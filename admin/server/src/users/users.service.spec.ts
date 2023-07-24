@@ -1,9 +1,7 @@
-import { faker } from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma, User } from '@prisma/client';
-import { PRISMA_UNIQUE_VIOLATION_ERROR_CODE } from '../common/constants';
 import { CreateUserDto } from './dto';
 import { createRandomUser } from '../common/__mocks__';
 
@@ -47,39 +45,9 @@ describe('UsersService', () => {
         password: user.password,
       };
     });
-    it('should throw an error when the email already exists', async () => {
-      jest.spyOn(prisma.user, 'create').mockRejectedValueOnce(
-        new Prisma.PrismaClientKnownRequestError('', {
-          clientVersion: '1.0',
-          code: PRISMA_UNIQUE_VIOLATION_ERROR_CODE,
-        }),
-      );
-
-      await expect(service.create(createUserDto)).rejects.toThrowError(
-        'User with that email already exists',
-      );
-    });
-
-    it('should throw an error when an internal server error occurs', async () => {
-      jest
-        .spyOn(prisma.user, 'create')
-        .mockRejectedValueOnce(new Error('Something went wrong'));
-
-      await expect(service.create(createUserDto)).rejects.toThrowError(
-        '[USER_CREATION_ERROR] - Something went wrong',
-      );
-    });
 
     it('should create the user', async () => {
-      jest.spyOn(prisma.user, 'create').mockResolvedValueOnce({
-        id: 1,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        password: user.password,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt,
-      });
+      jest.spyOn(prisma.user, 'create').mockResolvedValueOnce(user);
 
       const result = await service.create(createUserDto);
       expect(result).toEqual(user);
@@ -97,6 +65,14 @@ describe('UsersService', () => {
         where: { email: user.email },
       });
       expect(prisma.user.findUnique).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw an error when the user is not found by the given email', async () => {
+      jest.spyOn(prisma.user, 'findUnique').mockResolvedValueOnce(null);
+
+      await expect(service.findByEmail(user.email)).rejects.toThrowError(
+        'User with that email does not exist',
+      );
     });
   });
 

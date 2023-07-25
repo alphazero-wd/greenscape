@@ -2,8 +2,20 @@ import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { ConfigModule } from '@nestjs/config';
+import * as Joi from '@hapi/joi';
 
 @Module({
-  imports: [AuthModule, UsersModule, PrismaModule]
+  imports: [
+    AuthModule,
+    UsersModule,
+    PrismaModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      validationSchema: Joi.object({
+        POSTGRES_DB: Joi.string().required(),
+      }),
+    }),
+  ],
 })
 export class AppModule {}

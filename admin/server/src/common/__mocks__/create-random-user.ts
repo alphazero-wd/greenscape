@@ -7,7 +7,7 @@ export const createRandomUser = (): User => {
     firstName: faker.person.firstName(),
     lastName: faker.person.lastName(),
     email: faker.internet.email(),
-    password: faker.internet.password(),
+    password: 'Abcd12345@#',
     updatedAt: faker.date.recent(),
     createdAt: faker.date.recent(),
   };

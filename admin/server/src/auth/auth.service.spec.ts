@@ -1,6 +1,7 @@
 import * as argon2 from 'argon2';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { UsersService } from '../users/users.service';
 import { CreateUserDto } from '../users/dto';
 import { Prisma, User } from '@prisma/client';
@@ -10,25 +11,29 @@ import { PrismaError } from '../prisma/prisma-error';
 jest.mock('argon2');
 describe('AuthService', () => {
   let authService: AuthService;
-  let usersService: UsersService;
+  let prisma: PrismaService;
   let user: User;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
+        UsersService,
         {
-          provide: UsersService,
+          provide: PrismaService,
           useValue: {
-            create: jest.fn(),
-            findByEmail: jest.fn(),
+            user: {
+              create: jest.fn(),
+              findUniqueOrThrow: jest.fn(),
+              findUnique: jest.fn(),
+            },
           },
         },
       ],
     }).compile();
 
     authService = module.get<AuthService>(AuthService);
-    usersService = module.get<UsersService>(UsersService);
+    prisma = module.get<PrismaService>(PrismaService);
     user = createRandomUser();
   });
 
@@ -50,7 +55,7 @@ describe('AuthService', () => {
       (argon2.hash as jest.Mock).mockResolvedValueOnce(hashedPassword);
     });
     it('should throw an error when creating an account with the email that already exists', async () => {
-      jest.spyOn(usersService, 'create').mockRejectedValueOnce(
+      jest.spyOn(prisma.user, 'create').mockRejectedValueOnce(
         new Prisma.PrismaClientKnownRequestError('Email already exists', {
           code: PrismaError.UniqueViolation,
           clientVersion: '5.0.0',
@@ -64,7 +69,7 @@ describe('AuthService', () => {
 
     it('should throw an error when there is something wrong on the server', async () => {
       jest
-        .spyOn(usersService, 'create')
+        .spyOn(prisma.user, 'create')
         .mockRejectedValueOnce(new Error('Something went wrong'));
 
       await expect(authService.register(createUserDto)).rejects.toThrowError(
@@ -74,27 +79,29 @@ describe('AuthService', () => {
 
     it('should create a new user', async () => {
       jest
-        .spyOn(usersService, 'create')
+        .spyOn(prisma.user, 'create')
         .mockResolvedValueOnce({ ...user, password: hashedPassword });
       const result = await authService.register(createUserDto);
       expect(result).toEqual({ ...user, password: hashedPassword });
-      expect(usersService.create).toHaveBeenCalledWith({
-        ...createUserDto,
-        password: hashedPassword,
+      expect(prisma.user.create).toHaveBeenCalledWith({
+        data: {
+          ...createUserDto,
+          password: hashedPassword,
+        },
       });
     });
   });
 
   describe('login', () => {
     it('should throw an error when user is not found', async () => {
-      jest.spyOn(usersService, 'findByEmail').mockResolvedValue(undefined);
+      jest.spyOn(prisma.user, 'findUnique').mockResolvedValue(undefined);
       await expect(
         authService.login(user.email, user.password),
       ).rejects.toThrowError('Wrong username or password provided');
     });
 
     it('should throw an error when password is wrong', async () => {
-      jest.spyOn(usersService, 'findByEmail').mockResolvedValue(user);
+      jest.spyOn(prisma.user, 'findUnique').mockResolvedValue(user);
       (argon2.verify as jest.Mock).mockResolvedValue(false);
       await expect(
         authService.login(user.email, user.password),
@@ -103,7 +110,7 @@ describe('AuthService', () => {
 
     it('should log in successfully', async () => {
       jest
-        .spyOn(usersService, 'findByEmail')
+        .spyOn(prisma.user, 'findUnique')
         .mockResolvedValue({ ...user, password: 'hashedPassword' });
       (argon2.verify as jest.Mock).mockResolvedValue(true);
       const result = await authService.login(user.email, user.password);

@@ -1,4 +1,11 @@
-import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../users/dto';
 
@@ -7,18 +14,23 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
-  register(@Body() createUserDto: CreateUserDto) {
-    return this.authService.register(createUserDto);
+  async register(@Body() createUserDto: CreateUserDto) {
+    const newUser = await this.authService.register(createUserDto);
+    delete newUser.password;
+    return {
+      success: true,
+      data: newUser,
+    };
   }
 
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @Post('login')
   login() {}
 
   @Get('me')
   me() {}
 
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @Post('logout')
   logout() {}
 }

@@ -6,8 +6,8 @@ import {
 } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { CreateUserDto } from '../users/dto';
-import { PRISMA_UNIQUE_VIOLATION_ERROR_CODE } from '../common/constants';
 import { Prisma } from '@prisma/client';
+import { PrismaError } from '../prisma/prisma-error';
 
 @Injectable()
 export class AuthService {
@@ -23,7 +23,7 @@ export class AuthService {
       return user;
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === PRISMA_UNIQUE_VIOLATION_ERROR_CODE)
+        if (error.code === PrismaError.UniqueViolation)
           throw new BadRequestException({
             success: false,
             message: 'User with that email already exists',

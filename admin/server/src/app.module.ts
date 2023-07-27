@@ -14,6 +14,7 @@ import * as Joi from '@hapi/joi';
       isGlobal: true,
       validationSchema: Joi.object({
         POSTGRES_DB: Joi.string().required(),
+        SESSION_SECRET: Joi.string().required(),
       }),
     }),
   ],

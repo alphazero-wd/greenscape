@@ -46,7 +46,7 @@ export class AuthService {
       // for security reasons
       throw new BadRequestException({
         success: false,
-        message: 'Wrong username or password provided',
+        message: 'Wrong email or password provided',
       });
     }
   }

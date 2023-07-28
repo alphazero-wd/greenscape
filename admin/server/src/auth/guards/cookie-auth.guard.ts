@@ -4,12 +4,13 @@ import {
   CanActivate,
   UnauthorizedException,
 } from '@nestjs/common';
+import { Request } from 'express';
 
 @Injectable()
 export class CookieAuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext) {
-    const request = context.switchToHttp().getRequest();
-    if (request.isAuthenticated())
+    const request: Request = context.switchToHttp().getRequest();
+    if (!request.isAuthenticated())
       throw new UnauthorizedException({
         success: false,
         message: 'You are not logged in',

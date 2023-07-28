@@ -13,8 +13,10 @@ import * as Joi from '@hapi/joi';
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
+        DATABASE_URL: Joi.string().required(),
         POSTGRES_DB: Joi.string().required(),
         SESSION_SECRET: Joi.string().required(),
+        CORS_ORIGIN: Joi.string().required(),
       }),
     }),
   ],

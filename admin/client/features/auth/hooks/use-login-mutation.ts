@@ -11,7 +11,7 @@ const formSchema = z.object({
   password: z.string().min(1, { message: "Password must not be empty" }),
 });
 
-export const useLogin = () => {
+export const useLoginMutation = () => {
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

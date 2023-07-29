@@ -10,10 +10,10 @@ import {
   Input,
 } from "@/features/ui";
 import { Loader2 } from "lucide-react";
-import { useLogin } from "@/features/auth/hooks";
+import { useLoginMutation } from "@/features/auth/hooks";
 
 export const LoginClient = () => {
-  const { form, loginMutation } = useLogin();
+  const { form, loginMutation } = useLoginMutation();
 
   return (
     <Form {...form}>

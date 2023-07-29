@@ -1,5 +1,5 @@
 "use client";
-import { useRegister } from "@/features/auth/hooks";
+import { useREgisterMutation } from "@/features/auth/hooks";
 import {
   Button,
   Form,
@@ -13,7 +13,7 @@ import {
 import { Loader2 } from "lucide-react";
 
 export const RegisterClient = () => {
-  const { registerMutation, form } = useRegister();
+  const { registerMutation, form } = useREgisterMutation();
   return (
     <Form {...form}>
       <form onSubmit={registerMutation.mutate} className="space-y-8">

@@ -29,7 +29,7 @@ const formSchema = z.object({
     ),
 });
 
-export const useRegister = () => {
+export const useREgisterMutation = () => {
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

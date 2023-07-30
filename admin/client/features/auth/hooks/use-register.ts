@@ -1,8 +1,8 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as z from "zod";
@@ -29,7 +29,8 @@ const formSchema = z.object({
     ),
 });
 
-export const useREgisterMutation = () => {
+export const useRegister = () => {
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -43,6 +44,7 @@ export const useREgisterMutation = () => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
+      setLoading(true);
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
         values
@@ -52,11 +54,10 @@ export const useREgisterMutation = () => {
       setTimeout(() => router.push("/auth/login"), 1000);
     } catch (error: any) {
       toast.error(error.response.data.message);
+    } finally {
+      setLoading(false);
     }
   }
 
-  const registerMutation = useMutation({
-    mutationFn: form.handleSubmit(onSubmit),
-  });
-  return { registerMutation, form };
+  return { form, loading, handleSubmit: form.handleSubmit(onSubmit) };
 };

@@ -1,5 +1,5 @@
 "use client";
-import { useREgisterMutation } from "@/features/auth/hooks";
+import { useRegister } from "@/features/auth/hooks";
 import {
   Button,
   Form,
@@ -13,10 +13,10 @@ import {
 import { Loader2 } from "lucide-react";
 
 export const RegisterClient = () => {
-  const { registerMutation, form } = useREgisterMutation();
+  const { handleSubmit, form, loading } = useRegister();
   return (
     <Form {...form}>
-      <form onSubmit={registerMutation.mutate} className="space-y-8">
+      <form onSubmit={handleSubmit} className="space-y-8">
         <div className="flex md:flex-row flex-col gap-3">
           <FormField
             control={form.control}
@@ -26,7 +26,7 @@ export const RegisterClient = () => {
                 <FormLabel>First name</FormLabel>
                 <FormControl>
                   <Input
-                    disabled={registerMutation.isLoading}
+                    disabled={loading}
                     placeholder="First name"
                     {...field}
                   />
@@ -44,7 +44,7 @@ export const RegisterClient = () => {
                 <FormLabel>Last name</FormLabel>
                 <FormControl>
                   <Input
-                    disabled={registerMutation.isLoading}
+                    disabled={loading}
                     placeholder="Last name"
                     {...field}
                   />
@@ -61,11 +61,7 @@ export const RegisterClient = () => {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input
-                  disabled={registerMutation.isLoading}
-                  placeholder="Email"
-                  {...field}
-                />
+                <Input disabled={loading} placeholder="Email" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -80,7 +76,7 @@ export const RegisterClient = () => {
               <FormLabel>Password</FormLabel>
               <FormControl>
                 <Input
-                  disabled={registerMutation.isLoading}
+                  disabled={loading}
                   placeholder="Password"
                   type="password"
                   {...field}
@@ -91,14 +87,8 @@ export const RegisterClient = () => {
           )}
         />
 
-        <Button
-          className="w-full"
-          disabled={registerMutation.isLoading}
-          type="submit"
-        >
-          {registerMutation.isLoading && (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          )}
+        <Button className="w-full" disabled={loading} type="submit">
+          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Register
         </Button>
       </form>

@@ -10,14 +10,14 @@ import {
   Input,
 } from "@/features/ui";
 import { Loader2 } from "lucide-react";
-import { useLoginMutation } from "@/features/auth/hooks";
+import { useLogin } from "@/features/auth/hooks";
 
 export const LoginClient = () => {
-  const { form, loginMutation } = useLoginMutation();
+  const { form, loading, handleSubmit } = useLogin();
 
   return (
     <Form {...form}>
-      <form onSubmit={loginMutation.mutate} className="space-y-8">
+      <form onSubmit={handleSubmit} className="space-y-8">
         <FormField
           control={form.control}
           name="email"
@@ -25,11 +25,7 @@ export const LoginClient = () => {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input
-                  disabled={loginMutation.isLoading}
-                  placeholder="Email"
-                  {...field}
-                />
+                <Input disabled={loading} placeholder="Email" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -43,7 +39,7 @@ export const LoginClient = () => {
               <FormLabel>Password</FormLabel>
               <FormControl>
                 <Input
-                  disabled={loginMutation.isLoading}
+                  disabled={loading}
                   placeholder="Password"
                   type="password"
                   {...field}
@@ -54,14 +50,8 @@ export const LoginClient = () => {
           )}
         />
 
-        <Button
-          className="w-full"
-          disabled={loginMutation.isLoading}
-          type="submit"
-        >
-          {loginMutation.isLoading && (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          )}
+        <Button className="w-full" disabled={loading} type="submit">
+          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Login
         </Button>
       </form>

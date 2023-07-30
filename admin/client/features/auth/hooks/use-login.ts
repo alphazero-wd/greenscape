@@ -1,7 +1,8 @@
+"use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
@@ -11,7 +12,8 @@ const formSchema = z.object({
   password: z.string().min(1, { message: "Password must not be empty" }),
 });
 
-export const useLoginMutation = () => {
+export const useLogin = () => {
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -23,6 +25,7 @@ export const useLoginMutation = () => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
+      setLoading(true);
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
         values,
@@ -33,12 +36,10 @@ export const useLoginMutation = () => {
       setTimeout(() => router.push("/"), 1000);
     } catch (error: any) {
       toast.error(error.response.data.message);
+    } finally {
+      setLoading(false);
     }
   }
 
-  const loginMutation = useMutation({
-    mutationFn: form.handleSubmit(onSubmit),
-  });
-
-  return { form, loginMutation };
+  return { form, loading, handleSubmit: form.handleSubmit(onSubmit) };
 };

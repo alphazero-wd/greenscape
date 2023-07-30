@@ -31,3 +31,5 @@ export {
   CommandSeparator,
   CommandShortcut,
 } from "./command";
+export { Popover, PopoverContent, PopoverTrigger } from "./popover";
+export { Separator } from "./separator";

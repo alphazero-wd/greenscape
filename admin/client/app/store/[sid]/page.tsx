@@ -1,7 +1,7 @@
 import { getCurrentUser } from "@/features/user/utils";
 import { StoreClient } from "./store-client";
 import { redirect } from "next/navigation";
-import { getStores } from "@/features/store/utils";
+import { getStoreById, getStores } from "@/features/store/utils";
 import { NavLinks, NavbarStores } from "@/features/store/navbar";
 
 interface StorePageProps {
@@ -10,9 +10,12 @@ interface StorePageProps {
   };
 }
 
-export default async function StorePage({}: StorePageProps) {
+export default async function StorePage({ params: { sid } }: StorePageProps) {
   const user = await getCurrentUser();
+  console.log({ user });
   if (!user) redirect("/auth/login");
+  const store = await getStoreById(sid);
+  if (!store) redirect("/not-found");
   const stores = await getStores();
 
   return (

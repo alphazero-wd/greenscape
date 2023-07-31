@@ -3,5 +3,5 @@ export interface Store {
   name: string;
   ownerId: number;
   createdAt: Date;
-  updatedAT: Date;
+  updatedAt: Date;
 }

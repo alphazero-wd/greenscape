@@ -33,3 +33,13 @@ export {
 } from "./command";
 export { Popover, PopoverContent, PopoverTrigger } from "./popover";
 export { Separator } from "./separator";
+export {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuIndicator,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  NavigationMenuViewport,
+} from "./navigation-menu";

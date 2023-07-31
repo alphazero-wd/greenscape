@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useNavLinks } from "../hooks";
+import { NavAssetsMenu } from "./nav-assets-menu";
 
 export const NavLinks = () => {
   const links = useNavLinks();
@@ -16,6 +17,7 @@ export const NavLinks = () => {
           {link.name}
         </Link>
       ))}
+      <NavAssetsMenu />
     </div>
   );
 };

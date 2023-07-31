@@ -22,8 +22,7 @@ const components: { title: string; href: string; description: string }[] = [
   {
     title: "Sizes",
     href: "sizes",
-    description:
-      "Allow customers to select the products that fit them (usually for clothes)",
+    description: "Allow customers to select the products that fit them",
   },
   {
     title: "Colors",

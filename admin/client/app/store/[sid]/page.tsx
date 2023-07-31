@@ -3,6 +3,7 @@ import { StoreClient } from "./store-client";
 import { redirect } from "next/navigation";
 import { getStoreById, getStores } from "@/features/store/utils";
 import { NavLinks, NavbarStores } from "@/features/store/navbar";
+import { CreateStoreModal } from "@/features/store/create-store-modal";
 
 interface StorePageProps {
   params: {
@@ -25,6 +26,7 @@ export default async function StorePage({ params: { sid } }: StorePageProps) {
         <NavLinks />
       </nav>
       <StoreClient />
+      <CreateStoreModal />
     </>
   );
 }

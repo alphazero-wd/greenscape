@@ -7,8 +7,13 @@ import {
 } from "@/features/ui";
 import { LoginClient } from "./login-client";
 import Link from "next/link";
+import { getCurrentUser } from "@/features/user/utils";
+import { redirect } from "next/navigation";
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const user = await getCurrentUser();
+  if (user) redirect("/");
+
   return (
     <div className="flex items-center justify-center h-full">
       <Card className="w-[500px]">

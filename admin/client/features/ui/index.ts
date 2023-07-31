@@ -43,3 +43,13 @@ export {
   NavigationMenuTrigger,
   NavigationMenuViewport,
 } from "./navigation-menu";
+
+export {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "./dialog";

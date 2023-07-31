@@ -24,12 +24,14 @@ import { Store } from "../types/store";
 import { StoreIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { useCreateStoreModal } from "../hooks";
 
 interface NavbarStoresProps {
   stores: Store[];
 }
 
 export function NavbarStores({ stores }: NavbarStoresProps) {
+  const { onOpen } = useCreateStoreModal();
   const [open, setOpen] = useState(false);
   const { sid } = useParams();
   const [value, setValue] = useState(sid as string);
@@ -93,6 +95,7 @@ export function NavbarStores({ stores }: NavbarStoresProps) {
               <CommandItem
                 onSelect={() => {
                   setOpen(false);
+                  onOpen();
                 }}
               >
                 <PlusCircleIcon className="mr-2 text-gray-700 h-5 w-5" />

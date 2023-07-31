@@ -2,7 +2,13 @@ import { getCurrentUser } from "@/features/user/utils";
 import { StoreClient } from "./store-client";
 import { redirect } from "next/navigation";
 import { getStoreById, getStores } from "@/features/store/utils";
-import { NavLinks, NavbarStores } from "@/features/store/navbar";
+import {
+  MobileNavLinks,
+  NavLinks,
+  NavMenuButton,
+  NavUser,
+  NavbarStores,
+} from "@/features/store/navbar";
 import { CreateStoreModal } from "@/features/store/create-store-modal";
 
 interface StorePageProps {
@@ -21,12 +27,17 @@ export default async function StorePage({ params: { sid } }: StorePageProps) {
 
   return (
     <>
-      <nav className="flex h-16 border-b items-center px-4">
-        <NavbarStores stores={stores} />
-        <NavLinks />
+      <nav className="flex justify-between gap-x-2 h-16 border-b items-center px-4">
+        <div className="flex gap-x-2 items-center">
+          <NavbarStores stores={stores} />
+          <NavLinks />
+          <NavMenuButton />
+        </div>
+        <NavUser />
       </nav>
-      <StoreClient />
       <CreateStoreModal />
+      <MobileNavLinks />
+      <StoreClient />
     </>
   );
 }

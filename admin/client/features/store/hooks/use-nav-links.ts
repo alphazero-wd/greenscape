@@ -7,12 +7,12 @@ export const useNavLinks = () => {
         name: "Overview",
         href: "",
       },
-      { name: "Products", href: "products" },
+      { name: "Products", href: "/products" },
       {
         name: "Orders",
-        href: "orders",
+        href: "/orders",
       },
-      { name: "Settings", href: "settings" },
+      { name: "Settings", href: "/settings" },
     ],
     []
   );

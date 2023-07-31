@@ -53,3 +53,28 @@ export {
   DialogTrigger,
   DialogFooter,
 } from "./dialog";
+
+export {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "./collapsible";
+
+export {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "./accordion";
+
+export { Avatar, AvatarFallback, AvatarImage } from "./avatar";
+
+export {
+  DropdownMenu,
+  DropdownMenuItem,
+  DropdownMenuContent,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuGroup,
+} from "./dropdown-menu";

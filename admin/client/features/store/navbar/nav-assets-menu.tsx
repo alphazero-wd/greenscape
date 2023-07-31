@@ -12,37 +12,12 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/features/ui";
-
-const components: { title: string; href: string; description: string }[] = [
-  {
-    title: "Categories",
-    href: "categories",
-    description: "Classify products for better filtering results",
-  },
-  {
-    title: "Sizes",
-    href: "sizes",
-    description: "Allow customers to select the products that fit them",
-  },
-  {
-    title: "Colors",
-    href: "colors",
-    description:
-      "Allow customers to select the products that match their styles and preferences",
-  },
-  {
-    title: "Brands",
-    href: "brands",
-    description: "For customers who want designer labels",
-  },
-  {
-    title: "Billboards",
-    href: "billboards",
-    description: "Images carousel displayed on the home page with slogans",
-  },
-];
+import { useNavAssetLinks } from "../hooks";
+import { useParams, usePathname } from "next/navigation";
 
 export function NavAssetsMenu() {
+  const assets = useNavAssetLinks();
+
   return (
     <NavigationMenu>
       <NavigationMenuList>
@@ -50,13 +25,9 @@ export function NavAssetsMenu() {
           <NavigationMenuTrigger>Assets</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-              {components.map((component) => (
-                <ListItem
-                  key={component.title}
-                  title={component.title}
-                  href={component.href}
-                >
-                  {component.description}
+              {assets.map(({ title, href, description }) => (
+                <ListItem key={title} title={title} href={href}>
+                  {description}
                 </ListItem>
               ))}
             </ul>
@@ -71,20 +42,23 @@ const ListItem = React.forwardRef<
   React.ElementRef<typeof Link>,
   React.ComponentPropsWithoutRef<typeof Link>
 >(({ className, title, children, href, ...props }, ref) => {
+  const { sid } = useParams();
+  const pathname = usePathname();
   return (
     <li>
       <NavigationMenuLink asChild>
         <Link
-          href={href}
+          href={`/store/${sid}/${href}`}
           ref={ref}
           className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+            "block space-y-1 rounded-md p-3 leading-none transition-colors hover:bg-gray-100",
+            `/store/${sid}/${href}` === pathname && "bg-gray-100",
             className
           )}
           {...props}
         >
           <div className="text-sm font-medium leading-none">{title}</div>
-          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+          <p className="line-clamp-2 text-sm leading-snug text-gray-500">
             {children}
           </p>
         </Link>

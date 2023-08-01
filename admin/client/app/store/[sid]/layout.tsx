@@ -16,7 +16,6 @@ export default async function StoreLayout({
   children: React.ReactNode;
 }) {
   const user = await getCurrentUser();
-  console.log({ user });
   if (!user) redirect("/auth/login");
   const stores = await getStores();
 

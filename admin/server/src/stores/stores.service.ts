@@ -6,6 +6,7 @@ import {
 import { CreateStoreDto } from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
 import { PrismaService } from '../prisma/prisma.service';
+import { removeWhiteSpaces } from '../common/utils';
 
 @Injectable()
 export class StoresService {
@@ -13,7 +14,7 @@ export class StoresService {
 
   private async checkDuplicateStore(name: string, ownerId: number) {
     const store = await this.prisma.store.findFirst({
-      where: { name, ownerId },
+      where: { name: removeWhiteSpaces(name), ownerId },
     });
     if (store)
       throw new BadRequestException({
@@ -25,7 +26,7 @@ export class StoresService {
   async create({ name }: CreateStoreDto, ownerId: number) {
     await this.checkDuplicateStore(name, ownerId);
     const newStore = await this.prisma.store.create({
-      data: { name, ownerId },
+      data: { name: removeWhiteSpaces(name), ownerId },
     });
     return newStore;
   }
@@ -51,7 +52,7 @@ export class StoresService {
     await this.checkDuplicateStore(name, ownerId);
     const updatedStore = await this.prisma.store.update({
       where: { id, ownerId },
-      data: { name },
+      data: { name: removeWhiteSpaces(name) },
     });
     return updatedStore;
   }

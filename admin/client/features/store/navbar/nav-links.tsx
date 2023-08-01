@@ -11,7 +11,7 @@ export const NavLinks = () => {
   const pathname = usePathname();
 
   return (
-    <div className="hidden lg:flex items-center space-x-4 mx-6">
+    <div className="hidden lg:flex items-center space-x-6 mx-6">
       {links.map((link) => (
         <Link
           key={link.href}

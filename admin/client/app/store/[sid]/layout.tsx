@@ -21,19 +21,21 @@ export default async function StoreLayout({
 
   return (
     <>
-      <nav className="flex justify-between gap-x-2 h-16 border-b items-center px-4">
-        <div className="flex gap-x-2 items-center">
-          <NavbarStores stores={stores} />
-          <NavLinks />
-        </div>
-        <div className="flex gap-x-2 items-center">
-          <NavMenuButton />
-          <NavUser />
+      <nav className="h-16 border-b flex items-center px-4">
+        <div className="flex justify-between items-center gap-x-2 max-w-7xl container">
+          <div className="flex gap-x-2 items-center">
+            <NavbarStores stores={stores} />
+            <NavLinks />
+          </div>
+          <div className="flex gap-x-2 items-center">
+            <NavMenuButton />
+            <NavUser />
+          </div>
         </div>
       </nav>
       <CreateStoreModal />
       <MobileSidebarNav />
-      {children}
+      <div className="px-4 py-8">{children}</div>
     </>
   );
 }

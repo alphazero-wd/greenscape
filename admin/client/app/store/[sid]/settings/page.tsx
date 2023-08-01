@@ -5,6 +5,7 @@ import {
   DeleteStoreModal,
   EditStoreForm,
 } from "@/features/store/settings";
+import { Breadcrumb } from "@/features/ui";
 
 interface StoreSettingsPageProps {
   params: {
@@ -18,8 +19,17 @@ async function StoreSettingsPage({ params: { sid } }: StoreSettingsPageProps) {
 
   return (
     <>
-      <div className="px-4 py-6 sm:py-8">
-        <div className="container max-w-3xl">
+      <div className="max-w-7xl container">
+        <div className="max-w-md">
+          <div className="mb-4">
+            <Breadcrumb
+              links={[
+                { name: "Stores", href: "/" },
+                { name: store.name, href: `/store/${store.id}` },
+                { name: "Settings", href: `/store/${store.id}/settings` },
+              ]}
+            />
+          </div>
           <h1 className="font-bold tracking-tight text-2xl sm:text-3xl">
             Settings
           </h1>

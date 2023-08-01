@@ -89,3 +89,5 @@ export {
   SheetTitle,
   SheetTrigger,
 } from "./sheet";
+
+export { Breadcrumb } from "./breadcrumb";

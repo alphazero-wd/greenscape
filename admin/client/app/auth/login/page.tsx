@@ -1,3 +1,4 @@
+import { LoginForm } from "@/features/auth/login/login-form";
 import {
   Card,
   CardContent,
@@ -8,7 +9,6 @@ import {
 import { getCurrentUser } from "@/features/user/utils";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { LoginClient } from "./login-client";
 
 export default async function LoginPage() {
   const user = await getCurrentUser();
@@ -29,7 +29,7 @@ export default async function LoginPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <LoginClient />
+          <LoginForm />
         </CardContent>
       </Card>
     </div>

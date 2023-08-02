@@ -26,6 +26,7 @@ export const MobileSidebarNav = () => {
         <div className="mt-8 space-y-4">
           {navLinks.map((link) => (
             <Link
+              key={link.href}
               className={cn(
                 "block w-full rounded-md px-3 py-2 text-sm font-medium hover:bg-gray-100",
                 `/store/${sid}${link.href}` === pathname && "font-medium",
@@ -44,6 +45,7 @@ export const MobileSidebarNav = () => {
               <AccordionContent className="ml-4 space-y-2">
                 {navAssetLinks.map((link) => (
                   <Link
+                    key={link.href}
                     className={cn(
                       "block w-full rounded-md px-3 py-2 text-sm hover:bg-gray-900 hover:text-white",
                       `/store/${sid}${link.href}` === pathname &&

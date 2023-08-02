@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/features/ui";
-import { User } from "@/features/user/types/user";
+import { User } from "@/features/user/types";
 import { LayoutDashboard, LogOut, Settings } from "lucide-react";
 import Link from "next/link";
 
@@ -51,7 +51,7 @@ export const NavUserDropdown: React.FC<NavUserDropdownProps> = ({ user }) => {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           {dropdownLinks.map((link) => (
-            <Link href={link.href} className="block w-full">
+            <Link key={link.href} href={link.href} className="block w-full">
               <DropdownMenuItem key={link.text}>
                 <link.icon className="mr-2 h-4 w-4 text-gray-500" />
                 <span>{link.text}</span>

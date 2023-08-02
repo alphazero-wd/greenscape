@@ -12,7 +12,7 @@ import {
 } from "@/features/ui";
 import { Loader2 } from "lucide-react";
 
-export const LoginClient = () => {
+export const LoginForm = () => {
   const { form, loading, handleSubmit } = useLogin();
 
   return (

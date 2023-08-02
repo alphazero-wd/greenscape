@@ -71,10 +71,10 @@ export class CategoriesService {
     }
   }
 
-  async remove(id: number) {
+  async remove(ids: number[]) {
     try {
-      await this.prisma.category.delete({
-        where: { id },
+      await this.prisma.category.deleteMany({
+        where: { id: { in: ids } },
       });
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError)

@@ -35,7 +35,7 @@ export default async function StoreLayout({
       </nav>
       <CreateStoreModal />
       <MobileSidebarNav />
-      <div className="px-4 py-8">{children}</div>
+      <div className="container max-w-7xl px-4 py-8">{children}</div>
     </>
   );
 }

@@ -91,3 +91,14 @@ export {
 } from "./sheet";
 
 export { Breadcrumb } from "./breadcrumb";
+
+export {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "./table";
+
+export { DataTable } from "./data-table";

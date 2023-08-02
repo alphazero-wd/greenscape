@@ -24,7 +24,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import { useCreateStoreModal } from "../hooks";
-import { Store } from "../types/store";
+import { Store } from "../types";
 
 interface NavbarStoresProps {
   stores: Store[];

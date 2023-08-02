@@ -12,9 +12,14 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../users/dto';
-import { CookieAuthGuard, LocalAuthGuard } from './guards';
+import {
+  CookieAuthGuard,
+  LocalAuthGuard,
+  RolesGuard,
+  LocalAdminAuthGuard,
+} from './guards';
 import { CurrentUser } from '../users/decorators';
-import { User } from '@prisma/client';
+import { Role, User } from '@prisma/client';
 import { TransformDataInterceptor } from '../common/interceptors';
 import { AuthResponse } from './types';
 
@@ -40,10 +45,31 @@ export class AuthController {
     };
   }
 
+  @HttpCode(HttpStatus.OK)
+  @UseInterceptors(new TransformDataInterceptor(AuthResponse))
+  @UseGuards(LocalAdminAuthGuard(Role.Admin))
+  @Post('login-admin')
+  loginAdmin(@CurrentUser() user: User) {
+    return {
+      success: true,
+      data: user,
+    };
+  }
+
   @Get('me')
   @UseGuards(CookieAuthGuard)
   @UseInterceptors(new TransformDataInterceptor(AuthResponse))
   me(@CurrentUser() user: User) {
+    return {
+      success: true,
+      data: user,
+    };
+  }
+
+  @Get('me-admin')
+  @UseGuards(RolesGuard(Role.Admin))
+  @UseInterceptors(new TransformDataInterceptor(AuthResponse))
+  meAdmin(@CurrentUser() user: User) {
     return {
       success: true,
       data: user,

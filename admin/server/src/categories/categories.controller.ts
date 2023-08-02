@@ -7,6 +7,7 @@ import {
   Delete,
   UseGuards,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto, UpdateCategoryDto } from './dto';
@@ -43,10 +44,10 @@ export class CategoriesController {
     };
   }
 
-  @Delete(':id')
   @UseGuards(RolesGuard(Role.Admin))
-  async remove(@Param('id', ParseIntPipe) id: number) {
-    await this.categoriesService.remove(id);
+  async remove(@Query('ids') ids: string) {
+    const idsArray = ids.split(',').map((id) => +id);
+    await this.categoriesService.remove(idsArray);
     return { success: true };
   }
 }

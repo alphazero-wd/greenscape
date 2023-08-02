@@ -6,10 +6,10 @@ import {
   mixin,
 } from '@nestjs/common';
 import { Role, User } from '@prisma/client';
-import { CookieAuthGuard } from './cookie-auth.guard';
+import { AuthGuard } from '@nestjs/passport';
 
-export const RolesGuard = (role: Role): Type<CanActivate> => {
-  class RolesGuardMixin extends CookieAuthGuard {
+export const LocalAdminAuthGuard = (role: Role): Type<CanActivate> => {
+  class LocalAdminAuthGuardMixin extends AuthGuard('local') {
     async canActivate(context: ExecutionContext) {
       await super.canActivate(context);
 
@@ -22,9 +22,11 @@ export const RolesGuard = (role: Role): Type<CanActivate> => {
           message:
             'Non-admin users are not allowed to access the resources here',
         });
+
+      await super.logIn(request);
       return true;
     }
   }
 
-  return mixin(RolesGuardMixin);
+  return mixin(LocalAdminAuthGuardMixin);
 };

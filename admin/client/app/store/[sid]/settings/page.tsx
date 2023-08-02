@@ -19,25 +19,23 @@ async function StoreSettingsPage({ params: { sid } }: StoreSettingsPageProps) {
 
   return (
     <>
-      <div className="container max-w-7xl">
-        <div className="max-w-md">
-          <div className="mb-4">
-            <Breadcrumb
-              links={[
-                { name: "Stores", href: "/" },
-                { name: store.name, href: `/store/${store.id}` },
-                { name: "Settings", href: `/store/${store.id}/settings` },
-              ]}
-            />
-          </div>
-          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-            Settings
-          </h1>
+      <div className="max-w-md">
+        <div className="mb-4">
+          <Breadcrumb
+            links={[
+              { name: "Stores", href: "/" },
+              { name: store.name, href: `/store/${store.id}` },
+              { name: "Settings", href: `/store/${store.id}/settings` },
+            ]}
+          />
+        </div>
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+          Settings
+        </h1>
 
-          <div className="mt-6 space-y-8">
-            <EditStoreForm store={store} />
-            <DeleteStoreButton />
-          </div>
+        <div className="mt-6 space-y-8">
+          <EditStoreForm store={store} />
+          <DeleteStoreButton />
         </div>
       </div>
       <DeleteStoreModal storeId={store.id} storeName={store.name} />

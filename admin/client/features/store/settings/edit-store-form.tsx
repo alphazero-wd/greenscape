@@ -10,7 +10,7 @@ import {
 } from "@/features/ui";
 import { Loader2 } from "lucide-react";
 import { useEditStore } from "../hooks";
-import { Store } from "../types/store";
+import { Store } from "../types";
 
 interface SettingsClientProps {
   store: Store;

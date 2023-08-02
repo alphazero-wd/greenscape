@@ -1,6 +1,4 @@
-import { getCurrentUser } from "@/features/user/utils";
-import { redirect } from "next/navigation";
-import { getStores } from "@/features/store/utils";
+import { CreateStoreModal } from "@/features/store/create-store-modal";
 import {
   MobileSidebarNav,
   NavLinks,
@@ -8,7 +6,9 @@ import {
   NavUser,
   NavbarStores,
 } from "@/features/store/navbar";
-import { CreateStoreModal } from "@/features/store/create-store-modal";
+import { getStores } from "@/features/store/utils";
+import { getCurrentUser } from "@/features/user/utils";
+import { redirect } from "next/navigation";
 
 export default async function StoreLayout({
   children,
@@ -21,13 +21,13 @@ export default async function StoreLayout({
 
   return (
     <>
-      <nav className="h-16 border-b flex items-center px-4">
-        <div className="flex justify-between items-center gap-x-2 max-w-7xl container">
-          <div className="flex gap-x-2 items-center">
+      <nav className="flex h-16 items-center border-b px-4">
+        <div className="container flex max-w-7xl items-center justify-between gap-x-2">
+          <div className="flex items-center gap-x-2">
             <NavbarStores stores={stores} />
             <NavLinks />
           </div>
-          <div className="flex gap-x-2 items-center">
+          <div className="flex items-center gap-x-2">
             <NavMenuButton />
             <NavUser />
           </div>

@@ -1,5 +1,8 @@
 "use client";
+import { useLogout } from "@/features/auth/hooks";
 import {
+  Avatar,
+  AvatarFallback,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -7,12 +10,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  Avatar,
-  AvatarFallback,
 } from "@/features/ui";
-import { Settings, LogOut, LayoutDashboard } from "lucide-react";
-import { useLogout } from "@/features/auth/hooks";
 import { User } from "@/features/user/types/user";
+import { LayoutDashboard, LogOut, Settings } from "lucide-react";
 import Link from "next/link";
 
 interface NavUserDropdownProps {
@@ -45,7 +45,7 @@ export const NavUserDropdown: React.FC<NavUserDropdownProps> = ({ user }) => {
         <DropdownMenuLabel>
           {user?.firstName} {user?.lastName}
         </DropdownMenuLabel>
-        <DropdownMenuLabel className="text-gray-500 font-normal">
+        <DropdownMenuLabel className="font-normal text-gray-500">
           {user?.email}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
@@ -53,7 +53,7 @@ export const NavUserDropdown: React.FC<NavUserDropdownProps> = ({ user }) => {
           {dropdownLinks.map((link) => (
             <Link href={link.href} className="block w-full">
               <DropdownMenuItem key={link.text}>
-                <link.icon className="mr-2 text-gray-500 h-4 w-4" />
+                <link.icon className="mr-2 h-4 w-4 text-gray-500" />
                 <span>{link.text}</span>
               </DropdownMenuItem>
             </Link>
@@ -61,7 +61,7 @@ export const NavUserDropdown: React.FC<NavUserDropdownProps> = ({ user }) => {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={async () => await logout()}>
-          <LogOut className="mr-2 text-gray-500 h-4 w-4" />
+          <LogOut className="mr-2 h-4 w-4 text-gray-500" />
           <span>Log out</span>
         </DropdownMenuItem>
       </DropdownMenuContent>

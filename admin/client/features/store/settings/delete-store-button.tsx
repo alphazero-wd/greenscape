@@ -7,7 +7,7 @@ export const DeleteStoreButton = () => {
   return (
     <div>
       <Label>Delete store</Label>
-      <p className="text-gray-500 text-sm">This action cannot be undone.</p>
+      <p className="text-sm text-gray-500">This action cannot be undone.</p>
       <Button onClick={onOpen} variant="destructive" className="mt-3">
         Delete store
       </Button>

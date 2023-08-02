@@ -34,7 +34,7 @@ export const useCreateStore = () => {
       } = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/stores`,
         values,
-        { withCredentials: true }
+        { withCredentials: true },
       );
       toast.success("Store created");
       form.reset();

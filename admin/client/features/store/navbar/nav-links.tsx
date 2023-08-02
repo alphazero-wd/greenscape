@@ -1,9 +1,9 @@
 "use client";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { useParams, usePathname } from "next/navigation";
 import { useNavLinks } from "../hooks";
 import { NavAssetsMenu } from "./nav-assets-menu";
-import { useParams, usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
 
 export const NavLinks = () => {
   const links = useNavLinks();
@@ -11,15 +11,15 @@ export const NavLinks = () => {
   const pathname = usePathname();
 
   return (
-    <div className="hidden lg:flex items-center space-x-6 mx-6">
+    <div className="mx-6 hidden items-center space-x-6 lg:flex">
       {links.map((link) => (
         <Link
           key={link.href}
           href={`/store/${sid}${link.href}`}
           className={cn(
-            "text-sm font-medium transition-colors hover:text-gray-900 text-gray-500 hover:font-semibold",
+            "text-sm font-medium text-gray-500 transition-colors hover:font-semibold hover:text-gray-900",
             `/store/${sid}${link.href}` === pathname &&
-              "text-gray-900 font-semibold"
+              "font-semibold text-gray-900",
           )}
         >
           {link.name}

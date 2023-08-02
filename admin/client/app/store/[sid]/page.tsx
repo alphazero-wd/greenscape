@@ -1,6 +1,6 @@
 import { getStoreById } from "@/features/store/utils";
-import { redirect } from "next/navigation";
 import { Breadcrumb } from "@/features/ui";
+import { redirect } from "next/navigation";
 
 interface StorePageProps {
   params: {

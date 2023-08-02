@@ -4,6 +4,7 @@ import { UsersModule } from './users/users.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import { StoresModule } from './stores/stores.module';
+import { CategoriesModule } from './categories/categories.module';
 import * as Joi from '@hapi/joi';
 
 @Module({
@@ -17,9 +18,12 @@ import * as Joi from '@hapi/joi';
         DATABASE_URL: Joi.string().required(),
         SESSION_SECRET: Joi.string().required(),
         CORS_ORIGIN: Joi.string().required(),
+        REDIS_HOST: Joi.string().required(),
+        REDIS_PORT: Joi.string().required(),
       }),
     }),
     StoresModule,
+    CategoriesModule,
   ],
 })
 export class AppModule {}

@@ -8,9 +8,9 @@ import {
   FormMessage,
   Input,
 } from "@/features/ui";
+import { Loader2 } from "lucide-react";
 import { useEditStore } from "../hooks";
 import { Store } from "../types/store";
-import { Loader2 } from "lucide-react";
 
 interface SettingsClientProps {
   store: Store;
@@ -30,7 +30,7 @@ export const EditStoreForm: React.FC<SettingsClientProps> = ({ store }) => {
               <Input
                 disabled={loading}
                 placeholder="Edit store name here"
-                className="w-full col-span-3"
+                className="col-span-3 w-full"
                 {...field}
               />
               <FormMessage />
@@ -39,7 +39,7 @@ export const EditStoreForm: React.FC<SettingsClientProps> = ({ store }) => {
         />
 
         <Button type="submit" className="mt-3" disabled={loading}>
-          {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Submit
         </Button>
       </form>

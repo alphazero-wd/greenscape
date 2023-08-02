@@ -10,11 +10,13 @@ import { Request } from 'express';
 export class CookieAuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext) {
     const request: Request = context.switchToHttp().getRequest();
+
     if (!request.isAuthenticated())
       throw new UnauthorizedException({
         success: false,
-        message: 'You are not logged in',
+        message: 'You are not logged in to perform the action',
       });
+
     return true;
   }
 }

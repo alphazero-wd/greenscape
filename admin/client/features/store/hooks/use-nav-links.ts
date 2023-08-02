@@ -14,7 +14,7 @@ export const useNavLinks = () => {
       },
       { name: "Settings", href: "/settings" },
     ],
-    []
+    [],
   );
   return links;
 };

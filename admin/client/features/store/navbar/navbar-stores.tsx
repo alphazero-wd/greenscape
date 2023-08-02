@@ -1,6 +1,5 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import {
   Button,
   Command,
@@ -14,17 +13,18 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/features/ui";
+import { cn } from "@/lib/utils";
 import {
-  PlusCircleIcon,
-  ChevronUpDownIcon,
   CheckIcon,
+  ChevronUpDownIcon,
+  PlusCircleIcon,
 } from "@heroicons/react/24/outline";
-import { useState } from "react";
-import { Store } from "../types/store";
 import { StoreIcon } from "lucide-react";
-import { useParams } from "next/navigation";
 import Link from "next/link";
+import { useParams } from "next/navigation";
+import { useState } from "react";
 import { useCreateStoreModal } from "../hooks";
+import { Store } from "../types/store";
 
 interface NavbarStoresProps {
   stores: Store[];
@@ -46,7 +46,7 @@ export function NavbarStores({ stores }: NavbarStoresProps) {
           className="w-[200px] justify-between"
         >
           <div className="flex items-center gap-x-3">
-            <StoreIcon className="text-gray-500 w-4 h-4" />
+            <StoreIcon className="h-4 w-4 text-gray-500" />
             {value
               ? stores.find((store) => store.id.toString() === value)?.name
               : "Select store..."}
@@ -69,11 +69,11 @@ export function NavbarStores({ stores }: NavbarStoresProps) {
                   }}
                 >
                   <Link
-                    className="flex w-full justify-between items-center"
+                    className="flex w-full items-center justify-between"
                     href={`/store/${store.id}`}
                   >
                     <div className="flex items-center gap-x-3">
-                      <StoreIcon className="text-gray-500 w-4 h-4" />
+                      <StoreIcon className="h-4 w-4 text-gray-500" />
                       {store.name}
                     </div>
                     <CheckIcon
@@ -81,7 +81,7 @@ export function NavbarStores({ stores }: NavbarStoresProps) {
                         "mr-2 h-4 w-4",
                         value === store.id.toString()
                           ? "opacity-100"
-                          : "opacity-0"
+                          : "opacity-0",
                       )}
                     />
                   </Link>
@@ -98,7 +98,7 @@ export function NavbarStores({ stores }: NavbarStoresProps) {
                   onOpen();
                 }}
               >
-                <PlusCircleIcon className="mr-2 text-gray-700 h-5 w-5" />
+                <PlusCircleIcon className="mr-2 h-5 w-5 text-gray-700" />
                 Create new store
               </CommandItem>
             </CommandGroup>

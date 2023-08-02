@@ -47,5 +47,9 @@
     "zod": "^3.21.4",
     "zustand": "^4.3.9"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "prettier": "^3.0.0",
+    "prettier-plugin-organize-imports": "^3.2.3",
+    "prettier-plugin-tailwindcss": "^0.4.1"
+  }
 }

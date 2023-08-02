@@ -1,7 +1,7 @@
+import { cn } from "@/lib/utils";
 import { ChevronRightIcon, HomeIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import React from "react";
-import { cn } from "@/lib/utils";
 
 interface BreadcrumbProps {
   links: {
@@ -17,9 +17,9 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({ links }) => {
         <li>
           <Link
             href="/"
-            className="text-gray-400 flex-shrink-0 hover:text-gray-500"
+            className="flex-shrink-0 text-gray-400 hover:text-gray-500"
           >
-            <HomeIcon className="w-5 h-5" />
+            <HomeIcon className="h-5 w-5" />
             <span className="sr-only">Home</span>
           </Link>
         </li>
@@ -31,10 +31,10 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({ links }) => {
               <Link
                 href={link.href}
                 className={cn(
-                  "text-gray-400 ml-4 line-clamp-1 font-medium text-sm",
+                  "ml-4 line-clamp-1 text-sm font-medium text-gray-400",
                   index === links.length - 1
                     ? "text-gray-900"
-                    : "hover:text-gray-500"
+                    : "hover:text-gray-500",
                 )}
               >
                 {link.name}

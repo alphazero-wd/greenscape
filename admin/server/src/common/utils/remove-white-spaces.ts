@@ -1,1 +1,2 @@
-export const removeWhiteSpaces = (text: string) => text.replace(/\s+/g, ' ');
+export const removeWhiteSpaces = (text: string) =>
+  text.replace(/\s+/g, ' ').trim();

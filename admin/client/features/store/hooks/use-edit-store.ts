@@ -6,8 +6,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
-import { useCreateStoreModal } from "./use-create-store-modal";
 import { Store } from "../types/store";
+import { useCreateStoreModal } from "./use-create-store-modal";
 
 const formSchema = z.object({
   name: z
@@ -31,7 +31,7 @@ export const useEditStore = (store: Store) => {
       await axios.patch(
         `${process.env.NEXT_PUBLIC_API_URL}/stores/${store.id}`,
         values,
-        { withCredentials: true }
+        { withCredentials: true },
       );
       toast.success("Store updated");
       form.reset();

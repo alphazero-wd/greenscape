@@ -25,7 +25,7 @@ const formSchema = z.object({
     .string()
     .regex(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-      { message: "Password is not strong enough" }
+      { message: "Password is not strong enough" },
     ),
 });
 
@@ -47,7 +47,7 @@ export const useRegister = () => {
       setLoading(true);
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
-        values
+        values,
       );
       toast.success("Register successfully. Please log in");
       form.reset();

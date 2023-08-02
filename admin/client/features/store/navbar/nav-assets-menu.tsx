@@ -1,9 +1,8 @@
 "use client";
 
-import * as React from "react";
 import Link from "next/link";
+import * as React from "react";
 
-import { cn } from "@/lib/utils";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -12,8 +11,9 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/features/ui";
-import { useNavAssetLinks } from "../hooks";
+import { cn } from "@/lib/utils";
 import { useParams, usePathname } from "next/navigation";
+import { useNavAssetLinks } from "../hooks";
 
 export function NavAssetsMenu() {
   const assets = useNavAssetLinks();
@@ -53,7 +53,7 @@ const ListItem = React.forwardRef<
           className={cn(
             "block space-y-1 rounded-md p-3 leading-none transition-colors hover:bg-gray-100",
             `/store/${sid}/${href}` === pathname && "bg-gray-100",
-            className
+            className,
           )}
           {...props}
         >

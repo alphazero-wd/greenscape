@@ -30,6 +30,6 @@ export const useNavAssetLinks = () => {
         description: "Images carousel displayed on the home page with slogans",
       },
     ],
-    []
+    [],
   );
 };

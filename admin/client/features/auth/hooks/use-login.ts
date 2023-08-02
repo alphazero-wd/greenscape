@@ -29,7 +29,7 @@ export const useLogin = () => {
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
         values,
-        { withCredentials: true }
+        { withCredentials: true },
       );
       toast.success("Login successfully");
       form.reset();

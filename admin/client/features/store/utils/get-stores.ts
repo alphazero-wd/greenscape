@@ -1,6 +1,6 @@
 import axios from "axios";
-import { Store } from "../types/store";
 import { cookies } from "next/headers";
+import { Store } from "../types/store";
 
 export const getStores = async () => {
   const {

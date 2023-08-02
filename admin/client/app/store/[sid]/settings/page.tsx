@@ -1,11 +1,11 @@
-import { getStoreById } from "@/features/store/utils";
-import { redirect } from "next/navigation";
 import {
   DeleteStoreButton,
   DeleteStoreModal,
   EditStoreForm,
 } from "@/features/store/settings";
+import { getStoreById } from "@/features/store/utils";
 import { Breadcrumb } from "@/features/ui";
+import { redirect } from "next/navigation";
 
 interface StoreSettingsPageProps {
   params: {
@@ -19,7 +19,7 @@ async function StoreSettingsPage({ params: { sid } }: StoreSettingsPageProps) {
 
   return (
     <>
-      <div className="max-w-7xl container">
+      <div className="container max-w-7xl">
         <div className="max-w-md">
           <div className="mb-4">
             <Breadcrumb
@@ -30,7 +30,7 @@ async function StoreSettingsPage({ params: { sid } }: StoreSettingsPageProps) {
               ]}
             />
           </div>
-          <h1 className="font-bold tracking-tight text-2xl sm:text-3xl">
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
             Settings
           </h1>
 

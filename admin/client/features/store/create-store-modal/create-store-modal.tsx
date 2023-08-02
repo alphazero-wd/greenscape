@@ -4,19 +4,19 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  Input,
-  DialogFooter,
+  Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-  Form,
+  Input,
 } from "@/features/ui";
-import { useCreateStore, useCreateStoreModal } from "../hooks";
 import { Loader2 } from "lucide-react";
+import { useCreateStore, useCreateStoreModal } from "../hooks";
 
 export function CreateStoreModal() {
   const { isOpen, onClose } = useCreateStoreModal();
@@ -45,7 +45,7 @@ export function CreateStoreModal() {
                         disabled={loading}
                         placeholder="Store name"
                         {...field}
-                        className="w-full col-span-3"
+                        className="col-span-3 w-full"
                       />
                     </FormControl>
                   </div>

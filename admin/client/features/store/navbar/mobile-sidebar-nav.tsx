@@ -6,12 +6,11 @@ import {
   AccordionTrigger,
   Sheet,
   SheetContent,
-  SheetHeader,
 } from "@/features/ui";
-import { useMobileSidebarNav, useNavAssetLinks, useNavLinks } from "../hooks";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
+import { useMobileSidebarNav, useNavAssetLinks, useNavLinks } from "../hooks";
 
 export const MobileSidebarNav = () => {
   const { isOpen, onClose } = useMobileSidebarNav();
@@ -22,14 +21,14 @@ export const MobileSidebarNav = () => {
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent className="bg-white lg:hidden p-2">
+      <SheetContent className="bg-white p-2 lg:hidden">
         <br />
         <div className="mt-8 space-y-4">
           {navLinks.map((link) => (
             <Link
               className={cn(
-                "rounded-md block w-full px-3 py-2 text-sm hover:bg-gray-100 font-medium",
-                `/store/${sid}${link.href}` === pathname && "font-medium"
+                "block w-full rounded-md px-3 py-2 text-sm font-medium hover:bg-gray-100",
+                `/store/${sid}${link.href}` === pathname && "font-medium",
               )}
               href={`/store/${sid}${link.href}`}
               onClick={onClose}
@@ -39,16 +38,16 @@ export const MobileSidebarNav = () => {
           ))}
           <Accordion type="single" className="w-full" collapsible>
             <AccordionItem value="nav-assets">
-              <AccordionTrigger className="py-2 px-3 text-sm rounded-md hover:bg-gray-100 font-medium">
+              <AccordionTrigger className="rounded-md px-3 py-2 text-sm font-medium hover:bg-gray-100">
                 Assets
               </AccordionTrigger>
-              <AccordionContent className="space-y-2 ml-4">
+              <AccordionContent className="ml-4 space-y-2">
                 {navAssetLinks.map((link) => (
                   <Link
                     className={cn(
-                      "rounded-md block w-full px-3 py-2 text-sm hover:text-white hover:bg-gray-900",
+                      "block w-full rounded-md px-3 py-2 text-sm hover:bg-gray-900 hover:text-white",
                       `/store/${sid}${link.href}` === pathname &&
-                        "text-white bg-gray-900"
+                        "bg-gray-900 text-white",
                     )}
                     href={link.href}
                     onClick={onClose}

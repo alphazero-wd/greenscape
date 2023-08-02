@@ -8,7 +8,7 @@ export const getCurrentUser = async () => {
       process.env.NEXT_PUBLIC_API_URL + "/auth/me",
       {
         headers: { Cookie: cookies().toString() },
-      }
+      },
     );
     return data?.data as User | undefined;
   } catch (error) {

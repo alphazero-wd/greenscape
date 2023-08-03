@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/features/ui";
 import { Bars3Icon } from "@heroicons/react/24/outline";
-import { useMobileSidebarNav } from "../hooks";
+import { useMobileSidebarNav } from "./use-mobile-sidebar-nav";
 
 export const NavMenuButton = () => {
   const { onOpen } = useMobileSidebarNav();

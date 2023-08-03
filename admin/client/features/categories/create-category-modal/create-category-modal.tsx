@@ -16,20 +16,27 @@ import {
   Input,
 } from "@/features/ui";
 import { Loader2 } from "lucide-react";
-import { useCreateStore } from "./use-create-store";
-import { useCreateStoreModal } from "./use-create-store-modal";
+import React from "react";
+import { useCreateCategory } from "./use-create-category";
+import { useCreateCategoryModal } from "./use-create-category-modal";
 
-export function CreateStoreModal() {
-  const { isOpen, onClose } = useCreateStoreModal();
-  const { form, handleSubmit, loading } = useCreateStore();
+interface CreateCategoryModalProps {
+  storeId: number;
+}
+
+export const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({
+  storeId,
+}) => {
+  const { isOpen, onClose } = useCreateCategoryModal();
+  const { loading, handleSubmit, form } = useCreateCategory(storeId);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Create store</DialogTitle>
+          <DialogTitle>Create category</DialogTitle>
           <DialogDescription>
-            Create new store for better products management
+            Create new category for better products filtering
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -40,11 +47,11 @@ export function CreateStoreModal() {
               render={({ field }) => (
                 <FormItem className="py-4">
                   <div className="grid grid-cols-4 items-center">
-                    <FormLabel className="flex-1">Store name</FormLabel>
+                    <FormLabel className="flex-1">Category name</FormLabel>
                     <FormControl>
                       <Input
                         disabled={loading}
-                        placeholder="Store name"
+                        placeholder="Category name"
                         {...field}
                         className="col-span-3 w-full"
                       />
@@ -75,4 +82,4 @@ export function CreateStoreModal() {
       </DialogContent>
     </Dialog>
   );
-}
+};

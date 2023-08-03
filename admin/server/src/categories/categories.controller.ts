@@ -44,6 +44,7 @@ export class CategoriesController {
     };
   }
 
+  @Delete()
   @UseGuards(RolesGuard(Role.Admin))
   async remove(@Query('ids') ids: string) {
     const idsArray = ids.split(',').map((id) => +id);

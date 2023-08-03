@@ -13,7 +13,7 @@ import {
 } from "@/features/ui";
 import { cn } from "@/lib/utils";
 import { useParams, usePathname } from "next/navigation";
-import { useNavAssetLinks } from "../hooks";
+import { useNavAssetLinks } from "./use-nav-asset-links";
 
 export function NavAssetsMenu() {
   const assets = useNavAssetLinks();
@@ -48,11 +48,11 @@ const ListItem = React.forwardRef<
     <li>
       <NavigationMenuLink asChild>
         <Link
-          href={`/store/${sid}/${href}`}
+          href={`/store/${sid}${href}`}
           ref={ref}
           className={cn(
             "block space-y-1 rounded-md p-3 leading-none transition-colors hover:bg-gray-100",
-            `/store/${sid}/${href}` === pathname && "bg-gray-100",
+            `/store/${sid}${href}` === pathname && "bg-gray-100",
             className,
           )}
           {...props}

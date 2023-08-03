@@ -5,28 +5,28 @@ export const useNavAssetLinks = () => {
     () => [
       {
         title: "Categories",
-        href: "categories",
+        href: "/categories",
         description: "Classify products for better filtering results",
       },
       {
         title: "Sizes",
-        href: "sizes",
+        href: "/sizes",
         description: "Allow customers to select the products that fit them",
       },
       {
         title: "Colors",
-        href: "colors",
+        href: "/colors",
         description:
           "Allow customers to select the products that match their styles and preferences",
       },
       {
         title: "Brands",
-        href: "brands",
+        href: "/brands",
         description: "For customers who want designer labels",
       },
       {
         title: "Billboards",
-        href: "billboards",
+        href: "/billboards",
         description: "Images carousel displayed on the home page with slogans",
       },
     ],

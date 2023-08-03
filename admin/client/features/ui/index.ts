@@ -101,4 +101,17 @@ export {
   TableRow,
 } from "./table";
 
-export { DataTable } from "./data-table";
+export { Checkbox } from "./checkbox";
+export { DataTable } from "./data-table/data-table";
+export {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+} from "./select";
+
+export { DataTableColumnHeader } from "./data-table/data-table-column-header";

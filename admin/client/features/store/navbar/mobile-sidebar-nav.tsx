@@ -10,7 +10,9 @@ import {
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import { useMobileSidebarNav, useNavAssetLinks, useNavLinks } from "../hooks";
+import { useMobileSidebarNav } from "./use-mobile-sidebar-nav";
+import { useNavAssetLinks } from "./use-nav-asset-links";
+import { useNavLinks } from "./use-nav-links";
 
 export const MobileSidebarNav = () => {
   const { isOpen, onClose } = useMobileSidebarNav();
@@ -51,7 +53,7 @@ export const MobileSidebarNav = () => {
                       `/store/${sid}${link.href}` === pathname &&
                         "bg-gray-900 text-white",
                     )}
-                    href={link.href}
+                    href={`/store/${sid}${link.href}`}
                     onClick={onClose}
                   >
                     {link.title}

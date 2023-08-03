@@ -10,29 +10,29 @@ import {
   DialogTitle,
 } from "@/features/ui";
 import { Loader2 } from "lucide-react";
-import { useDeleteStore } from "./use-delete-store";
-import { useDeleteStoreModal } from "./use-delete-store-modal";
+import { useDeleteSelectedRows } from "../../ui/data-table/use-delete-selected-rows";
+import { useDeleteCategoryModal } from "./use-delete-category-modal";
 
-interface DeleteStoreModalProps {
-  storeName: string;
-  storeId: number;
+interface DeleteCategoryModalProps {
+  categoryName: string;
+  categoryId: number;
 }
 
-export const DeleteStoreModal: React.FC<DeleteStoreModalProps> = ({
-  storeName,
-  storeId,
+export const DeleteCategoryModal: React.FC<DeleteCategoryModalProps> = ({
+  categoryName,
+  categoryId,
 }) => {
-  const { loading, deleteStore } = useDeleteStore(storeId);
-  const { isOpen, onClose } = useDeleteStoreModal();
+  const { isOpen, onClose } = useDeleteCategoryModal();
+  const { loading, deleteSelectedRows } = useDeleteSelectedRows([categoryId]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Delete store</DialogTitle>
+          <DialogTitle>Delete category</DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete store{" "}
-            <strong className="font-bold">{storeName}</strong>?
+            Are you sure you want to delete category{" "}
+            <strong className="font-bold">{categoryName}</strong>?
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -47,7 +47,7 @@ export const DeleteStoreModal: React.FC<DeleteStoreModalProps> = ({
             </Button>
             <Button
               variant="destructive"
-              onClick={async () => await deleteStore()}
+              onClick={async () => await deleteSelectedRows("categories")}
               disabled={loading}
             >
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

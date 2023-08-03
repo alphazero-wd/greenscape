@@ -23,7 +23,7 @@ import { StoreIcon } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import { useCreateStoreModal } from "../hooks";
+import { useCreateStoreModal } from "../create-store-modal";
 import { Store } from "../types";
 
 interface NavbarStoresProps {

@@ -9,15 +9,17 @@ import {
   Input,
 } from "@/features/ui";
 import { Loader2 } from "lucide-react";
-import { Store } from "../types";
-import { useEditStore } from "./use-edit-store";
+import { Category } from "../types";
+import { useEditCategory } from "./use-edit-category";
 
 interface SettingsClientProps {
-  store: Store;
+  category: Category;
 }
 
-export const EditStoreForm: React.FC<SettingsClientProps> = ({ store }) => {
-  const { loading, form, handleSubmit } = useEditStore(store);
+export const EditCategoryForm: React.FC<SettingsClientProps> = ({
+  category,
+}) => {
+  const { loading, form, handleSubmit } = useEditCategory(category);
   return (
     <Form {...form}>
       <form onSubmit={handleSubmit}>
@@ -26,10 +28,10 @@ export const EditStoreForm: React.FC<SettingsClientProps> = ({ store }) => {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel htmlFor="name">Change store name</FormLabel>
+              <FormLabel htmlFor="name">Change category</FormLabel>
               <Input
                 disabled={loading}
-                placeholder="Edit store name here"
+                placeholder="Edit category name here"
                 className="col-span-3 w-full"
                 {...field}
               />
@@ -40,7 +42,7 @@ export const EditStoreForm: React.FC<SettingsClientProps> = ({ store }) => {
 
         <Button type="submit" className="mt-3" disabled={loading}>
           {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Submit
+          Edit
         </Button>
       </form>
     </Form>

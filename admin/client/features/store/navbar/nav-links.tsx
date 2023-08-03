@@ -2,8 +2,8 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import { useNavLinks } from "../hooks";
 import { NavAssetsMenu } from "./nav-assets-menu";
+import { useNavLinks } from "./use-nav-links";
 
 export const NavLinks = () => {
   const links = useNavLinks();

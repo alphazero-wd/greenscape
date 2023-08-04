@@ -13,6 +13,7 @@ import { CategoriesService } from './categories.service';
 import { CreateCategoryDto, UpdateCategoryDto } from './dto';
 import { RolesGuard } from '../auth/guards';
 import { Role } from '@prisma/client';
+import { DeleteManyDto } from '../common/dto';
 
 @Controller('categories')
 export class CategoriesController {
@@ -46,7 +47,7 @@ export class CategoriesController {
 
   @Delete()
   @UseGuards(RolesGuard(Role.Admin))
-  async remove(@Query('ids') ids: string) {
+  async remove(@Query() { ids }: DeleteManyDto) {
     const idsArray = ids.split(',').map((id) => +id);
     await this.categoriesService.remove(idsArray);
     return { success: true };

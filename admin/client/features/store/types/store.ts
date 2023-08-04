@@ -1,4 +1,5 @@
 import { Category } from "@/features/categories/types";
+import { Size } from "@/features/sizes/types";
 
 export interface Store {
   id: number;
@@ -7,4 +8,5 @@ export interface Store {
   createdAt: Date;
   updatedAt: Date;
   categories: Category[];
+  sizes: Size[];
 }

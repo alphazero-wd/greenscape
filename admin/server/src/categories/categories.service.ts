@@ -72,22 +72,13 @@ export class CategoriesService {
   }
 
   async remove(ids: number[]) {
-    try {
-      await this.prisma.category.deleteMany({
-        where: { id: { in: ids } },
-      });
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError)
-        if (error.code === PrismaError.RecordNotFound)
-          throw new NotFoundException({
-            success: false,
-            message:
-              'Cannot delete the category because it is not found with the given `id`',
-          });
-      throw new InternalServerErrorException({
+    const { count } = await this.prisma.category.deleteMany({
+      where: { id: { in: ids } },
+    });
+    if (count === 0)
+      throw new NotFoundException({
         success: false,
-        message: 'Something went wrong',
+        message: 'Please select 1 or more records to delete',
       });
-    }
   }
 }

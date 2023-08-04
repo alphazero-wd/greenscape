@@ -2,7 +2,7 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import { NavAssetsMenu } from "./nav-assets-menu";
+import { NavCatalogsMenu } from "./nav-catalogs-menu";
 import { useNavLinks } from "./use-nav-links";
 
 export const NavLinks = () => {
@@ -25,7 +25,7 @@ export const NavLinks = () => {
           {link.name}
         </Link>
       ))}
-      <NavAssetsMenu />
+      <NavCatalogsMenu />
     </div>
   );
 };

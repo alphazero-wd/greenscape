@@ -11,13 +11,13 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { useMobileSidebarNav } from "./use-mobile-sidebar-nav";
-import { useNavAssetLinks } from "./use-nav-asset-links";
+import { useNavCatalogLinks } from "./use-nav-catalog-links";
 import { useNavLinks } from "./use-nav-links";
 
 export const MobileSidebarNav = () => {
   const { isOpen, onClose } = useMobileSidebarNav();
   const navLinks = useNavLinks();
-  const navAssetLinks = useNavAssetLinks();
+  const navCatalogLinks = useNavCatalogLinks();
   const pathname = usePathname();
   const { sid } = useParams();
 
@@ -40,12 +40,12 @@ export const MobileSidebarNav = () => {
             </Link>
           ))}
           <Accordion type="single" className="w-full" collapsible>
-            <AccordionItem value="nav-assets">
+            <AccordionItem value="nav-catalogs">
               <AccordionTrigger className="rounded-md px-3 py-2 text-sm font-medium hover:bg-gray-100">
-                Assets
+                Catalogs
               </AccordionTrigger>
               <AccordionContent className="ml-4 space-y-2">
-                {navAssetLinks.map((link) => (
+                {navCatalogLinks.map((link) => (
                   <Link
                     key={link.href}
                     className={cn(

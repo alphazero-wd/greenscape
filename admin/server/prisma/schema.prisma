@@ -25,13 +25,16 @@ model User {
 
 model Store {
   id        Int      @id @default(autoincrement())
-  name      String   @unique @db.VarChar(64)
+  name      String   @unique @db.VarChar(30)
   ownerId   Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   owner      User       @relation(fields: [ownerId], references: [id])
   categories Category[]
+  sizes      Size[]
+  colors     Color[]
+  Brand      Brand[]
 }
 
 model Category {
@@ -44,6 +47,42 @@ model Category {
   store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
 
   @@unique([storeId, name])
+}
+
+model Size {
+  id        Int      @id @default(autoincrement())
+  label     String   @db.VarChar(20)
+  desc      String?
+  storeId   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  store Store @relation(fields: [storeId], references: [id])
+}
+
+model Color {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(20)
+  hexCode   String   @db.VarChar(7)
+  storeId   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@unique([storeId, hexCode, name])
+}
+
+model Brand {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(20)
+  storeId   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@unique([name, storeId])
 }
 
 enum Role {

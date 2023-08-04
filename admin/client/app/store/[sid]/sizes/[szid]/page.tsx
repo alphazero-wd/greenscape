@@ -1,8 +1,8 @@
 import {
-  DeleteCategoryButton,
-  DeleteCategoryModal,
-  EditCategoryForm,
-} from "@/features/categories/settings";
+  DeleteSizeButton,
+  DeleteSizeModal,
+  EditSizeForm,
+} from "@/features/sizes/settings";
 import { getStoreById } from "@/features/store/utils";
 import { Breadcrumb } from "@/features/ui";
 import { redirect } from "next/navigation";
@@ -10,17 +10,17 @@ import { redirect } from "next/navigation";
 interface CategoryPageProps {
   params: {
     sid: string;
-    cid: string;
+    szid: string;
   };
 }
 
-export default async function CategoryPage({
-  params: { sid, cid },
+export default async function SizePage({
+  params: { sid, szid },
 }: CategoryPageProps) {
   const store = await getStoreById(sid);
   if (!store) redirect("/not-found");
-  const category = store.categories.find((c) => c.id.toString() === cid);
-  if (!category) redirect("/not-found");
+  const size = store.sizes.find((s) => s.id.toString() === szid);
+  if (!size) redirect("/not-found");
 
   return (
     <>
@@ -30,27 +30,27 @@ export default async function CategoryPage({
             links={[
               { name: "Stores", href: "/" },
               { name: store.name, href: `/store/${store.id}` },
-              { name: "Categories", href: `/store/${store.id}/categories` },
               {
-                name: category.name,
-                href: `/store/${store.id}/categories/${category.id}`,
+                name: "Sizes",
+                href: `/store/${store.id}/sizes`,
+              },
+              {
+                name: size.label,
+                href: `/store/${store.id}/sizes/${size.id}`,
               },
             ]}
           />
         </div>
         <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-          Category Settings
+          Size Settings
         </h1>
 
         <div className="mt-6 space-y-8">
-          <EditCategoryForm category={category} />
-          <DeleteCategoryButton />
+          <EditSizeForm size={size} />
+          <DeleteSizeButton />
         </div>
       </div>
-      <DeleteCategoryModal
-        categoryId={category.id}
-        categoryName={category.name}
-      />
+      <DeleteSizeModal sizeId={size.id} sizeLabel={size.label} />
     </>
   );
 }

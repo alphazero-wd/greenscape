@@ -1,21 +1,19 @@
 import {
-  CreateCategoryButton,
-  CreateCategoryModal,
-} from "@/features/categories/create-category-modal";
-import { columns } from "@/features/categories/utils";
+  CreateSizeButton,
+  CreateSizeModal,
+} from "@/features/sizes/create-size-modal";
+import { columns } from "@/features/sizes/utils";
 import { getStoreById } from "@/features/store/utils";
 import { Breadcrumb, DataTable } from "@/features/ui";
 import { redirect } from "next/navigation";
 
-interface CategoriesPageProps {
+interface SizesPageProps {
   params: {
     sid: string;
   };
 }
 
-export default async function CategoriesPage({
-  params: { sid },
-}: CategoriesPageProps) {
+export default async function SizesPage({ params: { sid } }: SizesPageProps) {
   const store = await getStoreById(sid);
   if (!store) redirect("/not-found");
 
@@ -27,27 +25,27 @@ export default async function CategoriesPage({
             links={[
               { name: "Stores", href: "/" },
               { name: store.name, href: `/store/${store.id}` },
-              { name: "Categories", href: `/store/${store.id}/categories` },
+              { name: "Sizes", href: `/store/${store.id}/categories` },
             ]}
           />
         </div>
         <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-          Categories ({store.categories.length})
+          Sizes ({store.sizes.length})
         </h1>
 
         <div className="mt-3">
-          <CreateCategoryButton />
+          <CreateSizeButton />
         </div>
 
         <div className="mt-6 space-y-8">
           <DataTable
-            entityName="categories"
-            data={store.categories}
+            entityName="sizes"
+            data={store.sizes.map((size) => ({ ...size, name: size.label }))}
             columns={columns}
           />
         </div>
       </div>
-      <CreateCategoryModal storeId={store.id} />
+      <CreateSizeModal storeId={store.id} />
     </>
   );
 }

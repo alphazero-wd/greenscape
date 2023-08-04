@@ -13,19 +13,19 @@ import {
 } from "@/features/ui";
 import { cn } from "@/lib/utils";
 import { useParams, usePathname } from "next/navigation";
-import { useNavAssetLinks } from "./use-nav-asset-links";
+import { useNavCatalogLinks } from "./use-nav-catalog-links";
 
-export function NavAssetsMenu() {
-  const assets = useNavAssetLinks();
+export function NavCatalogsMenu() {
+  const catalogs = useNavCatalogLinks();
 
   return (
     <NavigationMenu>
       <NavigationMenuList>
         <NavigationMenuItem>
-          <NavigationMenuTrigger>Assets</NavigationMenuTrigger>
+          <NavigationMenuTrigger>Catalogs</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-              {assets.map(({ title, href, description }) => (
+              {catalogs.map(({ title, href, description }) => (
                 <ListItem key={title} title={title} href={href}>
                   {description}
                 </ListItem>

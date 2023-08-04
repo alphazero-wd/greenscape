@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-export const useNavAssetLinks = () => {
+export const useNavCatalogLinks = () => {
   return useMemo(
     () => [
       {

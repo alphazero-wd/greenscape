@@ -115,3 +115,4 @@ export {
 } from "./select";
 
 export { DataTableColumnHeader } from "./data-table/data-table-column-header";
+export { Textarea } from "./textarea";

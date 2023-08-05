@@ -1,10 +1,10 @@
 "use client";
 import { Button } from "@/features/ui";
 import { PlusIcon } from "@heroicons/react/24/solid";
-import { useCreateSizeModal } from "./use-create-size-modal";
+import { useCreateColorModal } from "./use-create-color-modal";
 
-export const CreateSizeButton = () => {
-  const { onOpen } = useCreateSizeModal();
+export const CreateColorButton = () => {
+  const { onOpen } = useCreateColorModal();
 
   return (
     <Button onClick={onOpen} variant="outline">

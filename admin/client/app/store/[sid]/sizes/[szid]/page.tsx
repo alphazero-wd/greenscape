@@ -1,10 +1,6 @@
-import {
-  DeleteSizeButton,
-  DeleteSizeModal,
-  EditSizeForm,
-} from "@/features/sizes/settings";
+import { DeleteSizeButton, EditSizeForm } from "@/features/sizes/settings";
 import { getStoreById } from "@/features/store/utils";
-import { Breadcrumb } from "@/features/ui";
+import { Breadcrumb, DeleteRecordsModal } from "@/features/ui";
 import { redirect } from "next/navigation";
 
 interface CategoryPageProps {
@@ -50,7 +46,10 @@ export default async function SizePage({
           <DeleteSizeButton />
         </div>
       </div>
-      <DeleteSizeModal sizeId={size.id} sizeLabel={size.label} />
+      <DeleteRecordsModal
+        entityName="sizes"
+        records={[{ id: size.id, name: size.label }]}
+      />
     </>
   );
 }

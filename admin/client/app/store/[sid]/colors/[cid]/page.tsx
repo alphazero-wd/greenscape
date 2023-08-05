@@ -1,7 +1,4 @@
-import {
-  DeleteCategoryButton,
-  EditCategoryForm,
-} from "@/features/categories/settings";
+import { DeleteColorButton, EditColorForm } from "@/features/colors/settings";
 import { getStoreById } from "@/features/store/utils";
 import { Breadcrumb, DeleteRecordsModal } from "@/features/ui";
 import { redirect } from "next/navigation";
@@ -13,13 +10,13 @@ interface CategoryPageProps {
   };
 }
 
-export default async function CategoryPage({
+export default async function ColorPage({
   params: { sid, cid },
 }: CategoryPageProps) {
   const store = await getStoreById(sid);
   if (!store) redirect("/not-found");
-  const category = store.categories.find((c) => c.id.toString() === cid);
-  if (!category) redirect("/not-found");
+  const color = store.colors.find((s) => s.id.toString() === cid);
+  if (!color) redirect("/not-found");
 
   return (
     <>
@@ -29,26 +26,29 @@ export default async function CategoryPage({
             links={[
               { name: "Stores", href: "/" },
               { name: store.name, href: `/store/${store.id}` },
-              { name: "Categories", href: `/store/${store.id}/categories` },
               {
-                name: category.name,
-                href: `/store/${store.id}/categories/${category.id}`,
+                name: "Colors",
+                href: `/store/${store.id}/colors`,
+              },
+              {
+                name: color.name,
+                href: `/store/${store.id}/colors/${color.id}`,
               },
             ]}
           />
         </div>
         <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-          Category Settings
+          Color Settings
         </h1>
 
         <div className="mt-6 space-y-8">
-          <EditCategoryForm category={category} />
-          <DeleteCategoryButton />
+          <EditColorForm color={color} />
+          <DeleteColorButton />
         </div>
       </div>
       <DeleteRecordsModal
-        entityName="categories"
-        records={[{ id: category.id, name: category.name }]}
+        entityName="colors"
+        records={[{ id: color.id, name: color.name }]}
       />
     </>
   );

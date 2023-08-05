@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { StoresModule } from './stores/stores.module';
 import { CategoriesModule } from './categories/categories.module';
 import { SizesModule } from './sizes/sizes.module';
+import { ColorsModule } from './colors/colors.module';
 import * as Joi from '@hapi/joi';
 
 @Module({
@@ -26,6 +27,7 @@ import * as Joi from '@hapi/joi';
     StoresModule,
     CategoriesModule,
     SizesModule,
+    ColorsModule,
   ],
 })
 export class AppModule {}

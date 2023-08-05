@@ -58,6 +58,8 @@ model Size {
   updatedAt DateTime @updatedAt
 
   store Store @relation(fields: [storeId], references: [id])
+
+  @@unique([storeId, label])
 }
 
 model Color {

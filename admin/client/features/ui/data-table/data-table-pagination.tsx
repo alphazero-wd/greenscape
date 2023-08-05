@@ -16,27 +16,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../select";
-import { useDeleteSelectedRows } from "./use-delete-selected-rows";
+import { DeleteRecordsModal } from "./delete-records-modal";
+import { useDeleteRecordsModal } from "./use-delete-records-modal";
 
-interface DataTablePaginationProps<TData> {
+interface DataTablePaginationProps<TData extends { id: number; name: string }> {
   table: Table<TData>;
   entityName: "categories" | "sizes" | "colors" | "products";
 }
 
-export function DataTablePagination<TData>({
-  table,
-  entityName,
-}: DataTablePaginationProps<TData>) {
-  const selectedRowsOriginalIds: number[] = useMemo(
+export function DataTablePagination<
+  TData extends { id: number; name: string },
+>({ table, entityName }: DataTablePaginationProps<TData>) {
+  const selectedRows = useMemo(
     () =>
-      table.getFilteredSelectedRowModel().rows.map((row) => row.original.id),
+      table.getSelectedRowModel().rows.map(({ original }) => ({
+        id: original.id,
+        name: original.name,
+      })),
     [table.getFilteredSelectedRowModel().rows],
   );
-  const { deleteSelectedRows } = useDeleteSelectedRows(selectedRowsOriginalIds);
+  const { onOpen } = useDeleteRecordsModal();
 
   return (
     <>
-      {" "}
       <div className="flex flex-col items-center gap-y-3 px-2 md:flex-row md:justify-between md:gap-y-0">
         <div className="flex items-center justify-start gap-x-3">
           <div className="text-sm text-gray-500">
@@ -112,14 +114,11 @@ export function DataTablePagination<TData>({
         </div>
       </div>
       {table.getFilteredSelectedRowModel().rows.length > 0 && (
-        <Button
-          onClick={async () => await deleteSelectedRows(entityName)}
-          variant="destructive"
-          className="mt-3"
-        >
+        <Button onClick={onOpen} variant="destructive" className="mt-3">
           Delete selected rows
         </Button>
       )}
+      <DeleteRecordsModal entityName={entityName} records={selectedRows} />
     </>
   );
 }

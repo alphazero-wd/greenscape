@@ -102,7 +102,7 @@ export {
 } from "./table";
 
 export { Checkbox } from "./checkbox";
-export { DataTable } from "./data-table/data-table";
+export * from "./data-table";
 export {
   Select,
   SelectContent,
@@ -114,5 +114,4 @@ export {
   SelectValue,
 } from "./select";
 
-export { DataTableColumnHeader } from "./data-table/data-table-column-header";
 export { Textarea } from "./textarea";

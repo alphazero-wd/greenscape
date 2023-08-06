@@ -20,7 +20,7 @@ export const useDeleteStore = (id: number) => {
       onClose();
       setTimeout(() => {
         router.refresh();
-        router.push("/store/5");
+        router.push("/");
       }, 1000);
     } catch (error) {
       toast.error("Something went wrong");

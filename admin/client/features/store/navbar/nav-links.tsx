@@ -11,7 +11,7 @@ export const NavLinks = () => {
   const pathname = usePathname();
 
   return (
-    <div className="mx-6 hidden items-center space-x-6 lg:flex">
+    <div className="mx-6 hidden items-center gap-x-6 lg:flex">
       {links.map((link) => (
         <Link
           key={link.href}

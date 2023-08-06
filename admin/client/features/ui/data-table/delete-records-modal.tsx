@@ -15,7 +15,7 @@ import { useDeleteRecordsModal } from "./use-delete-records-modal";
 
 interface DeleteRecordModalProps<TData extends { id: number; name: string }> {
   records: TData[];
-  entityName: "categories" | "sizes" | "products" | "brands" | "colors";
+  entityName: "categories" | "sizes" | "products" | "colors" | "billboards";
 }
 
 export const DeleteRecordsModal = <TData extends { id: number; name: string }>({

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 
 export const useNavCatalogLinks = () => {
-  return useMemo(
+  const catalogLinks = useMemo(
     () => [
       {
         title: "Categories",
@@ -20,16 +20,13 @@ export const useNavCatalogLinks = () => {
           "Allow customers to select the products that match their styles and preferences",
       },
       {
-        title: "Brands",
-        href: "/brands",
-        description: "For customers who want designer labels",
-      },
-      {
         title: "Billboards",
         href: "/billboards",
-        description: "Images carousel displayed on the home page with slogans",
+        description:
+          "Images carousel displayed on the home page for each store",
       },
     ],
     [],
   );
+  return catalogLinks;
 };

@@ -28,7 +28,7 @@ export const EditColorForm: React.FC<SettingsClientProps> = ({ color }) => {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="flex-1">Color label</FormLabel>
+              <FormLabel className="flex-1">Color name</FormLabel>
               <FormControl>
                 <Input
                   disabled={loading}

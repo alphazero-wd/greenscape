@@ -38,6 +38,7 @@ export const useCreateStore = () => {
       );
       toast.success("Store created");
       form.reset();
+      router.refresh();
       onClose();
       setTimeout(() => router.push(`/store/${id}`), 1000);
     } catch (error: any) {

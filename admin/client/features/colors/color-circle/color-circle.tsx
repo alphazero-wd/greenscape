@@ -7,7 +7,7 @@ interface ColorCircleProps {
 export const ColorCircle: React.FC<ColorCircleProps> = ({ hexCode }) => {
   return (
     <div
-      className="h-8 w-8 rounded-full p-3 ring-1 ring-gray-300"
+      className="h-8 w-8 rounded-full border border-black border-opacity-10 p-3"
       style={{ backgroundColor: hexCode }}
     />
   );

@@ -28,13 +28,13 @@ import {
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData extends { id: number; name: string }, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  entityName: "categories" | "sizes" | "products" | "colors";
+  entityName: "categories" | "sizes" | "products" | "colors" | "billboards";
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends { id: number; name: string }, TValue>({
   columns,
   data,
   entityName,

@@ -11,7 +11,7 @@ export const useDeleteRecords = (ids: number[]) => {
   const [loading, setLoading] = useState(false);
   const pathname = usePathname();
   const deleteSelectedRows = async (
-    entityName: "categories" | "colors" | "sizes" | "products" | "brands",
+    entityName: "categories" | "colors" | "sizes" | "products" | "billboards",
   ) => {
     try {
       setLoading(true);

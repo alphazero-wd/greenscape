@@ -31,31 +31,14 @@ CREATE TABLE "Color" (
     CONSTRAINT "Color_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
-CREATE TABLE "Brand" (
-    "id" SERIAL NOT NULL,
-    "name" VARCHAR(20) NOT NULL,
-    "storeId" INTEGER NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "Brand_pkey" PRIMARY KEY ("id")
-);
-
 -- CreateIndex
 CREATE UNIQUE INDEX "Size_storeId_label_key" ON "Size"("storeId", "label");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Color_storeId_hexCode_name_key" ON "Color"("storeId", "hexCode", "name");
 
--- CreateIndex
-CREATE UNIQUE INDEX "Brand_name_storeId_key" ON "Brand"("name", "storeId");
-
 -- AddForeignKey
-ALTER TABLE "Size" ADD CONSTRAINT "Size_storeId_fkey" FOREIGN KEY ("storeId") REFERENCES "Store"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Size" ADD CONSTRAINT "Size_storeId_fkey" FOREIGN KEY ("storeId") REFERENCES "Store"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Color" ADD CONSTRAINT "Color_storeId_fkey" FOREIGN KEY ("storeId") REFERENCES "Store"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Brand" ADD CONSTRAINT "Brand_storeId_fkey" FOREIGN KEY ("storeId") REFERENCES "Store"("id") ON DELETE CASCADE ON UPDATE CASCADE;

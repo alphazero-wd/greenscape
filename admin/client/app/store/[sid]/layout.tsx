@@ -8,6 +8,7 @@ import {
 } from "@/features/store/navbar";
 import { getStores } from "@/features/store/utils";
 import { getCurrentUser } from "@/features/user/utils";
+import { BellIcon } from "@heroicons/react/24/outline";
 import { redirect } from "next/navigation";
 
 export default async function StoreLayout({
@@ -28,11 +29,12 @@ export default async function StoreLayout({
             <NavLinks />
           </div>
           <div className="flex items-center gap-x-2">
-            <NavMenuButton />
+            <BellIcon className="h-5 w-5 cursor-pointer text-gray-400 hover:text-gray-500" />
             <NavUser />
+            <NavMenuButton />
           </div>
         </div>
-      </nav>
+      </nav>{" "}
       <CreateStoreModal />
       <MobileSidebarNav />
       <div className="container max-w-7xl px-4 py-8">{children}</div>

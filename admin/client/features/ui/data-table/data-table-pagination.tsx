@@ -21,7 +21,7 @@ import { useDeleteRecordsModal } from "./use-delete-records-modal";
 
 interface DataTablePaginationProps<TData extends { id: number; name: string }> {
   table: Table<TData>;
-  entityName: "categories" | "sizes" | "colors" | "products";
+  entityName: "categories" | "sizes" | "colors" | "products" | "billboards";
 }
 
 export function DataTablePagination<

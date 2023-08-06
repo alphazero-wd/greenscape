@@ -76,13 +76,17 @@ export class ColorsService {
   }
 
   async remove(ids: number[]) {
-    const { count } = await this.prisma.color.deleteMany({
-      where: { id: { in: ids } },
-    });
-    if (count === 0)
-      throw new NotFoundException({
-        success: false,
-        message: 'Please select 1 or more records to delete',
+    return this.prisma.$transaction(async (transactionClient) => {
+      const { count } = await transactionClient.color.deleteMany({
+        where: { id: { in: ids } },
       });
+      if (count !== ids.length)
+        throw new NotFoundException({
+          success: false,
+          message: `${
+            ids.length - count
+          } colors were not deleted because they were not found`,
+        });
+    });
   }
 }

@@ -30,10 +30,11 @@ model Store {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  owner      User       @relation(fields: [ownerId], references: [id])
+  owner      User        @relation(fields: [ownerId], references: [id])
   categories Category[]
   sizes      Size[]
   colors     Color[]
+  billboards Billboard[]
 }
 
 model Category {
@@ -72,6 +73,26 @@ model Color {
   store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
 
   @@unique([storeId, hexCode, name])
+}
+
+model Billboard {
+  id         Int      @id @default(autoincrement())
+  storeId    Int
+  imageId    Int      @unique
+  isFeatured Boolean  @default(true)
+  createdAt  DateTime @default(now())
+
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  image File  @relation(fields: [imageId], references: [id])
+}
+
+model File {
+  id       Int    @id @default(autoincrement())
+  filename String
+  path     String
+  mimetype String
+
+  billboard Billboard?
 }
 
 enum Role {

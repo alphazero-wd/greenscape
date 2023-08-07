@@ -1,7 +1,7 @@
 import {
   CreateCategoryButton,
   CreateCategoryModal,
-} from "@/features/categories/create-category-modal";
+} from "@/features/categories/create-category";
 import { columns } from "@/features/categories/utils";
 import { getStoreById } from "@/features/store/utils";
 import { Breadcrumb, DataTable } from "@/features/ui";

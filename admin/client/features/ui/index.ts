@@ -114,4 +114,5 @@ export {
   SelectValue,
 } from "./select";
 
+export { Dropzone } from "./dropzone";
 export { Textarea } from "./textarea";

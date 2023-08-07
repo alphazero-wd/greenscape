@@ -36,7 +36,7 @@ export const useCreateStore = () => {
         values,
         { withCredentials: true },
       );
-      toast.success("Store created");
+      toast.success("Store created. Redirecting...");
       form.reset();
       router.refresh();
       onClose();

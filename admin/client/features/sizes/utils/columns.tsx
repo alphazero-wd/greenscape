@@ -8,7 +8,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Size } from "../types";
 
-export const columns: ColumnDef<Size>[] = [
+export const columns: ColumnDef<Omit<Size, "label"> & { name: string }>[] = [
   {
     id: "select",
     header: ({ table }) => (

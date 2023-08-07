@@ -1,7 +1,7 @@
 import {
   CreateSizeButton,
   CreateSizeModal,
-} from "@/features/sizes/create-size-modal";
+} from "@/features/sizes/create-size";
 import { columns } from "@/features/sizes/utils";
 import { getStoreById } from "@/features/store/utils";
 import { Breadcrumb, DataTable } from "@/features/ui";

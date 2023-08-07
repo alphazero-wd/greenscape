@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
-import { useCreateStoreModal } from "../create-store-modal";
+import { useCreateStoreModal } from "../create-store";
 import { Store } from "../types";
 
 const formSchema = z.object({

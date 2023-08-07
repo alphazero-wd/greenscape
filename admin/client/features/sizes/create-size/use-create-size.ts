@@ -34,7 +34,7 @@ export const useCreateSize = (storeId: number) => {
         { ...values, storeId },
         { withCredentials: true },
       );
-      toast.success("Size created");
+      toast.success("Size created. Redirecting...");
       form.reset();
       router.refresh();
       onClose();

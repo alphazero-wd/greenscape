@@ -1,7 +1,7 @@
 import {
   CreateStoreButton,
   CreateStoreModal,
-} from "@/features/store/create-store-modal";
+} from "@/features/store/create-store";
 import { getStores } from "@/features/store/utils";
 import { Button } from "@/features/ui";
 import { getCurrentUser } from "@/features/user/utils";

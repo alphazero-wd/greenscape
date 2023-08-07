@@ -1,10 +1,9 @@
 import {
-  CreateColorButton,
-  CreateColorModal,
-} from "@/features/colors/create-color";
-import { columns } from "@/features/colors/utils";
+  CreateBillboardButton,
+  CreateBillboardModal,
+} from "@/features/billboards/create-billboard";
 import { getStoreById } from "@/features/store/utils";
-import { Breadcrumb, DataTable } from "@/features/ui";
+import { Breadcrumb } from "@/features/ui";
 import { redirect } from "next/navigation";
 
 interface ColorsPageProps {
@@ -30,22 +29,16 @@ export default async function ColorsPage({ params: { sid } }: ColorsPageProps) {
           />
         </div>
         <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-          Colors ({store.colors.length})
+          Billboards ({store.colors.length})
         </h1>
 
         <div className="mt-3">
-          <CreateColorButton />
+          <CreateBillboardButton />
         </div>
 
-        <div className="mt-6 space-y-8">
-          <DataTable
-            entityName="colors"
-            data={store.colors}
-            columns={columns}
-          />
-        </div>
+        <div className="mt-6 space-y-8"></div>
       </div>
-      <CreateColorModal storeId={store.id} />
+      <CreateBillboardModal storeId={store.id.toString()} />
     </>
   );
 }

@@ -6,37 +6,33 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
-import { useCreateColorModal } from "./use-create-color-modal";
+import { useCreateCategoryModal } from "./use-create-category-modal";
 
 const formSchema = z.object({
   name: z
     .string()
-    .min(1, { message: "Color name must be between 1 and 20 characters" })
-    .max(20, { message: "Color name must be between 1 and 20 characters" }),
-
-  hexCode: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, {
-    message: "Invalid hex color code",
-  }),
+    .min(1, { message: "Category name must be between 1 and 20 characters" })
+    .max(20, { message: "Category name must be between 1 and 20 characters" }),
 });
 
-export const useCreateColor = (storeId: number) => {
+export const useCreateCategory = (storeId: number) => {
   const [loading, setLoading] = useState(false);
-  const { onClose } = useCreateColorModal();
+  const { onClose } = useCreateCategoryModal();
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { name: "", hexCode: "#fff" },
+    defaultValues: { name: "" },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setLoading(true);
       await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/colors`,
+        `${process.env.NEXT_PUBLIC_API_URL}/categories/`,
         { ...values, storeId },
         { withCredentials: true },
       );
-      toast.success("Color created");
+      toast.success("Category created. Redirecting...");
       form.reset();
       router.refresh();
       onClose();

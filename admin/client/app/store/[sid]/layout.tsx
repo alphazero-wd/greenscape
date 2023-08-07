@@ -1,4 +1,4 @@
-import { CreateStoreModal } from "@/features/store/create-store-modal";
+import { CreateStoreModal } from "@/features/store/create-store";
 import {
   MobileSidebarNav,
   NavLinks,

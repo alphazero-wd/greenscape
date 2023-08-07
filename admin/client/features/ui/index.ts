@@ -115,4 +115,5 @@ export {
 } from "./select";
 
 export { Dropzone } from "./dropzone";
+export { Switch } from "./switch";
 export { Textarea } from "./textarea";

@@ -13,16 +13,24 @@ import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { FeaturedSwitch, ImageUpload } from "../form";
+import { useCreateBillboard } from "./use-create-billboard";
 import { useCreateBillboardModal } from "./use-create-billboard-modal";
 
 interface CreateBillboardModalProps {
   storeId: string;
 }
 
-const loading = false;
-export const CreateBillboardModal: React.FC<CreateBillboardModalProps> = () => {
+export const CreateBillboardModal: React.FC<CreateBillboardModalProps> = ({
+  storeId,
+}) => {
   const [files, setFiles] = useState<(File & { preview: string })[]>([]);
-  const [checked, setChecked] = useState(true);
+  const [isFeatured, setIsFeatured] = useState(true);
+  const { isOpen, onClose } = useCreateBillboardModal();
+  const { loading, createBillboard } = useCreateBillboard({
+    image: files[0] as File,
+    storeId,
+    isFeatured,
+  });
 
   const dropzoneState = useDropzone({
     maxSize: Math.pow(1024, 2) * 2,
@@ -42,8 +50,6 @@ export const CreateBillboardModal: React.FC<CreateBillboardModalProps> = () => {
     },
   });
 
-  const { isOpen, onClose } = useCreateBillboardModal();
-
   useEffect(() => {
     // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
     if (!isOpen) setFiles([]);
@@ -59,27 +65,30 @@ export const CreateBillboardModal: React.FC<CreateBillboardModalProps> = () => {
             Create new billboard to promote your brand and products
           </DialogDescription>
         </DialogHeader>
-        <div className="space-y-4">
+        <form onSubmit={createBillboard} className="space-y-4">
           <ImageUpload dropzoneState={dropzoneState} files={files} />
-          <FeaturedSwitch checked={checked} setChecked={setChecked} />
-        </div>
+          <FeaturedSwitch
+            isFeatured={isFeatured}
+            setIsFeatured={setIsFeatured}
+          />
 
-        <DialogFooter>
-          <div className="flex items-center gap-x-4">
-            <Button
-              onClick={onClose}
-              disabled={loading}
-              type="button"
-              variant="outline"
-            >
-              Cancel
-            </Button>
-            <Button disabled={loading} type="submit">
-              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Create
-            </Button>
-          </div>
-        </DialogFooter>
+          <DialogFooter>
+            <div className="flex items-center gap-x-4">
+              <Button
+                onClick={onClose}
+                disabled={loading}
+                type="button"
+                variant="outline"
+              >
+                Cancel
+              </Button>
+              <Button disabled={loading} type="submit">
+                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Create
+              </Button>
+            </div>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );

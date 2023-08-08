@@ -25,7 +25,7 @@ export default async function SizesPage({ params: { sid } }: SizesPageProps) {
             links={[
               { name: "Stores", href: "/" },
               { name: store.name, href: `/store/${store.id}` },
-              { name: "Sizes", href: `/store/${store.id}/categories` },
+              { name: "Sizes", href: `/store/${store.id}/sizes` },
             ]}
           />
         </div>

@@ -1,6 +1,6 @@
-import { OmitType, PartialType } from '@nestjs/mapped-types';
-import { CreateBillboardDto } from './create-billboard.dto';
+import { IsBoolean } from 'class-validator';
 
-export class UpdateBillboardDto extends PartialType(
-  OmitType(CreateBillboardDto, ['storeId']),
-) {}
+export class UpdateBillboardDto {
+  @IsBoolean()
+  isFeatured: boolean;
+}

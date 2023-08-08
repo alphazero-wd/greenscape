@@ -3,13 +3,13 @@ import { Label, Switch } from "@/features/ui";
 import { Dispatch } from "react";
 
 interface FeaturedSwitchProps {
-  checked: boolean;
-  setChecked: Dispatch<boolean>;
+  isFeatured: boolean;
+  setIsFeatured: Dispatch<boolean>;
 }
 
 export const FeaturedSwitch: React.FC<FeaturedSwitchProps> = ({
-  checked,
-  setChecked,
+  isFeatured,
+  setIsFeatured,
 }) => {
   return (
     <div className="flex flex-row items-center justify-between rounded-lg border p-4">
@@ -19,7 +19,10 @@ export const FeaturedSwitch: React.FC<FeaturedSwitchProps> = ({
           Decide whether the billboard will be put on display on the store
         </p>
       </div>
-      <Switch checked={checked} onCheckedChange={() => setChecked(!checked)} />
+      <Switch
+        checked={isFeatured}
+        onCheckedChange={() => setIsFeatured(!isFeatured)}
+      />
     </div>
   );
 };

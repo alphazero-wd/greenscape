@@ -36,7 +36,7 @@ export const useCreateColor = (storeId: number) => {
         { ...values, storeId },
         { withCredentials: true },
       );
-      toast.success("Color created. Redirecting...");
+      toast.success("Color created");
       form.reset();
       router.refresh();
       onClose();

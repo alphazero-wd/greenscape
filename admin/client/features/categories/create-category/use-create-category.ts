@@ -32,7 +32,7 @@ export const useCreateCategory = (storeId: number) => {
         { ...values, storeId },
         { withCredentials: true },
       );
-      toast.success("Category created. Redirecting...");
+      toast.success("Category created");
       form.reset();
       router.refresh();
       onClose();

@@ -25,7 +25,7 @@ export default async function ColorsPage({ params: { sid } }: ColorsPageProps) {
             links={[
               { name: "Stores", href: "/" },
               { name: store.name, href: `/store/${store.id}` },
-              { name: "Colors", href: `/store/${store.id}/categories` },
+              { name: "Colors", href: `/store/${store.id}/colors` },
             ]}
           />
         </div>

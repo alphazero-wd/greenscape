@@ -23,7 +23,7 @@ export const DeleteRecordsModal = <TData extends { id: number; name: string }>({
   entityName,
 }: DeleteRecordModalProps<TData>) => {
   const { isOpen, onClose } = useDeleteRecordsModal();
-  const { loading, deleteSelectedRows } = useDeleteRecords(
+  const { loading, deleteRecords } = useDeleteRecords(
     records.map((record) => record.id),
   );
 
@@ -53,7 +53,7 @@ export const DeleteRecordsModal = <TData extends { id: number; name: string }>({
             </Button>
             <Button
               variant="destructive"
-              onClick={async () => await deleteSelectedRows(entityName)}
+              onClick={async () => await deleteRecords(entityName)}
               disabled={loading}
             >
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

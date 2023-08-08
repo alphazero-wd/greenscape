@@ -117,3 +117,9 @@ export {
 export { Dropzone } from "./dropzone";
 export { Switch } from "./switch";
 export { Textarea } from "./textarea";
+export {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./tooltip";

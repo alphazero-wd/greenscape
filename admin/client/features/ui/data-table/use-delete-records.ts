@@ -10,7 +10,7 @@ export const useDeleteRecords = (ids: number[]) => {
   const { onClose } = useDeleteRecordsModal();
   const [loading, setLoading] = useState(false);
   const pathname = usePathname();
-  const deleteSelectedRows = async (
+  const deleteRecords = async (
     entityName: "categories" | "colors" | "sizes" | "products" | "billboards",
   ) => {
     try {
@@ -37,8 +37,5 @@ export const useDeleteRecords = (ids: number[]) => {
     }
   };
 
-  return {
-    deleteSelectedRows,
-    loading,
-  };
+  return { deleteRecords, loading };
 };

@@ -26,6 +26,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         </p>
         {files.map((file) => (
           <Image
+            key={file.preview}
             src={file.preview}
             alt={file.name}
             fill

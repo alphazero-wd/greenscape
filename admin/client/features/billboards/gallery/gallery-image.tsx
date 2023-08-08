@@ -1,6 +1,7 @@
 "use client";
 import {
   Button,
+  Checkbox,
   Tooltip,
   TooltipContent,
   TooltipProvider,
@@ -15,8 +16,9 @@ import {
 import Image from "next/image";
 import { useMemo } from "react";
 import { Billboard } from "../types";
-import { useBillboard } from "./use-billboard";
 import { useBillboardModal } from "./use-billboard-modal";
+import { useBillboards } from "./use-billboards";
+import { useDeleteBillboardsModal } from "./use-delete-billboards-modal";
 
 interface GalleryImageProps {
   billboard: Billboard;
@@ -24,7 +26,12 @@ interface GalleryImageProps {
 
 export const GalleryImage: React.FC<GalleryImageProps> = ({ billboard }) => {
   const { onOpen } = useBillboardModal();
-  const { toggleFeaturedBillboard } = useBillboard();
+  const { onOpen: onDeleteBillboardOpen } = useDeleteBillboardsModal();
+  const {
+    selectedBillboardIds,
+    toggleSelectedBillboardIds,
+    toggleFeaturedBillboard,
+  } = useBillboards();
 
   const actions = useMemo(
     () =>
@@ -46,7 +53,7 @@ export const GalleryImage: React.FC<GalleryImageProps> = ({ billboard }) => {
           name: "Remove billboard",
           icon: TrashIcon,
           variant: "destructive",
-          onClick: () => {},
+          onClick: () => onDeleteBillboardOpen([billboard.id]),
         },
       ] as const,
     [billboard],
@@ -54,6 +61,11 @@ export const GalleryImage: React.FC<GalleryImageProps> = ({ billboard }) => {
 
   return (
     <li className="group relative cursor-pointer">
+      <Checkbox
+        className="absolute right-4 top-4 z-50 bg-white"
+        checked={selectedBillboardIds.includes(billboard.id)}
+        onCheckedChange={() => toggleSelectedBillboardIds(billboard.id)}
+      />
       <div className="lg:aspect-none aspect-[4/3] w-full overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:h-80">
         <Image
           alt="Billboard image"

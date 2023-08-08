@@ -1,36 +1,53 @@
 "use client";
 
-import { Label } from "@/features/ui";
-import { useEffect, useMemo, useState } from "react";
+import { Button, Label } from "@/features/ui";
+import { useEffect, useMemo } from "react";
+import { toast } from "react-hot-toast";
 import { Billboard } from "../types";
 import { groupBillboardsByDates } from "../utils";
 import { BillboardModal } from "./billboard-modal";
+import { DeleteBillboardsModal } from "./delete-billboards-modal";
 import { GalleryImage } from "./gallery-image";
-import { useBillboard } from "./use-billboard";
+import { useBillboards } from "./use-billboards";
+import { useDeleteBillboardsModal } from "./use-delete-billboards-modal";
 
 interface GalleryProps {
   data: Billboard[];
 }
 
 export const Gallery: React.FC<GalleryProps> = ({ data }) => {
-  const [mounted, setMounted] = useState(false);
-  const { billboards, getBillboards } = useBillboard();
+  const { onOpen } = useDeleteBillboardsModal();
+  const { billboards, selectedBillboardIds, getBillboards } = useBillboards();
+
+  useEffect(() => {
+    toast.dismiss();
+    if (selectedBillboardIds.length > 0)
+      toast(
+        <div className="flex items-center justify-between gap-x-4">
+          <span className="font-medium">
+            {selectedBillboardIds.length}{" "}
+            {selectedBillboardIds.length === 1 ? "billboard" : "billboards"}{" "}
+            selected
+          </span>
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={() => onOpen(selectedBillboardIds)}
+          >
+            Delete
+          </Button>
+        </div>,
+      );
+  }, [selectedBillboardIds]);
 
   useEffect(() => {
     getBillboards(data);
   }, [data]);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   const photosGroups = useMemo(
     () => groupBillboardsByDates(billboards),
     [billboards],
   );
-
-  // add skeleton loading
-  if (!mounted) return null;
 
   return (
     <>
@@ -45,6 +62,7 @@ export const Gallery: React.FC<GalleryProps> = ({ data }) => {
         </div>
       ))}
       <BillboardModal />
+      <DeleteBillboardsModal />
     </>
   );
 };

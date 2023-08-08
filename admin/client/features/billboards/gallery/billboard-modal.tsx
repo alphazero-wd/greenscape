@@ -10,11 +10,11 @@ import { Label } from "@radix-ui/react-label";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { FeaturedSwitch } from "../form";
-import { useBillboard } from "./use-billboard";
 import { useBillboardModal } from "./use-billboard-modal";
+import { useBillboards } from "./use-billboards";
 
-export const BillboardModal = ({}) => {
-  const { billboards, toggleFeaturedBillboard } = useBillboard();
+export const BillboardModal = () => {
+  const { billboards, toggleFeaturedBillboard } = useBillboards();
   const { isOpen, onClose, id } = useBillboardModal();
   const billboard = useMemo(
     () => billboards.find((billboard) => billboard.id === id),

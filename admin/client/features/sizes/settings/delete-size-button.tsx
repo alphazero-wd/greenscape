@@ -1,9 +1,9 @@
 "use client";
-import { Button, Label } from "@/features/ui";
-import { useDeleteSizeModal } from "./use-delete-size-modal";
+import { Button, Label, useDeleteRecordsModal } from "@/features/ui";
 
 export const DeleteSizeButton = () => {
-  const { onOpen } = useDeleteSizeModal();
+  const { onOpen } = useDeleteRecordsModal();
+
   return (
     <div>
       <Label>Delete size</Label>

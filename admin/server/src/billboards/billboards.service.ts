@@ -72,9 +72,6 @@ export class BillboardsService {
             ids.length - billboardsToBeRemoved.length
           } categories were not deleted because they were not found`,
         });
-      await transactionClient.billboard.deleteMany({
-        where: { id: { in: ids } },
-      });
       const imageIds = billboardsToBeRemoved.map(({ imageId }) => imageId);
       await this.filesService.remove(imageIds);
     });

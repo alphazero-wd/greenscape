@@ -1,6 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UploadFileDto } from './dto';
+import { rm } from 'fs/promises';
+import { join } from 'path';
 
 @Injectable()
 export class FilesService {
@@ -24,6 +26,13 @@ export class FilesService {
 
   async remove(ids: number[]) {
     return this.prisma.$transaction(async (transactionClient) => {
+      const files = await transactionClient.file.findMany({
+        where: {
+          id: { in: ids },
+        },
+      });
+      files.forEach(async (file) => await rm(join(process.cwd(), file.path)));
+
       const { count } = await transactionClient.file.deleteMany({
         where: { id: { in: ids } },
       });

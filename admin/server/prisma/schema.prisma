@@ -35,6 +35,7 @@ model Store {
   sizes      Size[]
   colors     Color[]
   billboards Billboard[]
+  products   Product[]
 }
 
 model Category {
@@ -44,7 +45,8 @@ model Category {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  store   Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  product Product[]
 
   @@unique([storeId, name])
 }
@@ -57,7 +59,8 @@ model Size {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  store Store @relation(fields: [storeId], references: [id])
+  store    Store     @relation(fields: [storeId], references: [id])
+  products Product[]
 
   @@unique([storeId, label])
 }
@@ -70,7 +73,8 @@ model Color {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  store    Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  products Product[]
 
   @@unique([storeId, hexCode, name])
 }
@@ -83,16 +87,44 @@ model Billboard {
   createdAt  DateTime @default(now())
 
   store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  image File  @relation(fields: [imageId], references: [id])
+  image File  @relation(fields: [imageId], references: [id], onDelete: Cascade)
 }
 
 model File {
-  id       Int    @id @default(autoincrement())
-  filename String
-  path     String
-  mimetype String
+  id        Int    @id @default(autoincrement())
+  filename  String
+  path      String
+  mimetype  String
+  productId Int?
 
   billboard Billboard?
+  product   Product?   @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model Product {
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(120)
+  price      Int
+  desc       String?
+  storeId    Int
+  categoryId Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  images   File[]
+  sizes    Size[]
+  colors   Color[]
+  category Category @relation(references: [id], fields: [categoryId])
+  store    Store    @relation(references: [id], fields: [storeId], onDelete: Cascade)
+}
+
+model ProductsOnSizesColors {
+  sizeId    Int
+  colorId   Int
+  productId Int
+  qty       Int
+
+  @@id([sizeId, colorId, productId])
 }
 
 enum Role {

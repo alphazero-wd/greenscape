@@ -13,27 +13,23 @@ const formSchema = z.object({
     .string()
     .min(1, { message: "Size label must be between 1 and 20 characters" })
     .max(20, { message: "Size label must be between 1 and 20 characters" }),
-
-  desc: z.string().optional(),
 });
 
-export const useCreateSize = (storeId: number) => {
+export const useCreateSize = () => {
   const [loading, setLoading] = useState(false);
   const { onClose } = useCreateSizeModal();
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { label: "", desc: "" },
+    defaultValues: { label: "" },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setLoading(true);
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/sizes`,
-        { ...values, storeId },
-        { withCredentials: true },
-      );
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/sizes`, values, {
+        withCredentials: true,
+      });
       toast.success("Size created");
       form.reset();
       router.refresh();

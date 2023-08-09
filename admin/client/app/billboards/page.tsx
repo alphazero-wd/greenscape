@@ -1,47 +1,37 @@
-import {
-  CreateBillboardButton,
-  CreateBillboardModal,
-} from "@/features/billboards/create-billboard";
+import { CreateBillboardModal } from "@/features/billboards/create-billboard";
 import { Gallery } from "@/features/billboards/gallery";
-import { getStoreById } from "@/features/store/utils";
+import { Billboard } from "@/features/billboards/types";
 import { Breadcrumb } from "@/features/ui";
+import { getCurrentUser } from "@/features/user/utils";
+import axios from "axios";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-interface BillboardsPageProps {
-  params: {
-    sid: string;
-  };
-}
+const getBillboards = async (): Promise<Billboard[]> => {
+  const {
+    data: { data },
+  } = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/billboards?featured=false`,
+    {
+      headers: { Cookie: cookies().toString() },
+    },
+  );
+  return data as Billboard[];
+};
 
-export default async function BillboardsPage({
-  params: { sid },
-}: BillboardsPageProps) {
-  const store = await getStoreById(sid);
-  if (!store) redirect("/not-found");
+export default async function BillboardsPage() {
+  const user = await getCurrentUser();
+  if (!user) redirect("/auth/login");
+  const billboards = await getBillboards();
 
   return (
     <>
       <div className="mb-4">
-        <Breadcrumb
-          links={[
-            { name: "Stores", href: "/" },
-            { name: store.name, href: `/store/${store.id}` },
-            { name: "Billboards", href: `/store/${store.id}/billboards` },
-          ]}
-        />
+        <Breadcrumb links={[{ name: "Billboards", href: `/billboards` }]} />
       </div>
-      <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-        Billboards ({store.billboards.length})
-      </h1>
+      <Gallery data={billboards} />
 
-      <div className="mt-3">
-        <CreateBillboardButton />
-      </div>
-
-      <div className="mt-6">
-        <Gallery data={store.billboards} />
-      </div>
-      <CreateBillboardModal storeId={store.id.toString()} />
+      <CreateBillboardModal />
     </>
   );
 }

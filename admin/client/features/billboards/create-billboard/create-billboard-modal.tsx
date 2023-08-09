@@ -16,19 +16,12 @@ import { FeaturedSwitch, ImageUpload } from "../form";
 import { useCreateBillboard } from "./use-create-billboard";
 import { useCreateBillboardModal } from "./use-create-billboard-modal";
 
-interface CreateBillboardModalProps {
-  storeId: string;
-}
-
-export const CreateBillboardModal: React.FC<CreateBillboardModalProps> = ({
-  storeId,
-}) => {
+export const CreateBillboardModal = () => {
   const [files, setFiles] = useState<(File & { preview: string })[]>([]);
   const [isFeatured, setIsFeatured] = useState(true);
   const { isOpen, onClose } = useCreateBillboardModal();
   const { loading, createBillboard } = useCreateBillboard({
     image: files[0] as File,
-    storeId,
     isFeatured,
   });
 
@@ -69,7 +62,7 @@ export const CreateBillboardModal: React.FC<CreateBillboardModalProps> = ({
           <ImageUpload dropzoneState={dropzoneState} files={files} />
           <FeaturedSwitch
             isFeatured={isFeatured}
-            setIsFeatured={setIsFeatured}
+            onCheckedChange={setIsFeatured}
           />
 
           <DialogFooter>

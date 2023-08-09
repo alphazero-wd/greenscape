@@ -15,9 +15,9 @@ import {
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { useMemo } from "react";
+import { useBillboardsStore } from "../contexts";
 import { Billboard } from "../types";
 import { useBillboardModal } from "./use-billboard-modal";
-import { useBillboards } from "./use-billboards";
 import { useDeleteBillboardsModal } from "./use-delete-billboards-modal";
 
 interface GalleryImageProps {
@@ -31,13 +31,13 @@ export const GalleryImage: React.FC<GalleryImageProps> = ({ billboard }) => {
     selectedBillboardIds,
     toggleSelectedBillboardIds,
     toggleFeaturedBillboard,
-  } = useBillboards();
+  } = useBillboardsStore();
 
   const actions = useMemo(
     () =>
       [
         {
-          name: !billboard.isFeatured ? "Feature" : "Unfeature",
+          name: !billboard.isFeatured ? "Feature" : "Archive",
           icon: !billboard.isFeatured ? EyeIcon : EyeSlashIcon,
           variant: !billboard.isFeatured ? "secondary" : "default",
           onClick: async () =>

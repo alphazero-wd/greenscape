@@ -1,15 +1,14 @@
 "use client";
 import { Label, Switch } from "@/features/ui";
-import { Dispatch } from "react";
 
 interface FeaturedSwitchProps {
   isFeatured: boolean;
-  setIsFeatured: Dispatch<boolean>;
+  onCheckedChange: (checked: boolean) => void;
 }
 
 export const FeaturedSwitch: React.FC<FeaturedSwitchProps> = ({
   isFeatured,
-  setIsFeatured,
+  onCheckedChange,
 }) => {
   return (
     <div className="flex flex-row items-center justify-between rounded-lg border p-4">
@@ -19,10 +18,7 @@ export const FeaturedSwitch: React.FC<FeaturedSwitchProps> = ({
           Decide whether the billboard will be put on display on the store
         </p>
       </div>
-      <Switch
-        checked={isFeatured}
-        onCheckedChange={() => setIsFeatured(!isFeatured)}
-      />
+      <Switch checked={isFeatured} onCheckedChange={onCheckedChange} />
     </div>
   );
 };

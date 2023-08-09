@@ -3,7 +3,6 @@ import {
   Button,
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -16,24 +15,21 @@ import {
   Input,
 } from "@/features/ui";
 import { Loader2 } from "lucide-react";
-import { useCreateSize } from "./use-create-size";
-import { useCreateSizeModal } from "./use-create-size-modal";
+import { useEditSize } from "./use-edit-size";
+import { useEditSizeModal } from "./use-edit-size-modal";
 
-export const CreateSizeModal = () => {
-  const { isOpen, onClose } = useCreateSizeModal();
-  const { loading, handleSubmit, form } = useCreateSize();
+export const EditSizeModal = () => {
+  const { isOpen, onClose, id } = useEditSizeModal();
+  const { loading, handleSubmit, form } = useEditSize(id);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Create size</DialogTitle>
-          <DialogDescription>
-            Create new size for better fitability (usually for clothes, shoes)
-          </DialogDescription>
+          <DialogTitle>Edit size</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit}>
             <FormField
               control={form.control}
               name="label"
@@ -67,7 +63,7 @@ export const CreateSizeModal = () => {
                 </Button>
                 <Button disabled={loading} type="submit">
                   {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Create
+                  Edit
                 </Button>
               </div>
             </DialogFooter>

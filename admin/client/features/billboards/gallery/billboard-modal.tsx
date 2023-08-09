@@ -9,12 +9,12 @@ import {
 import { Label } from "@radix-ui/react-label";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
+import { useBillboardsStore } from "../contexts";
 import { FeaturedSwitch } from "../form";
 import { useBillboardModal } from "./use-billboard-modal";
-import { useBillboards } from "./use-billboards";
 
 export const BillboardModal = () => {
-  const { billboards, toggleFeaturedBillboard } = useBillboards();
+  const { billboards, toggleFeaturedBillboard } = useBillboardsStore();
   const { isOpen, onClose, id } = useBillboardModal();
   const billboard = useMemo(
     () => billboards.find((billboard) => billboard.id === id),
@@ -26,12 +26,6 @@ export const BillboardModal = () => {
   useEffect(() => {
     if (billboard) setIsFeatured(billboard.isFeatured);
   }, [billboard]);
-
-  useEffect(() => {
-    // do not make the initial request
-    if (billboard && billboard.isFeatured !== isFeatured)
-      toggleFeaturedBillboard(billboard.id, isFeatured);
-  }, [isFeatured]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -59,7 +53,10 @@ export const BillboardModal = () => {
 
           <FeaturedSwitch
             isFeatured={isFeatured}
-            setIsFeatured={setIsFeatured}
+            onCheckedChange={() => {
+              toggleFeaturedBillboard(id, !isFeatured);
+              setIsFeatured(!isFeatured);
+            }}
           />
         </div>
       </DialogContent>

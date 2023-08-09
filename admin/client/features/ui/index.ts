@@ -71,6 +71,7 @@ export { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 
 export {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,

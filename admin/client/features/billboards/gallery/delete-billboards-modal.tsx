@@ -11,14 +11,14 @@ import {
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useBillboards } from "./use-billboards";
+import { useBillboardsStore } from "../contexts";
 import { useDeleteBillboardsModal } from "./use-delete-billboards-modal";
 
 export const DeleteBillboardsModal = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { ids, isOpen, onClose } = useDeleteBillboardsModal();
-  const { deleteBillboards } = useBillboards();
+  const { deleteBillboards } = useBillboardsStore();
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

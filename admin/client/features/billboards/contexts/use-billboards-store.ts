@@ -1,22 +1,25 @@
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { create } from "zustand";
+import { useSwitchFeatured } from "../form";
 import { Billboard } from "../types";
-import { useSwitchFeatured } from "./use-switch-featured";
 
 interface BillboardsStore {
   billboards: Billboard[];
   selectedBillboardIds: number[];
   getBillboards: (billboards: Billboard[]) => void;
+  createBillboard: (billboard: Billboard) => void;
   toggleFeaturedBillboard: (id: number, isFeatured: boolean) => Promise<void>;
   toggleSelectedBillboardIds: (id: number) => void;
   deleteBillboards: (ids: number[]) => Promise<void>;
 }
 
-export const useBillboards = create<BillboardsStore>((set) => ({
+export const useBillboardsStore = create<BillboardsStore>((set) => ({
   billboards: [],
   selectedBillboardIds: [],
   getBillboards: (billboards) => set({ billboards }),
+  createBillboard: (billboard) =>
+    set(({ billboards }) => ({ billboards: [...billboards, billboard] })),
   toggleFeaturedBillboard: async (id, isFeatured) => {
     const { switchFeatured } = useSwitchFeatured();
     await switchFeatured(id.toString(), isFeatured);

@@ -9,7 +9,7 @@ export const CreateSizeButton = () => {
   return (
     <Button onClick={onOpen} variant="outline">
       <PlusIcon className="mr-2 h-4 w-4" />
-      Create new color
+      Create new size
     </Button>
   );
 };

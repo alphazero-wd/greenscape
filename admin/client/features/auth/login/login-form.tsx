@@ -1,5 +1,4 @@
 "use client";
-import { useLogin } from "@/features/auth/hooks";
 import {
   Button,
   Form,
@@ -11,6 +10,7 @@ import {
   Input,
 } from "@/features/ui";
 import { Loader2 } from "lucide-react";
+import { useLogin } from "./use-login";
 
 export const LoginForm = () => {
   const { form, loading, handleSubmit } = useLogin();

@@ -8,13 +8,12 @@ import {
   Param,
   Delete,
   UseGuards,
-  Res,
   ParseIntPipe,
-  StreamableFile,
   UseInterceptors,
   Query,
   UploadedFile,
   ParseFilePipe,
+  ParseBoolPipe,
 } from '@nestjs/common';
 import { BillboardsService } from './billboards.service';
 import { RolesGuard } from '../auth/guards';
@@ -24,11 +23,7 @@ import { imageValidators } from '../files/validators';
 import { DeleteManyDto } from '../common/dto';
 import { MAX_IMAGE_SIZE } from '../common/constants';
 import { diskStorage } from 'multer';
-import {
-  CreateBillboardDto,
-  FindBillboardsDto,
-  UpdateBillboardDto,
-} from './dto';
+import { CreateBillboardDto, UpdateBillboardDto } from './dto';
 
 @Controller('billboards')
 export class BillboardsController {
@@ -42,38 +37,48 @@ export class BillboardsController {
       limits: { fileSize: MAX_IMAGE_SIZE },
     }),
   )
-  create(
+  async create(
     @Body() createBillboardDto: CreateBillboardDto,
     @UploadedFile(new ParseFilePipe({ validators: imageValidators }))
     image: Express.Multer.File,
   ) {
-    return this.billboardsService.create(createBillboardDto, {
-      filename: image.filename,
-      mimetype: image.mimetype,
-      path: image.path,
-    });
+    const newBillboard = await this.billboardsService.create(
+      createBillboardDto,
+      {
+        filename: image.filename,
+        mimetype: image.mimetype,
+        path: image.path,
+      },
+    );
+    return { success: true, data: newBillboard };
   }
 
   @Get()
-  findAll(@Query() { featured }: FindBillboardsDto) {
-    return this.billboardsService.findAll(
-      featured ? { isFeatured: true } : undefined,
+  async findAll(@Query('featured', ParseBoolPipe) featured: boolean) {
+    const billboards = await this.billboardsService.findAll(
+      featured ? { isFeatured: true } : {},
     );
+    return { success: true, data: billboards };
   }
 
   @Patch(':id')
   @UseGuards(RolesGuard(Role.Admin))
-  update(
+  async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateBillboardDto: UpdateBillboardDto,
   ) {
-    return this.billboardsService.update(id, updateBillboardDto);
+    const updatedBillboard = await this.billboardsService.update(
+      id,
+      updateBillboardDto,
+    );
+    return { success: true, data: updatedBillboard };
   }
 
   @Delete()
   @UseGuards(RolesGuard(Role.Admin))
-  remove(@Query() { ids }: DeleteManyDto) {
+  async remove(@Query() { ids }: DeleteManyDto) {
     const idsList = ids.split(',').map((id) => +id);
-    return this.billboardsService.remove(idsList);
+    await this.billboardsService.remove(idsList);
+    return { success: true };
   }
 }

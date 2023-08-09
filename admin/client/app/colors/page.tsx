@@ -1,50 +1,39 @@
-import {
-  CreateColorButton,
-  CreateColorModal,
-} from "@/features/colors/create-color";
-import { columns } from "@/features/colors/utils";
-import { Breadcrumb, DataTable } from "@/features/ui";
+import { CreateColorModal } from "@/features/colors/create-color";
+import { Color } from "@/features/colors/types";
+import { Breadcrumb } from "@/features/ui";
+import { getCurrentUser } from "@/features/user/utils";
+import axios from "axios";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { ColorsPageClient } from "./colors-client";
 
-interface ColorsPageProps {
-  params: {
-    sid: string;
-  };
-}
+const getColors = async (): Promise<Color[]> => {
+  const {
+    data: { data },
+  } = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/colors`, {
+    headers: { Cookie: cookies().toString() },
+  });
+  return data as Color[];
+};
 
-export default async function ColorsPage({ params: { sid } }: ColorsPageProps) {
-  const store = await getStoreById(sid);
-  if (!store) redirect("/not-found");
+export const metadata = {
+  title: "Colors",
+};
+
+export default async function ColorsPage() {
+  const user = await getCurrentUser();
+  if (!user) redirect("/auth/login");
+  const colors = await getColors();
 
   return (
     <>
       <div className="max-w-5xl">
         <div className="mb-4">
-          <Breadcrumb
-            links={[
-              { name: "Stores", href: "/" },
-              { name: store.name, href: `/store/${store.id}` },
-              { name: "Colors", href: `/store/${store.id}/colors` },
-            ]}
-          />
+          <Breadcrumb links={[{ name: "Colors", href: `/colors` }]} />
         </div>
-        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-          Colors ({store.colors.length})
-        </h1>
-
-        <div className="mt-3">
-          <CreateColorButton />
-        </div>
-
-        <div className="mt-6 space-y-8">
-          <DataTable
-            entityName="colors"
-            data={store.colors}
-            columns={columns}
-          />
-        </div>
+        <ColorsPageClient data={colors} />
       </div>
-      <CreateColorModal storeId={store.id} />
+      <CreateColorModal />
     </>
   );
 }

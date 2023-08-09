@@ -3,7 +3,6 @@ import {
   Button,
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -17,24 +16,21 @@ import {
 } from "@/features/ui";
 import { Loader2 } from "lucide-react";
 import { ColorCircle } from "../color-circle";
-import { useCreateColor } from "./use-create-color";
-import { useCreateColorModal } from "./use-create-color-modal";
+import { useEditColor } from "./use-edit-color";
+import { useEditColorModal } from "./use-edit-color-modal";
 
-export const CreateColorModal = () => {
-  const { isOpen, onClose } = useCreateColorModal();
-  const { loading, handleSubmit, form } = useCreateColor();
+export const EditColorModal = () => {
+  const { isOpen, onClose, id } = useEditColorModal();
+  const { loading, handleSubmit, form } = useEditColor(id);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Create color</DialogTitle>
-          <DialogDescription>
-            Create new color for better fitability (usually for clothes, shoes)
-          </DialogDescription>
+          <DialogTitle>Edit color</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit}>
             <FormField
               control={form.control}
               name="name"
@@ -79,6 +75,7 @@ export const CreateColorModal = () => {
                 </FormItem>
               )}
             />
+
             <DialogFooter>
               <div className="flex items-center gap-x-4">
                 <Button
@@ -91,7 +88,7 @@ export const CreateColorModal = () => {
                 </Button>
                 <Button disabled={loading} type="submit">
                   {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Create
+                  Edit
                 </Button>
               </div>
             </DialogFooter>

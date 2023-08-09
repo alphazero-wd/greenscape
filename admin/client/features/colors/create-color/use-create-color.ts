@@ -19,7 +19,7 @@ const formSchema = z.object({
   }),
 });
 
-export const useCreateColor = (storeId: number) => {
+export const useCreateColor = () => {
   const [loading, setLoading] = useState(false);
   const { onClose } = useCreateColorModal();
   const router = useRouter();
@@ -31,11 +31,9 @@ export const useCreateColor = (storeId: number) => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setLoading(true);
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/colors`,
-        { ...values, storeId },
-        { withCredentials: true },
-      );
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/colors`, values, {
+        withCredentials: true,
+      });
       toast.success("Color created");
       form.reset();
       router.refresh();

@@ -7,13 +7,18 @@ import {
   Delete,
   ParseIntPipe,
   Query,
+  UseGuards,
+  Get,
 } from '@nestjs/common';
 import { SizesService } from './sizes.service';
 import { CreateSizeDto } from './dto/create-size.dto';
 import { UpdateSizeDto } from './dto/update-size.dto';
 import { DeleteManyDto } from '../common/dto';
+import { Role } from '@prisma/client';
+import { RolesGuard } from '../auth/guards';
 
 @Controller('sizes')
+@UseGuards(RolesGuard(Role.Admin))
 export class SizesController {
   constructor(private readonly sizesService: SizesService) {}
 
@@ -21,6 +26,12 @@ export class SizesController {
   async create(@Body() createSizeDto: CreateSizeDto) {
     const newSize = await this.sizesService.create(createSizeDto);
     return { success: true, data: newSize };
+  }
+
+  @Get()
+  async findAll() {
+    const sizes = await this.sizesService.findAll();
+    return { success: true, data: sizes };
   }
 
   @Patch(':id')

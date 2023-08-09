@@ -13,19 +13,17 @@ import {
 import { useDeleteRecords } from "./use-delete-records";
 import { useDeleteRecordsModal } from "./use-delete-records-modal";
 
-interface DeleteRecordModalProps<TData extends { id: number; name: string }> {
-  records: TData[];
+interface DeleteRecordModalProps {
   entityName: "categories" | "sizes" | "products" | "colors" | "billboards";
+  updateUI: (ids: number[]) => void;
 }
 
-export const DeleteRecordsModal = <TData extends { id: number; name: string }>({
-  records,
+export const DeleteRecordsModal = ({
   entityName,
-}: DeleteRecordModalProps<TData>) => {
-  const { isOpen, onClose } = useDeleteRecordsModal();
-  const { loading, deleteRecords } = useDeleteRecords(
-    records.map((record) => record.id),
-  );
+  updateUI,
+}: DeleteRecordModalProps) => {
+  const { isOpen, onClose, ids } = useDeleteRecordsModal();
+  const { loading, deleteRecords } = useDeleteRecords();
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -33,12 +31,7 @@ export const DeleteRecordsModal = <TData extends { id: number; name: string }>({
         <DialogHeader>
           <DialogTitle>Delete records confirmation</DialogTitle>
           <DialogDescription>
-            These following records will be removed:
-            <div>
-              {records.map((record) => (
-                <div className="font-bold">{record.name}</div>
-              ))}
-            </div>
+            {ids.length} items will be deleted
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -53,7 +46,9 @@ export const DeleteRecordsModal = <TData extends { id: number; name: string }>({
             </Button>
             <Button
               variant="destructive"
-              onClick={async () => await deleteRecords(entityName)}
+              onClick={() =>
+                deleteRecords(entityName).then(() => updateUI(ids))
+              }
               disabled={loading}
             >
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

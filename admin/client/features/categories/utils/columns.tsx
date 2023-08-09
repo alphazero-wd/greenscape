@@ -1,11 +1,14 @@
 "use client";
 
-import { Button, Checkbox, DataTableColumnHeader } from "@/features/ui";
+import {
+  Checkbox,
+  DataTableColumnHeader,
+  DataTableRowActions,
+  useDeleteRecordsModal,
+} from "@/features/ui";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { Edit } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useEditCategoryModal } from "../edit-category";
 import { Category } from "../types";
 
 export const columns: ColumnDef<Category>[] = [
@@ -60,14 +63,14 @@ export const columns: ColumnDef<Category>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const pathname = usePathname();
-
+      const { onOpen: onEditOpen } = useEditCategoryModal();
+      const { onOpen: onDeleteOpen } = useDeleteRecordsModal();
       return (
-        <Button variant="ghost" size="icon">
-          <Link href={pathname + `/${row.original.id}`}>
-            <Edit className="h-4 w-4" />
-          </Link>
-        </Button>
+        <DataTableRowActions
+          row={row}
+          onEditAction={onEditOpen}
+          onDeleteAction={onDeleteOpen}
+        />
       );
     },
   },

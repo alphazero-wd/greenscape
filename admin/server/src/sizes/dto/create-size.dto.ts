@@ -1,4 +1,4 @@
-import { IsInt, IsOptional, IsString, Length, Min } from 'class-validator';
+import { IsOptional, IsString, Length } from 'class-validator';
 
 export class CreateSizeDto {
   @Length(1, 20)
@@ -7,8 +7,4 @@ export class CreateSizeDto {
   @IsString()
   @IsOptional()
   desc?: string;
-
-  @IsInt()
-  @Min(1)
-  storeId: number;
 }

@@ -6,11 +6,14 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Admin",
+  title: {
+    template: "Admin | %s",
+    default: "Admin",
+  },
   description: "Welcome to the admin page",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;

@@ -3,7 +3,6 @@ import {
   Button,
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -16,21 +15,18 @@ import {
   Input,
 } from "@/features/ui";
 import { Loader2 } from "lucide-react";
-import { useCreateCategory } from "./use-create-category";
-import { useCreateCategoryModal } from "./use-create-category-modal";
+import { useEditCategory } from "./use-edit-category";
+import { useEditCategoryModal } from "./use-edit-category-modal";
 
-export const CreateCategoryModal = () => {
-  const { isOpen, onClose } = useCreateCategoryModal();
-  const { loading, handleSubmit, form } = useCreateCategory();
+export const EditCategoryModal = () => {
+  const { isOpen, onClose, id } = useEditCategoryModal();
+  const { loading, handleSubmit, form } = useEditCategory(id);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Create category</DialogTitle>
-          <DialogDescription>
-            Create new category for better products filtering
-          </DialogDescription>
+          <DialogTitle>Edit category</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={handleSubmit}>
@@ -66,7 +62,7 @@ export const CreateCategoryModal = () => {
                 </Button>
                 <Button disabled={loading} type="submit">
                   {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Create
+                  Edit
                 </Button>
               </div>
             </DialogFooter>

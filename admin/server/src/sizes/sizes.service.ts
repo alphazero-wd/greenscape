@@ -28,12 +28,6 @@ export class SizesService {
               success: false,
               message: 'The provided size already exists in the store',
             });
-          case PrismaError.ForeignViolation:
-            throw new BadRequestException({
-              success: false,
-              message:
-                'Cannot create size because the store with the given `storeId` is not found',
-            });
           default:
             break;
         }
@@ -42,6 +36,10 @@ export class SizesService {
         message: 'Something went wrong',
       });
     }
+  }
+
+  findAll() {
+    return this.prisma.size.findMany();
   }
 
   async update(id: number, { label, ...updateSizeDto }: UpdateSizeDto) {

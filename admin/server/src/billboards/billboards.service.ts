@@ -19,7 +19,7 @@ export class BillboardsService {
   ) {}
 
   async create(
-    { storeId, isFeatured }: CreateBillboardDto,
+    { isFeatured }: CreateBillboardDto,
     uploadFileDto: UploadFileDto,
   ) {
     return this.prisma.$transaction(async (transactionClient) => {
@@ -27,7 +27,6 @@ export class BillboardsService {
       try {
         const newBillboard = await transactionClient.billboard.create({
           data: {
-            storeId: +storeId,
             isFeatured: !!isFeatured,
             imageId: newFile.id,
           },

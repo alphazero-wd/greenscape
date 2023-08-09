@@ -8,10 +8,8 @@ import { ColorsModule } from './colors/colors.module';
 import { FilesModule } from './files/files.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { SizesModule } from './sizes/sizes.module';
-import { StoresModule } from './stores/stores.module';
 import { UsersModule } from './users/users.module';
-import { MulterModule } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
+import { ProductsModule } from './products/products.module';
 
 @Module({
   imports: [
@@ -28,12 +26,12 @@ import { diskStorage } from 'multer';
         REDIS_PORT: Joi.string().required(),
       }),
     }),
-    StoresModule,
     CategoriesModule,
     SizesModule,
     ColorsModule,
     FilesModule,
     BillboardsModule,
+    ProductsModule,
   ],
 })
 export class AppModule {}

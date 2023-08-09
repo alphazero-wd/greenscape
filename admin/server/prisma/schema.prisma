@@ -19,75 +19,45 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   roles     Role[]   @default([User])
-
-  stores Store[]
-}
-
-model Store {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique @db.VarChar(30)
-  ownerId   Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  owner      User        @relation(fields: [ownerId], references: [id])
-  categories Category[]
-  sizes      Size[]
-  colors     Color[]
-  billboards Billboard[]
-  products   Product[]
 }
 
 model Category {
   id        Int      @id @default(autoincrement())
-  name      String   @db.VarChar(20)
-  storeId   Int
+  name      String   @unique @db.VarChar(20)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  store   Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
   product Product[]
-
-  @@unique([storeId, name])
 }
 
 model Size {
   id        Int      @id @default(autoincrement())
-  label     String   @db.VarChar(20)
-  desc      String?
-  storeId   Int
+  label     String   @unique @db.VarChar(20)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  store    Store     @relation(fields: [storeId], references: [id])
-  products Product[]
-
-  @@unique([storeId, label])
+  inventories Inventory[]
 }
 
 model Color {
   id        Int      @id @default(autoincrement())
   name      String   @db.VarChar(20)
   hexCode   String   @db.VarChar(7)
-  storeId   Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  store    Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  products Product[]
+  inventories Inventory[]
 
-  @@unique([storeId, hexCode, name])
+  @@unique([hexCode, name])
 }
 
 model Billboard {
   id         Int      @id @default(autoincrement())
-  storeId    Int
   imageId    Int      @unique
   isFeatured Boolean  @default(true)
   createdAt  DateTime @default(now())
 
-  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  image File  @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  image File @relation(fields: [imageId], references: [id], onDelete: Cascade)
 }
 
 model File {
@@ -106,25 +76,25 @@ model Product {
   name       String   @db.VarChar(120)
   price      Int
   desc       String?
-  storeId    Int
   categoryId Int
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  images   File[]
-  sizes    Size[]
-  colors   Color[]
-  category Category @relation(references: [id], fields: [categoryId])
-  store    Store    @relation(references: [id], fields: [storeId], onDelete: Cascade)
+  images      File[]
+  category    Category    @relation(references: [id], fields: [categoryId])
+  inventories Inventory[]
 }
 
-model ProductsOnSizesColors {
-  sizeId    Int
-  colorId   Int
+model Inventory {
+  id        Int  @id @default(autoincrement())
   productId Int
+  colorId   Int?
+  sizeId    Int?
   qty       Int
 
-  @@id([sizeId, colorId, productId])
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  color   Color?  @relation(fields: [colorId], references: [id])
+  size    Size?   @relation(fields: [sizeId], references: [id])
 }
 
 enum Role {

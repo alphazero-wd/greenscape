@@ -14,10 +14,10 @@ import { PrismaError } from '../prisma/prisma-error';
 export class CategoriesService {
   constructor(private prisma: PrismaService) {}
 
-  async create({ name, storeId }: CreateCategoryDto) {
+  async create({ name }: CreateCategoryDto) {
     try {
       const newCategory = await this.prisma.category.create({
-        data: { name: removeWhiteSpaces(name), storeId },
+        data: { name: removeWhiteSpaces(name) },
       });
       return newCategory;
     } catch (error) {
@@ -28,18 +28,16 @@ export class CategoriesService {
             message:
               'Category with the given `name` already exists in the store',
           });
-        if (error.code === PrismaError.ForeignViolation)
-          throw new BadRequestException({
-            success: false,
-            message:
-              'Cannot create category because the store with the given `storeId` does not exist',
-          });
       }
       throw new InternalServerErrorException({
         success: false,
         message: 'Something went wrong',
       });
     }
+  }
+
+  findAll() {
+    return this.prisma.category.findMany();
   }
 
   async update(id: number, { name }: UpdateCategoryDto) {

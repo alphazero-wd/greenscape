@@ -1,4 +1,4 @@
-import { IsHexColor, IsInt, Length, Min } from 'class-validator';
+import { IsHexColor, Length } from 'class-validator';
 
 export class CreateColorDto {
   @Length(1, 20)
@@ -6,8 +6,4 @@ export class CreateColorDto {
 
   @IsHexColor()
   hexCode: string;
-
-  @IsInt()
-  @Min(1)
-  storeId: number;
 }

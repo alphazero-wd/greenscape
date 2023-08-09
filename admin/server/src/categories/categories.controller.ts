@@ -8,6 +8,7 @@ import {
   UseGuards,
   ParseIntPipe,
   Query,
+  Get,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto, UpdateCategoryDto } from './dto';
@@ -26,6 +27,16 @@ export class CategoriesController {
     return {
       success: true,
       data: newCategory,
+    };
+  }
+
+  // categories will be displayed on the store so don't apply guard to this endpoint
+  @Get()
+  async findAll() {
+    const categories = await this.categoriesService.findAll();
+    return {
+      success: true,
+      data: categories,
     };
   }
 

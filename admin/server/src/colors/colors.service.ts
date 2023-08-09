@@ -28,12 +28,6 @@ export class ColorsService {
               success: false,
               message: 'The provided color already exists in the store',
             });
-          case PrismaError.ForeignViolation:
-            throw new BadRequestException({
-              success: false,
-              message:
-                'Cannot create color because the store with the given `storeId` is not found',
-            });
           default:
             break;
         }
@@ -42,6 +36,10 @@ export class ColorsService {
         message: 'Something went wrong',
       });
     }
+  }
+
+  findAll() {
+    return this.prisma.color.findMany();
   }
 
   async update(id: number, { name, ...updateColorDto }: UpdateColorDto) {

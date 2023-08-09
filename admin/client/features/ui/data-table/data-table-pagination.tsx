@@ -16,7 +16,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../select";
-import { DeleteRecordsModal } from "./delete-records-modal";
 import { useDeleteRecordsModal } from "./use-delete-records-modal";
 
 interface DataTablePaginationProps<TData extends { id: number; name: string }> {
@@ -27,12 +26,8 @@ interface DataTablePaginationProps<TData extends { id: number; name: string }> {
 export function DataTablePagination<
   TData extends { id: number; name: string },
 >({ table, entityName }: DataTablePaginationProps<TData>) {
-  const selectedRows = useMemo(
-    () =>
-      table.getSelectedRowModel().rows.map(({ original }) => ({
-        id: original.id,
-        name: original.name,
-      })),
+  const selectedRowIds = useMemo(
+    () => table.getSelectedRowModel().rows.map(({ original }) => original.id),
     [table.getFilteredSelectedRowModel().rows],
   );
   const { onOpen } = useDeleteRecordsModal();
@@ -114,11 +109,14 @@ export function DataTablePagination<
         </div>
       </div>
       {table.getFilteredSelectedRowModel().rows.length > 0 && (
-        <Button onClick={onOpen} variant="destructive" className="mt-3">
+        <Button
+          onClick={() => onOpen(selectedRowIds)}
+          variant="destructive"
+          className="mt-3"
+        >
           Delete selected rows
         </Button>
       )}
-      <DeleteRecordsModal entityName={entityName} records={selectedRows} />
     </>
   );
 }

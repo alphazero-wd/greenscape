@@ -44,11 +44,14 @@ export const DeleteBillboardsModal = () => {
               variant="destructive"
               onClick={() => {
                 setLoading(true);
-                deleteBillboards(ids).finally(() => {
-                  setLoading(false);
-                  router.refresh();
-                  onClose();
-                });
+                deleteBillboards(ids)
+                  .then(() => {
+                    router.refresh();
+                    onClose();
+                  })
+                  .finally(() => {
+                    setLoading(false);
+                  });
               }}
               disabled={loading}
             >

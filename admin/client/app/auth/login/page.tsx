@@ -10,6 +10,10 @@ import { getCurrentUser } from "@/features/user/utils";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
+export const metadata = {
+  title: "Log in to your account",
+};
+
 export default async function LoginPage() {
   const user = await getCurrentUser();
   if (user) redirect("/");

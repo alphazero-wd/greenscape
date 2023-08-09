@@ -1,22 +1,17 @@
 "use client";
 import axios from "axios";
-import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { useDeleteRecordsModal } from "./use-delete-records-modal";
 
-export const useDeleteRecords = (ids: number[]) => {
-  const router = useRouter();
-  const { onClose } = useDeleteRecordsModal();
+export const useDeleteRecords = () => {
+  const { onClose, ids } = useDeleteRecordsModal();
   const [loading, setLoading] = useState(false);
-  const pathname = usePathname();
   const deleteRecords = async (
     entityName: "categories" | "colors" | "sizes" | "products" | "billboards",
   ) => {
     try {
       setLoading(true);
-      const segments = pathname.split("/"); // ['', store, :storeId, entityName, :entityNameId]
-
       const idsString = ids.join(",");
       await axios.delete(
         `${process.env.NEXT_PUBLIC_API_URL}/${entityName}?ids=${idsString}`,
@@ -24,10 +19,6 @@ export const useDeleteRecords = (ids: number[]) => {
       );
       onClose();
 
-      setTimeout(() => {
-        router.refresh();
-        router.push(segments.slice(0, 4).join("/")); // redirects to /store/:storeId/<entityName>
-      }, 1000);
       toast.success("Records deleted successfully");
     } catch (error) {
       console.log({ error });

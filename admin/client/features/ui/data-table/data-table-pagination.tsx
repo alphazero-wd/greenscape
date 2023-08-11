@@ -20,12 +20,11 @@ import { useDeleteRecordsModal } from "./use-delete-records-modal";
 
 interface DataTablePaginationProps<TData extends { id: number; name: string }> {
   table: Table<TData>;
-  entityName: "categories" | "sizes" | "colors" | "products" | "billboards";
 }
 
 export function DataTablePagination<
   TData extends { id: number; name: string },
->({ table, entityName }: DataTablePaginationProps<TData>) {
+>({ table }: DataTablePaginationProps<TData>) {
   const selectedRowIds = useMemo(
     () => table.getSelectedRowModel().rows.map(({ original }) => original.id),
     [table.getFilteredSelectedRowModel().rows],

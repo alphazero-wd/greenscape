@@ -31,13 +31,11 @@ import { DataTableToolbar } from "./data-table-toolbar";
 interface DataTableProps<TData extends { id: number; name: string }, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  entityName: "categories" | "sizes" | "products" | "colors" | "billboards";
 }
 
 export function DataTable<TData extends { id: number; name: string }, TValue>({
   columns,
   data,
-  entityName,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -122,7 +120,7 @@ export function DataTable<TData extends { id: number; name: string }, TValue>({
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination entityName={entityName} table={table} />
+      <DataTablePagination table={table} />
     </div>
   );
 }

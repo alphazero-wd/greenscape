@@ -1,13 +1,11 @@
 import * as Joi from '@hapi/joi';
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { BillboardsModule } from './billboards/billboards.module';
 import { CategoriesModule } from './categories/categories.module';
-import { ColorsModule } from './colors/colors.module';
 import { FilesModule } from './files/files.module';
 import { PrismaModule } from './prisma/prisma.module';
-import { SizesModule } from './sizes/sizes.module';
 import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
 
@@ -27,8 +25,6 @@ import { ProductsModule } from './products/products.module';
       }),
     }),
     CategoriesModule,
-    SizesModule,
-    ColorsModule,
     FilesModule,
     BillboardsModule,
     ProductsModule,

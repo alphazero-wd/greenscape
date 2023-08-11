@@ -30,27 +30,6 @@ model Category {
   product Product[]
 }
 
-model Size {
-  id        Int      @id @default(autoincrement())
-  label     String   @unique @db.VarChar(20)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  inventories Inventory[]
-}
-
-model Color {
-  id        Int      @id @default(autoincrement())
-  name      String   @db.VarChar(20)
-  hexCode   String   @db.VarChar(7)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  inventories Inventory[]
-
-  @@unique([hexCode, name])
-}
-
 model Billboard {
   id         Int      @id @default(autoincrement())
   imageId    Int      @unique
@@ -79,24 +58,21 @@ model Product {
   categoryId Int
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  qty        Int
 
-  images      File[]
-  category    Category    @relation(references: [id], fields: [categoryId])
-  inventories Inventory[]
+  images    File[]
+  category  Category    @relation(references: [id], fields: [categoryId])
+  inventory Inventory[]
 }
 
 model Inventory {
-  id        Int  @id @default(autoincrement())
   productId Int
-  colorId   Int?
-  sizeId    Int?
-  qty       Int
+  size      String @db.VarChar(20)
+  color     String @db.VarChar(7) // hex code
 
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  color   Color?  @relation(fields: [colorId], references: [id], onDelete: Cascade)
-  size    Size?   @relation(fields: [sizeId], references: [id], onDelete: Cascade)
+  product Product @relation(references: [id], fields: [productId], onDelete: Cascade)
 
-  @@unique([productId, colorId, sizeId])
+  @@unique([productId, size, color])
 }
 
 enum Role {

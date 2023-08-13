@@ -1,6 +1,9 @@
 export { DataTable } from "./data-table";
 export { DataTableColumnHeader } from "./data-table-column-header";
+export { DataTablePagination } from "./data-table-pagination";
 export { DataTableRowActions } from "./data-table-row-actions";
+export { DataTableViewOptions } from "./data-table-view-options";
 export { DeleteRecordsModal } from "./delete-records-modal";
 export { useDeleteRecords } from "./use-delete-records";
 export { useDeleteRecordsModal } from "./use-delete-records-modal";
+export { useTable } from "./use-table";

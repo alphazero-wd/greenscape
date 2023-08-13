@@ -13,6 +13,7 @@ import {
   FormLabel,
   FormMessage,
   Input,
+  Textarea,
 } from "@/features/ui";
 import { Loader2 } from "lucide-react";
 import { useEditCategory } from "./use-edit-category";
@@ -29,18 +30,18 @@ export const EditCategoryModal = () => {
           <DialogTitle>Edit category</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={handleSubmit}>
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem className="py-4">
                   <div className="grid grid-cols-4 items-center">
-                    <FormLabel className="flex-1">Category name</FormLabel>
+                    <FormLabel className="flex-1">Category</FormLabel>
                     <FormControl>
                       <Input
                         disabled={loading}
-                        placeholder="Category name"
+                        placeholder="Category"
                         {...field}
                         className="col-span-3 w-full"
                       />
@@ -50,6 +51,28 @@ export const EditCategoryModal = () => {
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="desc"
+              render={({ field }) => (
+                <FormItem className="py-4">
+                  <div className="grid grid-cols-4 items-center">
+                    <FormLabel className="flex-1">Description</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        disabled={loading}
+                        placeholder="Description"
+                        {...field}
+                        className="col-span-3 w-full"
+                      />
+                    </FormControl>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <DialogFooter>
               <div className="flex items-center gap-x-4">
                 <Button

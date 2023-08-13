@@ -1,2 +1,2 @@
 export { DeleteManyDto } from './delete-many.dto';
-export { PaginateDto } from './paginate.dto';
+export { FindManyDto } from './find-many.dto';

@@ -1,13 +1,12 @@
 "use client";
 
+import { Checkbox } from "@/features/ui";
 import {
-  Checkbox,
   DataTableColumnHeader,
   DataTableRowActions,
   useDeleteRecordsModal,
-} from "@/features/ui";
+} from "@/features/ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
-import { format } from "date-fns";
 import { useEditCategoryModal } from "../edit-category";
 import { Category } from "../types";
 
@@ -34,6 +33,7 @@ export const columns: ColumnDef<Category>[] = [
     enableHiding: false,
   },
   {
+    id: "name",
     accessorKey: "name",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Category" />
@@ -43,21 +43,13 @@ export const columns: ColumnDef<Category>[] = [
     ),
   },
   {
-    accessorKey: "createdAt",
-    header: "Created at",
+    id: "desc",
+    accessorKey: "desc",
+    header: "Description",
     cell: ({ row }) => (
-      <div className="text-sm text-gray-500">
-        {format(new Date(row.getValue("createdAt")), "PP p")}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "updatedAt",
-    header: "Updated at",
-    cell: ({ row }) => (
-      <div className="text-sm text-gray-500">
-        {format(new Date(row.getValue("updatedAt")), "PP p")}
-      </div>
+      <p className="line-clamp-1">
+        {row.getValue("desc") || "No description provided"}
+      </p>
     ),
   },
   {

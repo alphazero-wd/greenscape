@@ -1,7 +1,7 @@
 import { Type } from 'class-transformer';
 import { IsIn, IsInt, IsOptional, IsString, Min } from 'class-validator';
 
-export class PaginateDto {
+export class FindManyDto {
   @IsOptional()
   @Type(() => Number)
   @IsInt()
@@ -11,8 +11,12 @@ export class PaginateDto {
   @IsOptional()
   @Type(() => Number)
   @IsInt()
-  @Min(1)
+  @Min(0)
   offset?: number;
+
+  @IsOptional()
+  @IsString()
+  q?: string;
 
   @IsOptional()
   @IsString()

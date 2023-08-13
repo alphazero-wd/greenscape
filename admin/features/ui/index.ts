@@ -103,7 +103,6 @@ export {
 } from "./table";
 
 export { Checkbox } from "./checkbox";
-export * from "./data-table";
 export {
   Select,
   SelectContent,

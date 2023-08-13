@@ -10,16 +10,16 @@ import { PrismaService } from '../prisma/prisma.service';
 import { removeWhiteSpaces } from '../common/utils';
 import { Prisma } from '@prisma/client';
 import { PrismaError } from '../prisma/prisma-error';
-import { PaginateDto } from '../common/dto';
+import { FindManyDto } from '../common/dto';
 
 @Injectable()
 export class CategoriesService {
   constructor(private prisma: PrismaService) {}
 
-  async create({ name }: CreateCategoryDto) {
+  async create({ name, desc }: CreateCategoryDto) {
     try {
       const newCategory = await this.prisma.category.create({
-        data: { name: removeWhiteSpaces(name) },
+        data: { name: removeWhiteSpaces(name), desc },
       });
       return newCategory;
     } catch (error) {
@@ -38,24 +38,27 @@ export class CategoriesService {
     }
   }
 
-  async findAll({ limit, order, sortBy, offset }: PaginateDto) {
+  async findAll({ limit, order, sortBy, offset, q }: FindManyDto) {
     const categories = await this.prisma.category.findMany({
       take: limit,
-      orderBy: { [sortBy]: order || 'asc' },
+      orderBy: { [sortBy || 'id']: order || 'asc' },
       skip: offset,
+      where: q ? { name: { startsWith: q, mode: 'insensitive' } } : undefined,
     });
-    const count = await this.prisma.category.count();
+    const count = await this.prisma.category.count({
+      where: q ? { name: { startsWith: q, mode: 'insensitive' } } : undefined,
+    });
     return {
       count,
       categories,
     };
   }
 
-  async update(id: number, { name }: UpdateCategoryDto) {
+  async update(id: number, { name, desc }: UpdateCategoryDto) {
     try {
       const updatedCategory = await this.prisma.category.update({
         where: { id },
-        data: { name: removeWhiteSpaces(name) },
+        data: { name: removeWhiteSpaces(name), desc },
       });
       return updatedCategory;
     } catch (error) {

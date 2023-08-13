@@ -14,7 +14,7 @@ import { CategoriesService } from './categories.service';
 import { CreateCategoryDto, UpdateCategoryDto } from './dto';
 import { RolesGuard } from '../auth/guards';
 import { Role } from '@prisma/client';
-import { DeleteManyDto, PaginateDto } from '../common/dto';
+import { DeleteManyDto, FindManyDto } from '../common/dto';
 
 @Controller('categories')
 export class CategoriesController {
@@ -32,7 +32,7 @@ export class CategoriesController {
 
   // categories will be displayed on the store so don't apply guard to this endpoint
   @Get()
-  async findAll(@Query() paginateDto: PaginateDto) {
+  async findAll(@Query() paginateDto: FindManyDto) {
     const { count, categories } = await this.categoriesService.findAll(
       paginateDto,
     );

@@ -33,14 +33,15 @@ model File {
 
 model Category {
   id     Int     @id @default(autoincrement())
-  name   String  @db.VarChar(60)
+  name   String  @unique @db.VarChar(60)
+  desc   String?
   plants Plant[]
 }
 
 model Plant {
   id             Int      @id @default(autoincrement())
-  name           String   @db.VarChar(120)
-  botanicalName  String   @db.VarChar(120)
+  name           String   @unique @db.VarChar(120)
+  botanicalName  String   @unique @db.VarChar(120)
   price          Int
   desc           String
   care           String

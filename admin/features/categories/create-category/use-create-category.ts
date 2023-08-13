@@ -14,6 +14,8 @@ const formSchema = z.object({
     .string()
     .min(1, { message: "Category name must be between 1 and 20 characters" })
     .max(20, { message: "Category name must be between 1 and 20 characters" }),
+
+  desc: z.string().optional(),
 });
 
 export const useCreateCategory = () => {
@@ -22,7 +24,7 @@ export const useCreateCategory = () => {
   const { createCategory } = useCategoriesStore();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { name: "" },
+    defaultValues: { name: "", desc: "" },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {

@@ -7,13 +7,16 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { CategoriesPageClient } from "./categories-client";
 
-const getCategories = async (): Promise<Category[]> => {
+const getCategories = async () => {
   const {
-    data: { data },
-  } = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/categories`, {
-    headers: { Cookie: cookies().toString() },
-  });
-  return data as Category[];
+    data: { count, data },
+  } = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/categories?limit=10`,
+    {
+      headers: { Cookie: cookies().toString() },
+    },
+  );
+  return { count, data: data as Category[] };
 };
 
 export const metadata = {
@@ -23,7 +26,7 @@ export const metadata = {
 export default async function CategoriesPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/auth/login");
-  const categories = await getCategories();
+  const { count, data } = await getCategories();
 
   return (
     <>
@@ -31,7 +34,7 @@ export default async function CategoriesPage() {
         <div className="mb-4">
           <Breadcrumb links={[{ name: "Categories", href: `/categories` }]} />
         </div>
-        <CategoriesPageClient data={categories} />
+        <CategoriesPageClient count={count} data={data} />
       </div>
       <CreateCategoryModal />
     </>

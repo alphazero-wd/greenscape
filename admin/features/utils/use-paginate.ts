@@ -1,25 +1,18 @@
 import axios from "axios";
-import qs from "query-string";
 import { useState } from "react";
 
 export interface PaginationParams {
   limit: number;
   offset?: number;
+  sortBy?: string;
+  order?: "asc" | "desc";
   q?: string;
 }
 
-export const usePaginate = (entityName: "categories" | "plants") => {
+export const usePaginate = () => {
   const [loading, setLoading] = useState(false);
-  const paginate = async ({ limit = 10, offset, q }: PaginationParams) => {
+  const paginate = async (url: string) => {
     setLoading(true);
-    const url = qs.stringifyUrl({
-      url: `${process.env.NEXT_PUBLIC_API_URL}/${entityName}`,
-      query: {
-        limit,
-        offset,
-        q,
-      },
-    });
     const {
       data: { data, count },
     } = await axios.get(url);

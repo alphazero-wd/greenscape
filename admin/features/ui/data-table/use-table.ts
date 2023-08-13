@@ -1,3 +1,4 @@
+"use client";
 import { usePaginate } from "@/features/utils";
 import {
   ColumnDef,
@@ -6,6 +7,8 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import qs from "query-string";
 import { useEffect, useMemo, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -14,7 +17,6 @@ export const useTable = <TData>(
   data: TData[],
   count: number,
   getData: (count: number, data: TData[]) => void,
-  entity: "categories" | "plants",
 ) => {
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -23,6 +25,9 @@ export const useTable = <TData>(
     pageIndex: 0,
     pageSize: 10,
   });
+  const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const pagination = useMemo(
     () => ({
@@ -50,25 +55,26 @@ export const useTable = <TData>(
     getCoreRowModel: getCoreRowModel(),
   });
 
-  const { paginate, loading } = usePaginate(entity);
-  const search = useDebouncedCallback(async () => {
-    paginate({ offset: pageSize * pageIndex, limit: pageSize, q }).then(
-      ({ count, data }) => {
-        getData(count, data);
-      },
-    );
+  const { paginate, loading } = usePaginate();
+  const search = useDebouncedCallback(async (url) => {
+    paginate(url).then(({ count, data }) => {
+      getData(count, data);
+    });
   }, 1000);
 
   useEffect(() => {
-    paginate({ limit: pageSize, offset: pageSize * pageIndex }).then(
-      ({ data, count }) => getData(count, data),
-    );
-  }, [pagination]);
-
-  useEffect(() => {
-    setPagination({ pageIndex: 0, pageSize });
-    search();
-  }, [q]);
+    if (q) setPagination({ pageIndex: 0, pageSize });
+    const currentQuery = qs.parse(searchParams.toString());
+    currentQuery.offset = (pageIndex * pageSize).toString();
+    currentQuery.limit = pageSize.toString();
+    currentQuery.q = q;
+    const url = qs.stringifyUrl({
+      url: pathname,
+      query: currentQuery,
+    });
+    search(process.env.NEXT_PUBLIC_API_URL + url);
+    router.push(url);
+  }, [pagination, q, searchParams.toString()]);
 
   return {
     loading,

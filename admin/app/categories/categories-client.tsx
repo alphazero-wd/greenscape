@@ -31,7 +31,6 @@ export const CategoriesPageClient: React.FC<CategoriesPageClientProps> = ({
     categories,
     hits,
     getCategories,
-    "categories",
   );
 
   useEffect(() => {

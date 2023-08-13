@@ -7,6 +7,7 @@ import {
   useDeleteRecordsModal,
 } from "@/features/ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
+import { useCategoriesStore } from "../context";
 import { useEditCategoryModal } from "../edit-category";
 import { Category } from "../types";
 
@@ -35,9 +36,16 @@ export const columns: ColumnDef<Category>[] = [
   {
     id: "name",
     accessorKey: "name",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Category" />
-    ),
+    header: ({ column }) => {
+      const { getCategories } = useCategoriesStore();
+      return (
+        <DataTableColumnHeader
+          getData={getCategories}
+          column={column}
+          title="Category"
+        />
+      );
+    },
     cell: ({ row }) => (
       <div className="line-clamp-1 font-medium">{row.getValue("name")}</div>
     ),

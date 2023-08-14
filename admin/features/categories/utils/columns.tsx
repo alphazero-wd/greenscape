@@ -48,7 +48,14 @@ export const columns: ColumnDef<Category>[] = [
     },
     cell: ({ row }) => (
       <>
-        <div className="line-clamp-1 font-medium">{row.original.name}</div>
+        <div className="line-clamp-1 font-medium">
+          {row.original.parentCategory && (
+            <span className="font-normal text-gray-500">
+              {row.original.parentCategory.name} /
+            </span>
+          )}{" "}
+          {row.original.name}
+        </div>
         <ul className="ml-2 mt-2 space-y-3 text-gray-600">
           {row.original.subCategories.map((c) => (
             <li>- {c.name}</li>

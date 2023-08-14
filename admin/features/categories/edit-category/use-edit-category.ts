@@ -1,6 +1,7 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -13,12 +14,13 @@ const formSchema = z.object({
     .string()
     .min(1, { message: "Category name must be between 1 and 20 characters" })
     .max(20, { message: "Category name must be between 1 and 20 characters" }),
-  parentCategoryId: z.number().int().lte(1).optional(),
+  parentCategoryId: z.number().int().gte(1).optional(),
 });
 
 export const useEditCategory = (id: number) => {
   const [loading, setLoading] = useState(false);
-  const { categories, updateCategory } = useCategoriesStore();
+  const { categories } = useCategoriesStore();
+  const router = useRouter();
   const { onClose } = useEditCategoryModal();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -41,16 +43,13 @@ export const useEditCategory = (id: number) => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setLoading(true);
-      const {
-        data: { data },
-      } = await axios.patch(
+      await axios.patch(
         `${process.env.NEXT_PUBLIC_API_URL}/categories/${id}`,
         { ...values },
         { withCredentials: true },
       );
       toast.success("Category updated");
-      updateCategory(id, data);
-      form.reset({ parentCategoryId: undefined });
+      router.refresh();
       onClose();
     } catch (error: any) {
       toast.error(error.response.data.message);

@@ -20,6 +20,7 @@ export class CategoriesService {
     try {
       const newCategory = await this.prisma.category.create({
         data: { name: removeWhiteSpaces(name), parentCategoryId },
+        include: { parentCategory: true, subCategories: true },
       });
       return newCategory;
     } catch (error) {
@@ -76,6 +77,7 @@ export class CategoriesService {
       const updatedCategory = await this.prisma.category.update({
         where: { id },
         data: { name: removeWhiteSpaces(name), parentCategoryId },
+        include: { subCategories: true, parentCategory: true },
       });
       return updatedCategory;
     } catch (error) {

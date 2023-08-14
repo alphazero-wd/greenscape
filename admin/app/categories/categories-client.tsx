@@ -2,17 +2,9 @@
 import { useCategoriesStore } from "@/features/categories/context";
 import { CreateCategoryButton } from "@/features/categories/create-category";
 import { EditCategoryModal } from "@/features/categories/edit-category";
+import { CategoriesTable } from "@/features/categories/table";
 import { Category } from "@/features/categories/types";
-import { columns } from "@/features/categories/utils";
-import { Input } from "@/features/ui";
-import {
-  DataTable,
-  DataTablePagination,
-  DataTableViewOptions,
-  DeleteRecordsModal,
-  useTable,
-} from "@/features/ui/data-table";
-import { useRouter } from "next/navigation";
+import { DeleteRecordsModal } from "@/features/ui/data-table";
 import { useEffect } from "react";
 
 interface CategoriesPageClientProps {
@@ -24,22 +16,11 @@ export const CategoriesPageClient: React.FC<CategoriesPageClientProps> = ({
   count: hits,
   data,
 }) => {
-  const { categories, getCategories, count, deleteCategories } =
-    useCategoriesStore();
-
-  const { loading, q, setQ, table } = useTable<Category>(
-    columns,
-    categories,
-    hits,
-    getCategories,
-  );
-  const router = useRouter();
+  const { categories, getCategories, count } = useCategoriesStore();
 
   useEffect(() => {
     getCategories(hits, data);
   }, [data, hits]);
-
-  if (loading) return <div>Loading...</div>;
 
   return (
     <>
@@ -52,21 +33,12 @@ export const CategoriesPageClient: React.FC<CategoriesPageClientProps> = ({
       </div>
 
       <div className="mt-6 space-y-8">
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex flex-1 items-center space-x-2">
-              <Input
-                value={q}
-                onChange={(e) => setQ(e.target.value)}
-                placeholder="Search categories..."
-                className="h-8 w-[250px]"
-              />
-            </div>
-            <DataTableViewOptions table={table} />
-          </div>
-          <DataTable columns={columns} table={table} />
-          <DataTablePagination table={table} />
-        </div>
+        <CategoriesTable
+          categories={categories}
+          pid={null}
+          hits={count}
+          getCategories={getCategories}
+        />
       </div>
 
       <EditCategoryModal />

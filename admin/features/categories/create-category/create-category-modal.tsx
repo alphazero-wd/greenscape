@@ -16,13 +16,18 @@ import {
   Input,
 } from "@/features/ui";
 import { Loader2 } from "lucide-react";
-import { ParentCategorySelect } from "../form";
 import { useCreateCategory } from "./use-create-category";
 import { useCreateCategoryModal } from "./use-create-category-modal";
 
-export const CreateCategoryModal = () => {
+interface CreateCategoryModalProps {
+  pid?: number;
+}
+
+export const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({
+  pid,
+}) => {
   const { isOpen, onClose } = useCreateCategoryModal();
-  const { loading, handleSubmit, form } = useCreateCategory();
+  const { loading, handleSubmit, form } = useCreateCategory(pid);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -50,22 +55,6 @@ export const CreateCategoryModal = () => {
                         className="col-span-3 w-full"
                       />
                     </FormControl>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="parentCategoryId"
-              render={({ field }) => (
-                <FormItem className="py-4">
-                  <div className="grid grid-cols-4 items-center">
-                    <FormLabel className="flex-1">Parent category</FormLabel>
-                    <div className="col-span-3 w-full">
-                      <ParentCategorySelect value={field.value} form={form} />
-                    </div>
                   </div>
                   <FormMessage />
                 </FormItem>

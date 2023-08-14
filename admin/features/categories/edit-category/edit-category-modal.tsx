@@ -15,82 +15,81 @@ import {
   Input,
 } from "@/features/ui";
 import { Loader2 } from "lucide-react";
-import { ParentCategorySelect } from "../form";
+import { useCategoriesStore } from "../context";
+import { CreateCategoryButton, CreateCategoryModal } from "../create-category";
+import { CategoriesTable } from "../table";
 import { useEditCategory } from "./use-edit-category";
 import { useEditCategoryModal } from "./use-edit-category-modal";
 
 export const EditCategoryModal = () => {
   const { isOpen, onClose, id } = useEditCategoryModal();
+  const { categories, getCategories, count } = useCategoriesStore();
   const { loading, handleSubmit, form } = useEditCategory(id);
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px]">
-        <DialogHeader>
-          <DialogTitle>Edit category</DialogTitle>
-        </DialogHeader>
-        <Form {...form}>
-          <form className="space-y-4" onSubmit={handleSubmit}>
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem className="py-4">
-                  <div className="grid grid-cols-4 items-center">
-                    <FormLabel className="flex-1">Category</FormLabel>
-                    <FormControl>
-                      <Input
-                        disabled={loading}
-                        placeholder="Category"
-                        {...field}
-                        className="col-span-3 w-full"
-                      />
-                    </FormControl>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
+    <>
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Edit category</DialogTitle>
+          </DialogHeader>
+          <div className="my-4">
+            <div className="mb-3">
+              <CreateCategoryButton />
+            </div>
+            <CategoriesTable
+              pid={id}
+              hits={count}
+              getCategories={getCategories}
+              categories={categories}
             />
-
-            <FormField
-              control={form.control}
-              name="parentCategoryId"
-              render={({ field }) => (
-                <FormItem className="py-4">
-                  <div className="grid grid-cols-4 items-center">
-                    <FormLabel className="flex-1">Parent category</FormLabel>
-                    <div className="col-span-3 w-full">
-                      <ParentCategorySelect
-                        id={id}
-                        value={field.value}
-                        form={form}
-                      />
+          </div>
+          <Form {...form}>
+            <form className="space-y-4" onSubmit={handleSubmit}>
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem className="py-4">
+                    <div className="grid grid-cols-4 items-center">
+                      <FormLabel className="flex-1">Category</FormLabel>
+                      <FormControl>
+                        <Input
+                          disabled={loading}
+                          placeholder="Category"
+                          {...field}
+                          className="col-span-3 w-full"
+                        />
+                      </FormControl>
                     </div>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <DialogFooter>
-              <div className="flex items-center gap-x-4">
-                <Button
-                  onClick={onClose}
-                  disabled={loading}
-                  type="button"
-                  variant="outline"
-                >
-                  Cancel
-                </Button>
-                <Button disabled={loading} type="submit">
-                  {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Edit
-                </Button>
-              </div>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+              <DialogFooter>
+                <div className="flex items-center gap-x-4">
+                  <Button
+                    onClick={onClose}
+                    disabled={loading}
+                    type="button"
+                    variant="outline"
+                  >
+                    Cancel
+                  </Button>
+                  <Button disabled={loading} type="submit">
+                    {loading && (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    )}
+                    Edit
+                  </Button>
+                </div>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+      <CreateCategoryModal pid={id} />
+    </>
   );
 };

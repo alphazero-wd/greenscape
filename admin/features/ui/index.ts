@@ -95,16 +95,8 @@ export {
 
 export { Breadcrumb } from "./breadcrumb";
 
-export {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "./table";
-
 export { Checkbox } from "./checkbox";
+export * from "./data-table";
 export {
   Select,
   SelectContent,
@@ -115,6 +107,14 @@ export {
   SelectTrigger,
   SelectValue,
 } from "./select";
+export {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "./table";
 
 export { Dropzone } from "./dropzone";
 export { Switch } from "./switch";

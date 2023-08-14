@@ -11,7 +11,11 @@ import {
   Get,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
-import { CreateCategoryDto, UpdateCategoryDto } from './dto';
+import {
+  CreateCategoryDto,
+  FindManyCategoriesDto,
+  UpdateCategoryDto,
+} from './dto';
 import { RolesGuard } from '../auth/guards';
 import { Role } from '@prisma/client';
 import { DeleteManyDto, FindManyDto } from '../common/dto';
@@ -32,7 +36,7 @@ export class CategoriesController {
 
   // categories will be displayed on the store so don't apply guard to this endpoint
   @Get()
-  async findAll(@Query() paginateDto: FindManyDto) {
+  async findAll(@Query() paginateDto: FindManyCategoriesDto) {
     const { count, categories } = await this.categoriesService.findAll(
       paginateDto,
     );

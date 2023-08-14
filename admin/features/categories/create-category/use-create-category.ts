@@ -16,13 +16,13 @@ const formSchema = z.object({
   parentCategoryId: z.number().int().gte(1).optional(),
 });
 
-export const useCreateCategory = () => {
+export const useCreateCategory = (pid?: number) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { onClose } = useCreateCategoryModal();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { name: "", parentCategoryId: undefined },
+    defaultValues: { name: "", parentCategoryId: pid },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {

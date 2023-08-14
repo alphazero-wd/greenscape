@@ -5,12 +5,15 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateCategoryDto, UpdateCategoryDto } from './dto';
+import {
+  CreateCategoryDto,
+  UpdateCategoryDto,
+  FindManyCategoriesDto,
+} from './dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { removeWhiteSpaces } from '../common/utils';
 import { Prisma } from '@prisma/client';
 import { PrismaError } from '../prisma/prisma-error';
-import { FindManyDto } from '../common/dto';
 
 @Injectable()
 export class CategoriesService {
@@ -45,26 +48,33 @@ export class CategoriesService {
     }
   }
 
-  async findAll({ limit, order, sortBy, offset, q }: FindManyDto) {
+  async findAll({
+    limit = 10,
+    order = 'asc',
+    sortBy = 'id',
+    offset = 0,
+    q = '',
+    pid = null,
+  }: FindManyCategoriesDto) {
     const categories = await this.prisma.category.findMany({
       take: limit,
       orderBy: { [sortBy || 'id']: order || 'asc' },
       skip: offset,
-      where: q ? { name: { startsWith: q, mode: 'insensitive' } } : undefined,
+      where: {
+        parentCategoryId: pid,
+        name: { startsWith: q, mode: 'insensitive' },
+      },
       include: {
         _count: {
-          select: { products: true, subCategories: true },
+          select: { subCategories: true },
         },
-        products: {
-          take: 1,
-          select: { images: { take: 1, select: { imageId: true } } },
-        },
-        parentCategory: true,
-        subCategories: true,
       },
     });
     const count = await this.prisma.category.count({
-      where: q ? { name: { startsWith: q, mode: 'insensitive' } } : undefined,
+      where: {
+        name: { startsWith: q, mode: 'insensitive' },
+        parentCategoryId: pid,
+      },
     });
     return {
       count,

@@ -17,6 +17,7 @@ export const useTable = <TData>(
   data: TData[],
   count: number,
   getData: (count: number, data: TData[]) => void,
+  pid: number | null = null,
 ) => {
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -69,13 +70,14 @@ export const useTable = <TData>(
     currentQuery.offset = (pageIndex * pageSize).toString();
     currentQuery.limit = pageSize.toString();
     currentQuery.q = q;
+    if (pid) currentQuery.pid = pid.toString();
     const url = qs.stringifyUrl({
       url: pathname,
       query: currentQuery,
     });
     search(process.env.NEXT_PUBLIC_API_URL + url);
     router.push(url);
-  }, [pagination, q, searchParams.toString()]);
+  }, [pagination, pid, q, searchParams.toString()]);
 
   return {
     loading,

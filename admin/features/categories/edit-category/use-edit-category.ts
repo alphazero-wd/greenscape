@@ -14,7 +14,6 @@ const formSchema = z.object({
     .string()
     .min(1, { message: "Category name must be between 1 and 20 characters" })
     .max(20, { message: "Category name must be between 1 and 20 characters" }),
-  parentCategoryId: z.number().int().gte(1).optional(),
 });
 
 export const useEditCategory = (id: number) => {
@@ -33,11 +32,7 @@ export const useEditCategory = (id: number) => {
   );
 
   useEffect(() => {
-    if (category)
-      form.reset({
-        name: category.name,
-        parentCategoryId: category.parentCategoryId,
-      });
+    if (category) form.setValue("name", category.name);
   }, [category]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {

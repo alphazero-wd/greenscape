@@ -14,9 +14,9 @@ import {
   FormLabel,
   FormMessage,
   Input,
-  Textarea,
 } from "@/features/ui";
 import { Loader2 } from "lucide-react";
+import { ParentCategorySelect } from "../form";
 import { useCreateCategory } from "./use-create-category";
 import { useCreateCategoryModal } from "./use-create-category-modal";
 
@@ -58,19 +58,14 @@ export const CreateCategoryModal = () => {
 
             <FormField
               control={form.control}
-              name="desc"
+              name="parentCategoryId"
               render={({ field }) => (
                 <FormItem className="py-4">
                   <div className="grid grid-cols-4 items-center">
-                    <FormLabel className="flex-1">Description</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        disabled={loading}
-                        placeholder="Description"
-                        {...field}
-                        className="col-span-3 w-full"
-                      />
-                    </FormControl>
+                    <FormLabel className="flex-1">Parent category</FormLabel>
+                    <div className="col-span-3 w-full">
+                      <ParentCategorySelect value={field.value} form={form} />
+                    </div>
                   </div>
                   <FormMessage />
                 </FormItem>

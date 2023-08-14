@@ -11,12 +11,12 @@ import {
   TableRow,
 } from "../table";
 
-interface DataTableProps<TData extends { id: number; name: string }, TValue> {
+interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   table: ITable<TData>;
 }
 
-export function DataTable<TData extends { id: number; name: string }, TValue>({
+export function DataTable<TData, TValue>({
   columns,
   table,
 }: DataTableProps<TData, TValue>) {

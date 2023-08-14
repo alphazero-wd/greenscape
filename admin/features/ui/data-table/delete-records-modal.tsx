@@ -1,6 +1,7 @@
 "use client";
 
 import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Button } from "../button";
 import {
   Dialog,
@@ -14,14 +15,11 @@ import { useDeleteRecords } from "./use-delete-records";
 import { useDeleteRecordsModal } from "./use-delete-records-modal";
 
 interface DeleteRecordModalProps {
-  entityName: "categories" | "sizes" | "products" | "colors" | "billboards";
-  updateUI: (ids: number[]) => void;
+  entityName: "categories" | "sizes" | "colors";
 }
 
-export const DeleteRecordsModal = ({
-  entityName,
-  updateUI,
-}: DeleteRecordModalProps) => {
+export const DeleteRecordsModal = ({ entityName }: DeleteRecordModalProps) => {
+  const router = useRouter();
   const { isOpen, onClose, ids } = useDeleteRecordsModal();
   const { loading, deleteRecords } = useDeleteRecords();
 
@@ -47,7 +45,7 @@ export const DeleteRecordsModal = ({
             <Button
               variant="destructive"
               onClick={() =>
-                deleteRecords(entityName).then(() => updateUI(ids))
+                deleteRecords(entityName).then(() => router.refresh())
               }
               disabled={loading}
             >

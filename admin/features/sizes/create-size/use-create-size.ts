@@ -5,25 +5,26 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
-import { useCategoriesStore } from "../context";
-import { Category } from "../types";
-import { useCreateCategoryModal } from "./use-create-category-modal";
+import { useSizesStore } from "../context";
+import { Size } from "../types";
+import { useCreateSizeModal } from "./use-create-size-modal";
 
 const formSchema = z.object({
   name: z
     .string()
-    .min(1, { message: "Category name must be between 1 and 20 characters" })
-    .max(20, { message: "Category name must be between 1 and 20 characters" }),
-  parentCategoryId: z.number().int().positive().optional(),
+    .min(1, { message: "Size name must be between 1 and 20 characters" })
+    .max(20, { message: "Size name must be between 1 and 20 characters" }),
+
+  desc: z.string().optional(),
 });
 
-export const useCreateCategory = () => {
+export const useCreateSize = () => {
   const [loading, setLoading] = useState(false);
-  const { onClose } = useCreateCategoryModal();
-  const { createCategory } = useCategoriesStore();
+  const { onClose } = useCreateSizeModal();
+  const { createSize } = useSizesStore();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { name: "", parentCategoryId: undefined },
+    defaultValues: { name: "", desc: "" },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -36,10 +37,10 @@ export const useCreateCategory = () => {
         values,
         { withCredentials: true },
       );
-      toast.success("Category created");
+      toast.success("Size created");
       form.reset();
       onClose();
-      createCategory(data as Category);
+      createSize(data as Size);
     } catch (error: any) {
       toast.error(error.response.data.message);
     } finally {

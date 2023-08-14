@@ -13,8 +13,7 @@ const formSchema = z.object({
     .string()
     .min(1, { message: "Category name must be between 1 and 20 characters" })
     .max(20, { message: "Category name must be between 1 and 20 characters" }),
-
-  desc: z.string().optional(),
+  parentCategoryId: z.number().int().lte(1).optional(),
 });
 
 export const useEditCategory = (id: number) => {
@@ -32,7 +31,11 @@ export const useEditCategory = (id: number) => {
   );
 
   useEffect(() => {
-    if (category) form.reset({ name: category.name, desc: category.desc });
+    if (category)
+      form.reset({
+        name: category.name,
+        parentCategoryId: category.parentCategoryId,
+      });
   }, [category]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -42,11 +45,12 @@ export const useEditCategory = (id: number) => {
         data: { data },
       } = await axios.patch(
         `${process.env.NEXT_PUBLIC_API_URL}/categories/${id}`,
-        values,
+        { ...values },
         { withCredentials: true },
       );
       toast.success("Category updated");
       updateCategory(id, data);
+      form.reset({ parentCategoryId: undefined });
       onClose();
     } catch (error: any) {
       toast.error(error.response.data.message);

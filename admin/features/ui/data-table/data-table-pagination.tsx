@@ -18,13 +18,13 @@ import {
 } from "../select";
 import { useDeleteRecordsModal } from "./use-delete-records-modal";
 
-interface DataTablePaginationProps<TData extends { id: number; name: string }> {
+interface DataTablePaginationProps<TData extends { id: number }> {
   table: Table<TData>;
 }
 
-export function DataTablePagination<
-  TData extends { id: number; name: string },
->({ table }: DataTablePaginationProps<TData>) {
+export function DataTablePagination<TData extends { id: number }>({
+  table,
+}: DataTablePaginationProps<TData>) {
   const selectedRowIds = useMemo(
     () => table.getSelectedRowModel().rows.map(({ original }) => original.id),
     [table.getFilteredSelectedRowModel().rows],

@@ -1,5 +1,10 @@
 export interface Category {
   id: number;
   name: string;
-  desc?: string;
+  parentCategoryId?: number;
+  subCategories: Category[];
+  _count: {
+    products: number;
+    subCategories: number;
+  };
 }

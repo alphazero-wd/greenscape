@@ -1,45 +1,51 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
-import { useCategoriesStore } from "../context";
-import { Category } from "../types";
-import { useCreateCategoryModal } from "./use-create-category-modal";
+import { useSizesStore } from "../context";
+import { useEditSizeModal } from "./use-edit-size-modal";
 
 const formSchema = z.object({
-  name: z
+  label: z
     .string()
-    .min(1, { message: "Category name must be between 1 and 20 characters" })
-    .max(20, { message: "Category name must be between 1 and 20 characters" }),
-  parentCategoryId: z.number().int().positive().optional(),
+    .min(1, { message: "Size name must be between 1 and 20 characters" })
+    .max(20, { message: "Size name must be between 1 and 20 characters" }),
 });
 
-export const useCreateCategory = () => {
+export const useEditSize = (id: number) => {
   const [loading, setLoading] = useState(false);
-  const { onClose } = useCreateCategoryModal();
-  const { createCategory } = useCategoriesStore();
+  const { categories, updateSize } = useSizesStore();
+  const { onClose } = useEditSizeModal();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { name: "", parentCategoryId: undefined },
   });
+
+  const size = useMemo(
+    () => categories.find((c) => c.id === id),
+    [categories, id],
+  );
+
+  useEffect(() => {
+    if (size) form.reset({ label: size.name });
+  }, [size]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setLoading(true);
       const {
         data: { data },
-      } = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/categories/`,
+      } = await axios.patch(
+        `${process.env.NEXT_PUBLIC_API_URL}/categories/${id}`,
         values,
         { withCredentials: true },
       );
-      toast.success("Category created");
-      form.reset();
+      toast.success("Size updated");
+      updateSize(id, data);
       onClose();
-      createCategory(data as Category);
     } catch (error: any) {
       toast.error(error.response.data.message);
     } finally {

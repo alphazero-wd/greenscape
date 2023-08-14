@@ -1,1 +1,1 @@
-export const MAX_IMAGE_SIZE = Math.pow(1024, 2) * 2; // 2 MB
+export const MAX_IMAGE_SIZE = Math.pow(1024, 2) * 5; // 5 MB

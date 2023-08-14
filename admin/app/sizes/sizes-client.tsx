@@ -1,9 +1,9 @@
 "use client";
-import { useCategoriesStore } from "@/features/categories/context";
-import { CreateCategoryButton } from "@/features/categories/create-category";
-import { EditCategoryModal } from "@/features/categories/edit-category";
-import { Category } from "@/features/categories/types";
-import { columns } from "@/features/categories/utils";
+import { useSizesStore } from "@/features/sizes/context";
+import { CreateSizeButton } from "@/features/sizes/create-size";
+import { EditSizeModal } from "@/features/sizes/edit-size";
+import { Size } from "@/features/sizes/types";
+import { columns } from "@/features/sizes/utils";
 import { Input } from "@/features/ui";
 import {
   DataTable,
@@ -12,31 +12,28 @@ import {
   DeleteRecordsModal,
   useTable,
 } from "@/features/ui/data-table";
-import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-interface CategoriesPageClientProps {
+interface SizesPageClientProps {
   count: number;
-  data: Category[];
+  data: Size[];
 }
 
-export const CategoriesPageClient: React.FC<CategoriesPageClientProps> = ({
+export const SizesPageClient: React.FC<SizesPageClientProps> = ({
   count: hits,
   data,
 }) => {
-  const { categories, getCategories, count, deleteCategories } =
-    useCategoriesStore();
+  const { categories, getSizes, count, deleteSizes } = useSizesStore();
 
-  const { loading, q, setQ, table } = useTable<Category>(
+  const { loading, q, setQ, table } = useTable<Size>(
     columns,
     categories,
     hits,
-    getCategories,
+    getSizes,
   );
-  const router = useRouter();
 
   useEffect(() => {
-    getCategories(hits, data);
+    getSizes(hits, data);
   }, [data, hits]);
 
   if (loading) return <div>Loading...</div>;
@@ -44,11 +41,11 @@ export const CategoriesPageClient: React.FC<CategoriesPageClientProps> = ({
   return (
     <>
       <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-        Categories ({count})
+        Plants ({count})
       </h1>
 
       <div className="mt-3">
-        <CreateCategoryButton />
+        <CreateSizeButton />
       </div>
 
       <div className="mt-6 space-y-8">
@@ -58,7 +55,7 @@ export const CategoriesPageClient: React.FC<CategoriesPageClientProps> = ({
               <Input
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
-                placeholder="Search categories..."
+                placeholder="Search plants..."
                 className="h-8 w-[250px]"
               />
             </div>
@@ -69,8 +66,8 @@ export const CategoriesPageClient: React.FC<CategoriesPageClientProps> = ({
         </div>
       </div>
 
-      <EditCategoryModal />
-      <DeleteRecordsModal entityName="categories" />
+      <EditSizeModal />
+      <DeleteRecordsModal entityName="sizes" updateUI={deleteSizes} />
     </>
   );
 };

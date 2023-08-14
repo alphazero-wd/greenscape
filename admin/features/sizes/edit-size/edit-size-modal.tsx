@@ -15,13 +15,12 @@ import {
   Input,
 } from "@/features/ui";
 import { Loader2 } from "lucide-react";
-import { ParentCategorySelect } from "../form";
-import { useEditCategory } from "./use-edit-category";
-import { useEditCategoryModal } from "./use-edit-category-modal";
+import { useEditSize } from "./use-edit-size";
+import { useEditSizeModal } from "./use-edit-size-modal";
 
-export const EditCategoryModal = () => {
-  const { isOpen, onClose, id } = useEditCategoryModal();
-  const { loading, handleSubmit, form } = useEditCategory(id);
+export const EditSizeModal = () => {
+  const { isOpen, onClose, id } = useEditSizeModal();
+  const { loading, handleSubmit, form } = useEditSize(id);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -33,39 +32,19 @@ export const EditCategoryModal = () => {
           <form className="space-y-4" onSubmit={handleSubmit}>
             <FormField
               control={form.control}
-              name="name"
+              name="label"
               render={({ field }) => (
                 <FormItem className="py-4">
                   <div className="grid grid-cols-4 items-center">
-                    <FormLabel className="flex-1">Category</FormLabel>
+                    <FormLabel className="flex-1">Size</FormLabel>
                     <FormControl>
                       <Input
                         disabled={loading}
-                        placeholder="Category"
+                        placeholder="Size"
                         {...field}
                         className="col-span-3 w-full"
                       />
                     </FormControl>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="parentCategoryId"
-              render={({ field }) => (
-                <FormItem className="py-4">
-                  <div className="grid grid-cols-4 items-center">
-                    <FormLabel className="flex-1">Parent category</FormLabel>
-                    <div className="col-span-3 w-full">
-                      <ParentCategorySelect
-                        id={id}
-                        value={field.value}
-                        form={form}
-                      />
-                    </div>
                   </div>
                   <FormMessage />
                 </FormItem>

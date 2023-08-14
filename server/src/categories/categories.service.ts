@@ -16,10 +16,10 @@ import { FindManyDto } from '../common/dto';
 export class CategoriesService {
   constructor(private prisma: PrismaService) {}
 
-  async create({ name, desc }: CreateCategoryDto) {
+  async create({ name, parentCategoryId }: CreateCategoryDto) {
     try {
       const newCategory = await this.prisma.category.create({
-        data: { name: removeWhiteSpaces(name), desc },
+        data: { name: removeWhiteSpaces(name), parentCategoryId },
       });
       return newCategory;
     } catch (error) {
@@ -29,6 +29,12 @@ export class CategoriesService {
             success: false,
             message:
               'Category with the given `name` already exists in the store',
+          });
+        if (error.code === PrismaError.ForeignViolation)
+          throw new NotFoundException({
+            success: false,
+            message:
+              'Cannot create category because the parent category with the given `parentCategoryId` is not found',
           });
       }
       throw new InternalServerErrorException({
@@ -44,6 +50,17 @@ export class CategoriesService {
       orderBy: { [sortBy || 'id']: order || 'asc' },
       skip: offset,
       where: q ? { name: { startsWith: q, mode: 'insensitive' } } : undefined,
+      include: {
+        _count: {
+          select: { products: true, subCategories: true },
+        },
+        products: {
+          take: 1,
+          select: { images: { take: 1, select: { imageId: true } } },
+        },
+        parentCategory: true,
+        subCategories: true,
+      },
     });
     const count = await this.prisma.category.count({
       where: q ? { name: { startsWith: q, mode: 'insensitive' } } : undefined,
@@ -54,11 +71,11 @@ export class CategoriesService {
     };
   }
 
-  async update(id: number, { name, desc }: UpdateCategoryDto) {
+  async update(id: number, { name, parentCategoryId }: UpdateCategoryDto) {
     try {
       const updatedCategory = await this.prisma.category.update({
         where: { id },
-        data: { name: removeWhiteSpaces(name), desc },
+        data: { name: removeWhiteSpaces(name), parentCategoryId },
       });
       return updatedCategory;
     } catch (error) {
@@ -74,6 +91,12 @@ export class CategoriesService {
             success: false,
             message:
               'Cannot update the category because it is not found with the given `id`',
+          });
+        if (error.code === PrismaError.ForeignViolation)
+          throw new NotFoundException({
+            success: false,
+            message:
+              'Cannot update category because the parent category with the given `parentCategoryId` is not found',
           });
       }
       throw new InternalServerErrorException({
@@ -102,7 +125,7 @@ export class CategoriesService {
             throw new ForbiddenException({
               success: false,
               message:
-                'Cannot delete categories because they are linked to existing plants',
+                'Cannot delete categories because they are linked to existing products',
             });
         if (error instanceof NotFoundException) throw error;
         throw new InternalServerErrorException({

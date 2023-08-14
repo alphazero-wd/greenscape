@@ -5,7 +5,7 @@ import {
   CaretSortIcon,
   EyeNoneIcon,
 } from "@radix-ui/react-icons";
-import { Column } from "@tanstack/react-table";
+import { Column, SortDirection } from "@tanstack/react-table";
 import qs from "query-string";
 
 import { usePaginate } from "@/features/utils";
@@ -45,15 +45,15 @@ export function DataTableColumnHeader<TData, TValue>({
 
   const toggleSortingServer = useDebouncedCallback(async () => {
     const currentQuery = qs.parse(searchParams.toString());
-    currentQuery.sortBy = column.id || "id";
-    currentQuery.order = (column.getIsSorted() as string) || "asc";
+    if (column.getIsSorted()) {
+      currentQuery.sortBy = column.id;
+      currentQuery.order = column.getIsSorted() as SortDirection;
+    }
     const url = qs.stringifyUrl({
       url: pathname,
       query: currentQuery,
     });
     paginate(process.env.NEXT_PUBLIC_API_URL + url).then(({ data, count }) => {
-      console.log({ url });
-      console.log({ data });
       if (typeof getData === "function") getData(count, data);
     });
     router.push(url);

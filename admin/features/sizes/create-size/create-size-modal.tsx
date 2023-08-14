@@ -3,6 +3,7 @@ import {
   Button,
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -13,21 +14,24 @@ import {
   FormLabel,
   FormMessage,
   Input,
+  Textarea,
 } from "@/features/ui";
 import { Loader2 } from "lucide-react";
-import { ParentCategorySelect } from "../form";
-import { useEditCategory } from "./use-edit-category";
-import { useEditCategoryModal } from "./use-edit-category-modal";
+import { useCreateSize } from "./use-create-size";
+import { useCreateSizeModal } from "./use-create-size-modal";
 
-export const EditCategoryModal = () => {
-  const { isOpen, onClose, id } = useEditCategoryModal();
-  const { loading, handleSubmit, form } = useEditCategory(id);
+export const CreateSizeModal = () => {
+  const { isOpen, onClose } = useCreateSizeModal();
+  const { loading, handleSubmit, form } = useCreateSize();
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Edit category</DialogTitle>
+          <DialogTitle>Create category</DialogTitle>
+          <DialogDescription>
+            Create new category for better products filtering
+          </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form className="space-y-4" onSubmit={handleSubmit}>
@@ -37,11 +41,11 @@ export const EditCategoryModal = () => {
               render={({ field }) => (
                 <FormItem className="py-4">
                   <div className="grid grid-cols-4 items-center">
-                    <FormLabel className="flex-1">Category</FormLabel>
+                    <FormLabel className="flex-1">Size</FormLabel>
                     <FormControl>
                       <Input
                         disabled={loading}
-                        placeholder="Category"
+                        placeholder="Size"
                         {...field}
                         className="col-span-3 w-full"
                       />
@@ -54,18 +58,19 @@ export const EditCategoryModal = () => {
 
             <FormField
               control={form.control}
-              name="parentCategoryId"
+              name="desc"
               render={({ field }) => (
                 <FormItem className="py-4">
                   <div className="grid grid-cols-4 items-center">
-                    <FormLabel className="flex-1">Parent category</FormLabel>
-                    <div className="col-span-3 w-full">
-                      <ParentCategorySelect
-                        id={id}
-                        value={field.value}
-                        form={form}
+                    <FormLabel className="flex-1">Description</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        disabled={loading}
+                        placeholder="Description"
+                        {...field}
+                        className="col-span-3 w-full"
                       />
-                    </div>
+                    </FormControl>
                   </div>
                   <FormMessage />
                 </FormItem>
@@ -84,7 +89,7 @@ export const EditCategoryModal = () => {
                 </Button>
                 <Button disabled={loading} type="submit">
                   {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Edit
+                  Create
                 </Button>
               </div>
             </DialogFooter>

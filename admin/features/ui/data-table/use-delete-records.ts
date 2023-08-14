@@ -7,7 +7,9 @@ import { useDeleteRecordsModal } from "./use-delete-records-modal";
 export const useDeleteRecords = () => {
   const { onClose, ids } = useDeleteRecordsModal();
   const [loading, setLoading] = useState(false);
-  const deleteRecords = async (entityName: "categories" | "plants") => {
+  const deleteRecords = async (
+    entityName: "categories" | "sizes" | "colors",
+  ) => {
     try {
       setLoading(true);
       const idsString = ids.join(",");

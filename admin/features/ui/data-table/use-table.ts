@@ -50,6 +50,7 @@ export const useTable = <TData>(
     enableRowSelection: true,
     manualPagination: true,
     manualSorting: true,
+    manualFiltering: true,
     onRowSelectionChange: setRowSelection,
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),

@@ -8,6 +8,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 import { PrismaError } from '../prisma/prisma-error';
 import { CreateColorDto, UpdateColorDto } from './dto';
+import { FindManyDto } from '../common/dto';
 
 @Injectable()
 export class ColorsService {
@@ -37,8 +38,24 @@ export class ColorsService {
     }
   }
 
-  findAll() {
-    return this.prisma.color.findMany();
+  async findAll({
+    limit = 10,
+    sortBy = 'id',
+    order = 'asc',
+    offset = 0,
+    q = '',
+  }: FindManyDto) {
+    const colors = await this.prisma.color.findMany({
+      take: limit,
+      orderBy: { [sortBy]: order || 'asc' },
+      skip: offset,
+      where: { hexCode: { startsWith: q, mode: 'insensitive' } },
+      include: { _count: { select: { variants: true } } },
+    });
+    const count = await this.prisma.color.count({
+      where: { hexCode: { startsWith: q, mode: 'insensitive' } },
+    });
+    return { count, colors };
   }
 
   async update(id: number, { hexCode }: UpdateColorDto) {

@@ -116,6 +116,7 @@ export {
   TableRow,
 } from "./table";
 
+export { CopyButton } from "./copy-button";
 export { Dropzone } from "./dropzone";
 export { Switch } from "./switch";
 export { Textarea } from "./textarea";

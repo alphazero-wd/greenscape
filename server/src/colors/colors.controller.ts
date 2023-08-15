@@ -11,11 +11,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ColorsService } from './colors.service';
-import { CreateColorDto } from './dto/create-color.dto';
-import { UpdateColorDto } from './dto/update-color.dto';
-import { DeleteManyDto } from '../common/dto';
+import { DeleteManyDto, FindManyDto } from '../common/dto';
 import { RolesGuard } from '../auth/guards';
 import { Role } from '@prisma/client';
+import { CreateColorDto, UpdateColorDto } from './dto';
 
 @Controller('colors')
 @UseGuards(RolesGuard(Role.Admin))
@@ -29,9 +28,9 @@ export class ColorsController {
   }
 
   @Get()
-  async findAll() {
-    const colors = await this.colorsService.findAll();
-    return { success: true, data: colors };
+  async findAll(@Query() findManyDto: FindManyDto) {
+    const { count, colors } = await this.colorsService.findAll(findManyDto);
+    return { success: true, count, data: colors };
   }
 
   @Patch(':id')

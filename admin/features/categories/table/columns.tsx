@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Checkbox } from "@/features/ui";
+import { Button, Checkbox, CopyButton } from "@/features/ui";
 import {
   DataTableColumnHeader,
   DataTableRowActions,
@@ -80,6 +80,7 @@ export const columns: ColumnDef<Category>[] = [
       const { onOpen: onDeleteOpen } = useDeleteRecordsModal();
       return (
         <div className="flex items-center justify-end">
+          <CopyButton text={row.original.name} />
           <Button variant="ghost" size="icon">
             <Link href={`/categories/${row.original.id}`}>
               <EyeIcon className="h-5 w-5" />

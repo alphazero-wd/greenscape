@@ -7,19 +7,16 @@ import {
   useTable,
 } from "@/features/ui";
 import React from "react";
-import { Category } from "../types";
+import { Color } from "../types";
 import { columns } from "./columns";
 
-interface CategoriesTableProps {
-  categories: Category[];
+interface ColorsTableProps {
+  colors: Color[];
   count: number;
 }
 
-export const CategoriesTable: React.FC<CategoriesTableProps> = ({
-  categories,
-  count,
-}) => {
-  const { q, setQ, table } = useTable(columns, categories, count);
+export const ColorsTable: React.FC<ColorsTableProps> = ({ colors, count }) => {
+  const { q, setQ, table } = useTable(columns, colors, count);
 
   return (
     <div className="space-y-4">
@@ -28,7 +25,7 @@ export const CategoriesTable: React.FC<CategoriesTableProps> = ({
           <Input
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Search categories..."
+            placeholder="Search colors..."
             className="h-8 w-[250px]"
           />
         </div>

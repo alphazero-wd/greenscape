@@ -15,36 +15,39 @@ import {
   Input,
 } from "@/features/ui";
 import { Loader2 } from "lucide-react";
-import { useEditSize } from "./use-edit-size";
-import { useEditSizeModal } from "./use-edit-size-modal";
+import { ColorCircle } from "../circle";
+import { useEditColor } from "./use-edit-color";
+import { useEditColorModal } from "./use-edit-color-modal";
 
-export const EditSizeModal = () => {
-  const { isOpen, onClose, currentSize } = useEditSizeModal();
-  const { loading, handleSubmit, form } = useEditSize(currentSize);
+export const EditColorModal = () => {
+  const { isOpen, onClose, currentColor } = useEditColorModal();
+  const { loading, handleSubmit, form } = useEditColor(currentColor);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Edit size</DialogTitle>
+          <DialogTitle>Edit color</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form className="space-y-4" onSubmit={handleSubmit}>
             <FormField
               control={form.control}
-              name="label"
+              name="hexCode"
               render={({ field }) => (
                 <FormItem className="py-4">
-                  <div className="grid grid-cols-4 items-center">
-                    <FormLabel className="flex-1">Size label</FormLabel>
+                  <div className="grid grid-cols-4 items-center gap-3">
+                    <FormLabel className="flex-1">Hex code</FormLabel>
                     <FormControl>
                       <Input
                         disabled={loading}
-                        placeholder="Size label"
+                        maxLength={7}
+                        placeholder="Hex code"
                         {...field}
-                        className="col-span-3 w-full"
+                        className="col-span-2 w-full"
                       />
                     </FormControl>
+                    <ColorCircle color={field.value} />
                   </div>
                   <FormMessage />
                 </FormItem>

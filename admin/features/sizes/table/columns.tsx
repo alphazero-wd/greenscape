@@ -1,6 +1,6 @@
 "use client";
 
-import { Checkbox } from "@/features/ui";
+import { Checkbox, CopyButton } from "@/features/ui";
 import {
   DataTableColumnHeader,
   DataTableRowActions,
@@ -43,20 +43,6 @@ export const columns: ColumnDef<Size>[] = [
     ),
   },
   {
-    id: "variants",
-    accessorKey: "variants",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        className="justify-end"
-        column={column}
-        title="Variants"
-      />
-    ),
-    cell: ({ row }) => (
-      <div className="text-right">{row.original._count.variants}</div>
-    ),
-  },
-  {
     id: "actions",
     header: () => <div className="text-right">Actions</div>,
     cell: ({ row }) => {
@@ -64,6 +50,7 @@ export const columns: ColumnDef<Size>[] = [
       const { onOpen: onDeleteOpen } = useDeleteRecordsModal();
       return (
         <div className="flex justify-end">
+          <CopyButton text={row.original.label} />
           <DataTableRowActions
             row={row}
             onEditAction={onEditOpen}

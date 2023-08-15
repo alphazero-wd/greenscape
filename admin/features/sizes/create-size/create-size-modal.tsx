@@ -27,9 +27,10 @@ export const CreateSizeModal = () => {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Create category</DialogTitle>
+          <DialogTitle>Create size</DialogTitle>
           <DialogDescription>
-            Create new category for better products filtering
+            Create new size so that customers can choose products that{" "}
+            <b>fit</b> them
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>

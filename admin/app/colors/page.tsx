@@ -1,17 +1,17 @@
-import { getSizes } from "@/features/sizes/actions";
+import { getColors } from "@/features/colors/actions";
 import {
-  CreateSizeButton,
-  CreateSizeModal,
-} from "@/features/sizes/create-size";
-import { EditSizeModal } from "@/features/sizes/edit-size";
-import { SizesTable } from "@/features/sizes/table";
+  CreateColorButton,
+  CreateColorModal,
+} from "@/features/colors/create-color";
+import { EditColorModal } from "@/features/colors/edit-color";
+import { ColorsTable } from "@/features/colors/table";
 import { Breadcrumb, DeleteRecordsModal } from "@/features/ui";
 import { getCurrentUser } from "@/features/user/utils";
 import { redirect } from "next/navigation";
 import qs from "query-string";
 
 export const metadata = {
-  title: "Sizes",
+  title: "Colors",
 };
 
 interface CategoriesPageProps {
@@ -30,32 +30,32 @@ export default async function CategoriesPage({
   const user = await getCurrentUser();
   if (!user) redirect("/auth/login");
   const url = qs.stringifyUrl({
-    url: process.env.NEXT_PUBLIC_API_URL! + "/sizes",
+    url: process.env.NEXT_PUBLIC_API_URL! + "/colors",
     query: searchParams,
   });
-  const { count, data } = await getSizes(url);
+  const { count, data } = await getColors(url);
 
   return (
     <>
-      <div className="max-w-2xl">
+      <div className="max-w-3xl">
         <div className="mb-4">
-          <Breadcrumb links={[{ name: "Sizes", href: `/sizes` }]} />
+          <Breadcrumb links={[{ name: "Colors", href: `/colors` }]} />
         </div>
         <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-          Sizes ({count})
+          Colors ({count})
         </h1>
 
         <div className="mt-3">
-          <CreateSizeButton />
+          <CreateColorButton />
         </div>
 
         <div className="mt-6 space-y-8">
-          <SizesTable sizes={data} count={count} />
+          <ColorsTable colors={data} count={count} />
         </div>
       </div>
-      <CreateSizeModal />
-      <EditSizeModal />
-      <DeleteRecordsModal entityName="sizes" />
+      <CreateColorModal />
+      <EditColorModal />
+      <DeleteRecordsModal entityName="colors" />
     </>
   );
 }

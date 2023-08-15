@@ -8,7 +8,7 @@ import {
 } from "@/features/ui";
 import React from "react";
 import { Size } from "../types";
-import { columns } from "../utils";
+import { columns } from "./columns";
 
 interface SizesTableProps {
   sizes: Size[];

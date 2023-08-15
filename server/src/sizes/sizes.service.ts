@@ -40,14 +40,9 @@ export class SizesService {
   }
 
   async findAll({ limit, order, sortBy, offset, q }: FindManyDto) {
-    let orderBy = {};
-    if (sortBy === 'variants')
-      orderBy = { variants: { _count: order || 'asc' } };
-    else orderBy = { [sortBy || 'id']: order || 'asc' };
-
     const sizes = await this.prisma.size.findMany({
       take: limit,
-      orderBy,
+      orderBy: { [sortBy || 'id']: order || 'asc' },
       skip: offset,
       where: { label: { startsWith: q, mode: 'insensitive' } },
       include: { _count: { select: { variants: true } } },

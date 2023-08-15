@@ -3,6 +3,7 @@ import {
   Button,
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -15,36 +16,43 @@ import {
   Input,
 } from "@/features/ui";
 import { Loader2 } from "lucide-react";
-import { useEditSize } from "./use-edit-size";
-import { useEditSizeModal } from "./use-edit-size-modal";
+import { ColorCircle } from "../circle";
+import { useCreateColor } from "./use-create-color";
+import { useCreateColorModal } from "./use-create-color-modal";
 
-export const EditSizeModal = () => {
-  const { isOpen, onClose, currentSize } = useEditSizeModal();
-  const { loading, handleSubmit, form } = useEditSize(currentSize);
+export const CreateColorModal = () => {
+  const { isOpen, onClose } = useCreateColorModal();
+  const { loading, handleSubmit, form } = useCreateColor();
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Edit size</DialogTitle>
+          <DialogTitle>Create color</DialogTitle>
+          <DialogDescription>
+            Create new size so that customers can choose products that{" "}
+            <b>match</b> their preferences
+          </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form className="space-y-4" onSubmit={handleSubmit}>
             <FormField
               control={form.control}
-              name="label"
+              name="hexCode"
               render={({ field }) => (
                 <FormItem className="py-4">
-                  <div className="grid grid-cols-4 items-center">
-                    <FormLabel className="flex-1">Size label</FormLabel>
+                  <div className="grid grid-cols-4 items-center gap-3">
+                    <FormLabel className="flex-1">Hex code</FormLabel>
                     <FormControl>
                       <Input
                         disabled={loading}
-                        placeholder="Size label"
+                        maxLength={7}
+                        placeholder="Hex code"
                         {...field}
-                        className="col-span-3 w-full"
+                        className="col-span-2 w-full"
                       />
                     </FormControl>
+                    <ColorCircle color={field.value} />
                   </div>
                   <FormMessage />
                 </FormItem>
@@ -63,7 +71,7 @@ export const EditSizeModal = () => {
                 </Button>
                 <Button disabled={loading} type="submit">
                   {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Edit
+                  Create
                 </Button>
               </div>
             </DialogFooter>

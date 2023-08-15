@@ -2,11 +2,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
-import { useCategoriesStore } from "../context";
+import { Category } from "../types";
 import { useEditCategoryModal } from "./use-edit-category-modal";
 
 const formSchema = z.object({
@@ -16,20 +16,14 @@ const formSchema = z.object({
     .max(20, { message: "Category name must be between 1 and 20 characters" }),
 });
 
-export const useEditCategory = (id: number) => {
+export const useEditCategory = (category: Category | null) => {
   const [loading, setLoading] = useState(false);
-  const { categories } = useCategoriesStore();
   const router = useRouter();
   const { onClose } = useEditCategoryModal();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
-
-  const category = useMemo(
-    () => categories.find((c) => c.id === id),
-    [categories, id],
-  );
 
   useEffect(() => {
     if (category) form.setValue("name", category.name);
@@ -39,8 +33,8 @@ export const useEditCategory = (id: number) => {
     try {
       setLoading(true);
       await axios.patch(
-        `${process.env.NEXT_PUBLIC_API_URL}/categories/${id}`,
-        { ...values },
+        `${process.env.NEXT_PUBLIC_API_URL}/categories/${category?.id}`,
+        values,
         { withCredentials: true },
       );
       toast.success("Category updated");

@@ -56,30 +56,52 @@ export class CategoriesService {
     q = '',
     pid = null,
   }: FindManyCategoriesDto) {
-    const categories = await this.prisma.category.findMany({
-      take: limit,
-      orderBy: { [sortBy || 'id']: order || 'asc' },
-      skip: offset,
-      where: {
-        parentCategoryId: pid,
-        name: { startsWith: q, mode: 'insensitive' },
-      },
-      include: {
-        _count: {
-          select: { subCategories: true },
+    try {
+      const categories = await this.prisma.category.findMany({
+        take: limit,
+        orderBy: { [sortBy || 'id']: order || 'asc' },
+        skip: offset,
+        where: {
+          parentCategoryId: pid,
+          name: { startsWith: q, mode: 'insensitive' },
         },
+        include: {
+          _count: {
+            select: { subCategories: true, products: true },
+          },
+        },
+      });
+      const count = await this.prisma.category.count({
+        where: {
+          name: { startsWith: q, mode: 'insensitive' },
+          parentCategoryId: pid,
+        },
+      });
+      return {
+        count,
+        categories,
+      };
+    } catch (error) {
+      throw new InternalServerErrorException({
+        success: false,
+        message: 'Something went wrong',
+      });
+    }
+  }
+
+  async findOne(id: number) {
+    const category = await this.prisma.category.findUnique({
+      where: { id },
+      include: {
+        parentCategory: { select: { id: true, name: true } },
       },
     });
-    const count = await this.prisma.category.count({
-      where: {
-        name: { startsWith: q, mode: 'insensitive' },
-        parentCategoryId: pid,
-      },
-    });
-    return {
-      count,
-      categories,
-    };
+    if (!category)
+      throw new NotFoundException({
+        success: false,
+        message: 'Cannot find category with the given `id`',
+      });
+    return category;
   }
 
   async update(id: number, { name, parentCategoryId }: UpdateCategoryDto) {

@@ -1,15 +1,16 @@
 import { create } from "zustand";
+import { Category } from "../types";
 
 interface EditCategoryModalStore {
   isOpen: boolean;
-  id: number;
-  onOpen: (id: number) => void;
+  currentCategory: Category | null;
+  onOpen: (category: Category) => void;
   onClose: () => void;
 }
 
 export const useEditCategoryModal = create<EditCategoryModalStore>((set) => ({
   isOpen: false,
-  id: 0,
-  onOpen: (id) => set({ isOpen: true, id }),
-  onClose: () => set({ isOpen: false, id: 0 }),
+  currentCategory: null,
+  onOpen: (category) => set({ isOpen: true, currentCategory: category }),
+  onClose: () => set({ isOpen: false, currentCategory: null }),
 }));

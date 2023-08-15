@@ -8,7 +8,6 @@ import {
 import { Column, SortDirection } from "@tanstack/react-table";
 import qs from "query-string";
 
-import { usePaginate } from "@/features/utils";
 import { cn } from "@/lib/utils";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
@@ -26,21 +25,18 @@ interface DataTableColumnHeaderProps<TData, TValue>
   extends React.HTMLAttributes<HTMLDivElement> {
   column: Column<TData, TValue>;
   title: string;
-  getData?: (count: number, data: TData[]) => void;
 }
 
 export function DataTableColumnHeader<TData, TValue>({
   column,
   title,
   className,
-  getData,
 }: DataTableColumnHeaderProps<TData, TValue>) {
   if (!column.getCanSort()) {
     return <div className={cn(className)}>{title}</div>;
   }
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const { paginate } = usePaginate();
   const router = useRouter();
 
   const toggleSortingServer = useDebouncedCallback(async () => {
@@ -52,9 +48,6 @@ export function DataTableColumnHeader<TData, TValue>({
     const url = qs.stringifyUrl({
       url: pathname,
       query: currentQuery,
-    });
-    paginate(process.env.NEXT_PUBLIC_API_URL + url).then(({ data, count }) => {
-      if (typeof getData === "function") getData(count, data);
     });
     router.push(url);
   }, 500);

@@ -7,7 +7,7 @@ import { Button } from "../button";
 
 interface DataTableRowActionsProps<TData extends { id: number }> {
   row: Row<TData>;
-  onEditAction: (id: number) => void;
+  onEditAction: (data: TData) => void;
   onDeleteAction: (ids: number[]) => void;
 }
 
@@ -17,10 +17,10 @@ export function DataTableRowActions<TData extends { id: number }>({
   onEditAction,
 }: DataTableRowActionsProps<TData>) {
   return (
-    <div className="flex items-center gap-x-4">
+    <div className="flex items-center gap-x-2">
       <Button
         onClick={() => {
-          onEditAction(row.original.id);
+          onEditAction(row.original);
         }}
         variant="ghost"
         size="icon"

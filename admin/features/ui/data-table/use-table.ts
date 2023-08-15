@@ -1,5 +1,4 @@
 "use client";
-import { usePaginate } from "@/features/utils";
 import {
   ColumnDef,
   PaginationState,
@@ -16,8 +15,6 @@ export const useTable = <TData>(
   columns: ColumnDef<TData>[],
   data: TData[],
   count: number,
-  getData: (count: number, data: TData[]) => void,
-  pid: number | null = null,
 ) => {
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -57,30 +54,24 @@ export const useTable = <TData>(
     getCoreRowModel: getCoreRowModel(),
   });
 
-  const { paginate, loading } = usePaginate();
-  const search = useDebouncedCallback(async (url) => {
-    paginate(url).then(({ count, data }) => {
-      getData(count, data);
-    });
-  }, 1000);
-
-  useEffect(() => {
+  const updateQueries = useDebouncedCallback(() => {
     if (q) setPagination({ pageIndex: 0, pageSize });
     const currentQuery = qs.parse(searchParams.toString());
     currentQuery.offset = (pageIndex * pageSize).toString();
     currentQuery.limit = pageSize.toString();
     currentQuery.q = q;
-    if (pid) currentQuery.pid = pid.toString();
     const url = qs.stringifyUrl({
       url: pathname,
       query: currentQuery,
     });
-    search(process.env.NEXT_PUBLIC_API_URL + url);
     router.push(url);
-  }, [pagination, pid, q, searchParams.toString()]);
+  }, 500);
+
+  useEffect(() => {
+    updateQueries();
+  }, [pagination, router, q, searchParams.toString()]);
 
   return {
-    loading,
     q,
     setQ,
     table,

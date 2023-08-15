@@ -18,7 +18,7 @@ import {
 } from './dto';
 import { RolesGuard } from '../auth/guards';
 import { Role } from '@prisma/client';
-import { DeleteManyDto, FindManyDto } from '../common/dto';
+import { DeleteManyDto } from '../common/dto';
 
 @Controller('categories')
 export class CategoriesController {
@@ -41,6 +41,12 @@ export class CategoriesController {
       paginateDto,
     );
     return { success: true, count, data: categories };
+  }
+
+  @Get(':id')
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    const category = await this.categoriesService.findOne(id);
+    return { success: true, data: category };
   }
 
   @Patch(':id')

@@ -1,3 +1,4 @@
+"use client";
 import {
   DataTable,
   DataTablePagination,
@@ -11,25 +12,15 @@ import { columns } from "../utils";
 
 interface CategoriesTableProps {
   categories: Category[];
-  hits: number;
-  getCategories: (count: number, categories: Category[]) => void;
-  pid: number | null;
+  count: number;
 }
 
 export const CategoriesTable: React.FC<CategoriesTableProps> = ({
   categories,
-  hits,
-  getCategories,
-  pid,
+  count,
 }) => {
-  const { loading, q, setQ, table } = useTable<Category>(
-    columns,
-    categories,
-    hits,
-    getCategories,
-    pid,
-  );
-  if (loading) return <div>Loading...</div>;
+  const { q, setQ, table } = useTable(columns, categories, count);
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">

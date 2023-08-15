@@ -7,7 +7,6 @@ import {
   useDeleteRecordsModal,
 } from "@/features/ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
-import { useSizesStore } from "../context";
 import { useEditSizeModal } from "../edit-size";
 import { Size } from "../types";
 
@@ -34,43 +33,43 @@ export const columns: ColumnDef<Size>[] = [
     enableHiding: false,
   },
   {
-    id: "name",
-    accessorKey: "name",
+    id: "label",
+    accessorKey: "label",
     header: ({ column }) => {
-      const { getSizes } = useSizesStore();
-      return (
-        <DataTableColumnHeader
-          getData={getSizes}
-          column={column}
-          title="Size"
-        />
-      );
+      return <DataTableColumnHeader column={column} title="Size" />;
     },
     cell: ({ row }) => (
-      <div className="line-clamp-1 font-medium">{row.getValue("name")}</div>
+      <div className="line-clamp-1 font-medium">{row.getValue("label")}</div>
     ),
   },
   {
-    id: "desc",
-    accessorKey: "desc",
-    header: "Description",
+    id: "variants",
+    accessorKey: "variants",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        className="justify-end"
+        column={column}
+        title="Variants"
+      />
+    ),
     cell: ({ row }) => (
-      <p className="line-clamp-1">
-        {row.getValue("desc") || "No description provided"}
-      </p>
+      <div className="text-right">{row.original._count.variants}</div>
     ),
   },
   {
     id: "actions",
+    header: () => <div className="text-right">Actions</div>,
     cell: ({ row }) => {
       const { onOpen: onEditOpen } = useEditSizeModal();
       const { onOpen: onDeleteOpen } = useDeleteRecordsModal();
       return (
-        <DataTableRowActions
-          row={row}
-          onEditAction={onEditOpen}
-          onDeleteAction={onDeleteOpen}
-        />
+        <div className="flex justify-end">
+          <DataTableRowActions
+            row={row}
+            onEditAction={onEditOpen}
+            onDeleteAction={onDeleteOpen}
+          />
+        </div>
       );
     },
   },

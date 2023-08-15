@@ -47,7 +47,6 @@ export function DataTableColumnHeader<TData, TValue>({
       url: pathname,
       query: currentQuery,
     });
-    console.log({ url });
     router.push(url);
   }, 500);
 

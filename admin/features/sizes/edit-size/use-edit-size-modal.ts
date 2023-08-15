@@ -1,15 +1,16 @@
 import { create } from "zustand";
+import { Size } from "../types";
 
 interface EditSizeModalStore {
   isOpen: boolean;
-  id: number;
-  onOpen: (id: number) => void;
+  currentSize: Size | null;
+  onOpen: (size: Size) => void;
   onClose: () => void;
 }
 
 export const useEditSizeModal = create<EditSizeModalStore>((set) => ({
   isOpen: false,
-  id: 0,
-  onOpen: (id) => set({ isOpen: true, id }),
-  onClose: () => set({ isOpen: false, id: 0 }),
+  currentSize: null,
+  onOpen: (size) => set({ isOpen: true, currentSize: size }),
+  onClose: () => set({ isOpen: false, currentSize: null }),
 }));

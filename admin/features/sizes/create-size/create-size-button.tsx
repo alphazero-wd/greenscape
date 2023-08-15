@@ -1,15 +1,15 @@
 "use client";
 import { Button } from "@/features/ui";
 import { PlusIcon } from "@heroicons/react/24/solid";
-import { useCreateCategoryModal } from "./use-create-size-modal";
+import { useCreateSizeModal } from "./use-create-size-modal";
 
-export const CreateCategoryButton = () => {
-  const { onOpen } = useCreateCategoryModal();
+export const CreateSizeButton = () => {
+  const { onOpen } = useCreateSizeModal();
 
   return (
     <Button onClick={onOpen} variant="outline">
       <PlusIcon className="mr-2 h-4 w-4" />
-      Create new category
+      Create new size
     </Button>
   );
 };

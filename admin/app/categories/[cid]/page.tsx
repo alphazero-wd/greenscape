@@ -10,11 +10,7 @@ import { getCurrentUser } from "@/features/user/utils";
 import { redirect } from "next/navigation";
 import qs from "query-string";
 
-export const metadata = {
-  title: "Categories",
-};
-
-interface CategoriesPageProps {
+interface CategoryPageProps {
   searchParams: {
     limit?: string;
     offset?: string;
@@ -27,10 +23,15 @@ interface CategoriesPageProps {
   };
 }
 
-export default async function CategoriesPage({
+export async function generateMetadata({ params: { cid } }: CategoryPageProps) {
+  const { data: category } = await getCategory(cid);
+  return { title: category.name };
+}
+
+export default async function CategoryPage({
   searchParams,
   params: { cid },
-}: CategoriesPageProps) {
+}: CategoryPageProps) {
   const user = await getCurrentUser();
   if (!user) redirect("/auth/login");
 

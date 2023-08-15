@@ -80,13 +80,11 @@ export const columns: ColumnDef<Category>[] = [
       const { onOpen: onDeleteOpen } = useDeleteRecordsModal();
       return (
         <div className="flex items-center justify-end">
-          {row.original._count.subCategories > 0 && (
-            <Button variant="ghost" size="icon">
-              <Link href={`/categories/${row.original.id}`}>
-                <EyeIcon className="h-5 w-5" />
-              </Link>
-            </Button>
-          )}
+          <Button variant="ghost" size="icon">
+            <Link href={`/categories/${row.original.id}`}>
+              <EyeIcon className="h-5 w-5" />
+            </Link>
+          </Button>
           <DataTableRowActions
             row={row}
             onEditAction={onEditOpen}

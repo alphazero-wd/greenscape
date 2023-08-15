@@ -19,8 +19,8 @@ import { useEditSize } from "./use-edit-size";
 import { useEditSizeModal } from "./use-edit-size-modal";
 
 export const EditSizeModal = () => {
-  const { isOpen, onClose, id } = useEditSizeModal();
-  const { loading, handleSubmit, form } = useEditSize(id);
+  const { isOpen, onClose, currentSize } = useEditSizeModal();
+  const { loading, handleSubmit, form } = useEditSize(currentSize);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -36,11 +36,11 @@ export const EditSizeModal = () => {
               render={({ field }) => (
                 <FormItem className="py-4">
                   <div className="grid grid-cols-4 items-center">
-                    <FormLabel className="flex-1">Size</FormLabel>
+                    <FormLabel className="flex-1">Size label</FormLabel>
                     <FormControl>
                       <Input
                         disabled={loading}
-                        placeholder="Size"
+                        placeholder="Size label"
                         {...field}
                         className="col-span-3 w-full"
                       />

@@ -30,8 +30,8 @@ export class SizesController {
 
   @Get()
   async findAll(@Query() findManyDto: FindManyDto) {
-    const sizes = await this.sizesService.findAll(findManyDto);
-    return { success: true, data: sizes };
+    const { count, sizes } = await this.sizesService.findAll(findManyDto);
+    return { success: true, count, data: sizes };
   }
 
   @Patch(':id')

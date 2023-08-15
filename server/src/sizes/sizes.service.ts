@@ -40,23 +40,29 @@ export class SizesService {
   }
 
   async findAll({ limit, order, sortBy, offset, q }: FindManyDto) {
-    const categories = await this.prisma.size.findMany({
+    let orderBy = {};
+    if (sortBy === 'variants')
+      orderBy = { variants: { _count: order || 'asc' } };
+    else orderBy = { [sortBy || 'id']: order || 'asc' };
+
+    const sizes = await this.prisma.size.findMany({
       take: limit,
-      orderBy: { [sortBy || 'id']: order || 'asc' },
+      orderBy,
       skip: offset,
-      where: q ? { label: { startsWith: q, mode: 'insensitive' } } : undefined,
+      where: { label: { startsWith: q, mode: 'insensitive' } },
+      include: { _count: { select: { variants: true } } },
     });
     const count = await this.prisma.size.count({
-      where: q ? { label: { startsWith: q, mode: 'insensitive' } } : undefined,
+      where: { label: { startsWith: q, mode: 'insensitive' } },
     });
-    return { count, categories };
+    return { count, sizes };
   }
 
-  async update(id: number, { label, ...updateSizeDto }: UpdateSizeDto) {
+  async update(id: number, { label }: UpdateSizeDto) {
     try {
       const updatedSize = await this.prisma.size.update({
         where: { id },
-        data: { ...updateSizeDto, label: removeWhiteSpaces(label) },
+        data: { label: removeWhiteSpaces(label) },
       });
       return updatedSize;
     } catch (error) {

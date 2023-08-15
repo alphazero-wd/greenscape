@@ -14,7 +14,6 @@ import {
   FormLabel,
   FormMessage,
   Input,
-  Textarea,
 } from "@/features/ui";
 import { Loader2 } from "lucide-react";
 import { useCreateSize } from "./use-create-size";
@@ -37,36 +36,15 @@ export const CreateSizeModal = () => {
           <form className="space-y-4" onSubmit={handleSubmit}>
             <FormField
               control={form.control}
-              name="name"
+              name="label"
               render={({ field }) => (
                 <FormItem className="py-4">
                   <div className="grid grid-cols-4 items-center">
-                    <FormLabel className="flex-1">Size</FormLabel>
+                    <FormLabel className="flex-1">Size label</FormLabel>
                     <FormControl>
                       <Input
                         disabled={loading}
-                        placeholder="Size"
-                        {...field}
-                        className="col-span-3 w-full"
-                      />
-                    </FormControl>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="desc"
-              render={({ field }) => (
-                <FormItem className="py-4">
-                  <div className="grid grid-cols-4 items-center">
-                    <FormLabel className="flex-1">Description</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        disabled={loading}
-                        placeholder="Description"
+                        placeholder="Size label"
                         {...field}
                         className="col-span-3 w-full"
                       />

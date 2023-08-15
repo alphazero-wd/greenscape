@@ -41,20 +41,19 @@ export function DataTableColumnHeader<TData, TValue>({
 
   const toggleSortingServer = useDebouncedCallback(async () => {
     const currentQuery = qs.parse(searchParams.toString());
-    if (column.getIsSorted()) {
-      currentQuery.sortBy = column.id;
-      currentQuery.order = column.getIsSorted() as SortDirection;
-    }
+    currentQuery.sortBy = column.id || "id";
+    currentQuery.order = (column.getIsSorted() as SortDirection) || "asc";
     const url = qs.stringifyUrl({
       url: pathname,
       query: currentQuery,
     });
+    console.log({ url });
     router.push(url);
   }, 500);
 
   useEffect(() => {
-    toggleSortingServer();
-  }, [column.getIsSorted(), searchParams, router, column]);
+    if (column.getIsSorted()) toggleSortingServer();
+  }, [column.getIsSorted(), searchParams, router]);
 
   return (
     <div className={cn("flex items-center space-x-2", className)}>

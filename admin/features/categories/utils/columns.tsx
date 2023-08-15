@@ -45,17 +45,29 @@ export const columns: ColumnDef<Category>[] = [
     ),
   },
   {
-    id: "Products",
+    id: "products",
     accessorKey: "products",
-    header: () => <div className="text-right">Products</div>,
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        className="justify-end"
+        title="Products"
+      />
+    ),
     cell: ({ row }) => (
       <div className="text-right">{row.original._count.products}</div>
     ),
   },
   {
-    id: "Sub-categories",
+    id: "subCategories",
     accessorKey: "subCategories",
-    header: () => <div className="text-right">Sub-categories</div>,
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        className="justify-end"
+        title="Sub-categories"
+      />
+    ),
     cell: ({ row }) => (
       <div className="text-right">{row.original._count.subCategories}</div>
     ),

@@ -56,10 +56,17 @@ export class CategoriesService {
     q = '',
     pid = null,
   }: FindManyCategoriesDto) {
+    let orderBy = {};
+    if (sortBy === 'products')
+      orderBy = { products: { _count: order || 'asc' } };
+    else if (sortBy === 'subCategories')
+      orderBy = { subCategories: { _count: order || 'asc' } };
+    else orderBy = { [sortBy || 'id']: order || 'asc' };
+
     try {
       const categories = await this.prisma.category.findMany({
         take: limit,
-        orderBy: { [sortBy || 'id']: order || 'asc' },
+        orderBy,
         skip: offset,
         where: {
           parentCategoryId: pid,

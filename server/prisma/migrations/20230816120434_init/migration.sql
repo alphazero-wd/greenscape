@@ -37,6 +37,8 @@ CREATE TABLE "File" (
     "filename" TEXT NOT NULL,
     "path" TEXT NOT NULL,
     "mimetype" TEXT NOT NULL,
+    "size" INTEGER NOT NULL,
+    "variationId" INTEGER,
 
     CONSTRAINT "File_pkey" PRIMARY KEY ("id")
 );
@@ -54,38 +56,39 @@ CREATE TABLE "Category" (
 CREATE TABLE "Product" (
     "id" SERIAL NOT NULL,
     "name" VARCHAR(120) NOT NULL,
-    "price" INTEGER NOT NULL,
     "desc" TEXT NOT NULL,
-    "highlights" TEXT NOT NULL,
-    "care" TEXT NOT NULL,
-    "discount" INTEGER NOT NULL DEFAULT 0,
+    "sizeChart" TEXT,
 
     CONSTRAINT "Product_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "ProductImage" (
-    "imageId" INTEGER NOT NULL,
-    "productId" INTEGER NOT NULL,
-    "colorId" INTEGER,
-
-    CONSTRAINT "ProductImage_pkey" PRIMARY KEY ("imageId")
-);
-
--- CreateTable
-CREATE TABLE "ProductVariant" (
+CREATE TABLE "Variation" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "productId" INTEGER NOT NULL,
     "colorId" INTEGER,
     "sizeId" INTEGER,
-    "qty" INTEGER NOT NULL,
+    "price" INTEGER NOT NULL,
+    "inStock" INTEGER NOT NULL,
 
-    CONSTRAINT "ProductVariant_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Variation_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "_ColorToProduct" (
+    "A" INTEGER NOT NULL,
+    "B" INTEGER NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "_CategoryToProduct" (
+    "A" INTEGER NOT NULL,
+    "B" INTEGER NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "_ProductToSize" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL
 );
@@ -100,13 +103,19 @@ CREATE UNIQUE INDEX "Size_label_key" ON "Size"("label");
 CREATE UNIQUE INDEX "Color_hexCode_key" ON "Color"("hexCode");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Category_name_key" ON "Category"("name");
+CREATE UNIQUE INDEX "Category_parentCategoryId_name_key" ON "Category"("parentCategoryId", "name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Product_name_key" ON "Product"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "ProductVariant_name_productId_colorId_sizeId_key" ON "ProductVariant"("name", "productId", "colorId", "sizeId");
+CREATE UNIQUE INDEX "Variation_name_productId_colorId_sizeId_key" ON "Variation"("name", "productId", "colorId", "sizeId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_ColorToProduct_AB_unique" ON "_ColorToProduct"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_ColorToProduct_B_index" ON "_ColorToProduct"("B");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_CategoryToProduct_AB_unique" ON "_CategoryToProduct"("A", "B");
@@ -114,29 +123,41 @@ CREATE UNIQUE INDEX "_CategoryToProduct_AB_unique" ON "_CategoryToProduct"("A", 
 -- CreateIndex
 CREATE INDEX "_CategoryToProduct_B_index" ON "_CategoryToProduct"("B");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "_ProductToSize_AB_unique" ON "_ProductToSize"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_ProductToSize_B_index" ON "_ProductToSize"("B");
+
+-- AddForeignKey
+ALTER TABLE "File" ADD CONSTRAINT "File_variationId_fkey" FOREIGN KEY ("variationId") REFERENCES "Variation"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
 -- AddForeignKey
 ALTER TABLE "Category" ADD CONSTRAINT "Category_parentCategoryId_fkey" FOREIGN KEY ("parentCategoryId") REFERENCES "Category"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ProductImage" ADD CONSTRAINT "ProductImage_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Variation" ADD CONSTRAINT "Variation_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ProductImage" ADD CONSTRAINT "ProductImage_colorId_fkey" FOREIGN KEY ("colorId") REFERENCES "Color"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Variation" ADD CONSTRAINT "Variation_colorId_fkey" FOREIGN KEY ("colorId") REFERENCES "Color"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ProductImage" ADD CONSTRAINT "ProductImage_imageId_fkey" FOREIGN KEY ("imageId") REFERENCES "File"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Variation" ADD CONSTRAINT "Variation_sizeId_fkey" FOREIGN KEY ("sizeId") REFERENCES "Size"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ProductVariant" ADD CONSTRAINT "ProductVariant_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_ColorToProduct" ADD CONSTRAINT "_ColorToProduct_A_fkey" FOREIGN KEY ("A") REFERENCES "Color"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ProductVariant" ADD CONSTRAINT "ProductVariant_colorId_fkey" FOREIGN KEY ("colorId") REFERENCES "Color"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "ProductVariant" ADD CONSTRAINT "ProductVariant_sizeId_fkey" FOREIGN KEY ("sizeId") REFERENCES "Size"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_ColorToProduct" ADD CONSTRAINT "_ColorToProduct_B_fkey" FOREIGN KEY ("B") REFERENCES "Product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_CategoryToProduct" ADD CONSTRAINT "_CategoryToProduct_A_fkey" FOREIGN KEY ("A") REFERENCES "Category"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_CategoryToProduct" ADD CONSTRAINT "_CategoryToProduct_B_fkey" FOREIGN KEY ("B") REFERENCES "Product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_ProductToSize" ADD CONSTRAINT "_ProductToSize_A_fkey" FOREIGN KEY ("A") REFERENCES "Product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_ProductToSize" ADD CONSTRAINT "_ProductToSize_B_fkey" FOREIGN KEY ("B") REFERENCES "Size"("id") ON DELETE CASCADE ON UPDATE CASCADE;

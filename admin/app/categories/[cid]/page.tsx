@@ -25,7 +25,12 @@ interface CategoryPageProps {
 
 export async function generateMetadata({ params: { cid } }: CategoryPageProps) {
   const { data: category } = await getCategory(cid);
-  return { title: category.name };
+  let title = "Categories - ";
+  if (category.parentCategory?.parentCategory)
+    title += category.parentCategory.parentCategory.name + "/";
+  if (category.parentCategory) title += category.parentCategory.name + "/";
+  title += category.name;
+  return { title };
 }
 
 export default async function CategoryPage({
@@ -45,7 +50,19 @@ export default async function CategoryPage({
 
   const { count, data } = await getSubcategories(url);
 
-  const pathsWithParent = category.parentCategory
+  const pathsWithParent = category.parentCategory?.parentCategory
+    ? [
+        {
+          name: category.parentCategory.parentCategory.name,
+          href: `/categories/${category.parentCategory.parentCategory}`,
+        },
+        {
+          name: category.parentCategory.name,
+          href: `/categories/${category.parentCategory}`,
+        },
+        { name: category.name, href: `/categories/${category.id}` },
+      ]
+    : category.parentCategory
     ? [
         {
           name: category.parentCategory.name,

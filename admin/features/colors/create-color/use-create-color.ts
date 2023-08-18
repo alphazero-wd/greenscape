@@ -1,6 +1,7 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import { GetColorName } from "hex-color-to-color-name";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -26,9 +27,13 @@ export const useCreateColor = () => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setLoading(true);
-      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/colors`, values, {
-        withCredentials: true,
-      });
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/colors`,
+        { ...values, name: GetColorName(values.hexCode) },
+        {
+          withCredentials: true,
+        },
+      );
       toast.success("Color created");
       form.reset();
       router.refresh();

@@ -34,10 +34,20 @@ export const columns: ColumnDef<Color>[] = [
     enableHiding: false,
   },
   {
+    id: "name",
+    accessorKey: "name",
+    header: ({ column }) => {
+      return <DataTableColumnHeader column={column} title="Color name" />;
+    },
+    cell: ({ row }) => (
+      <div className="font-medium">{row.getValue("name")}</div>
+    ),
+  },
+  {
     id: "hexCode",
     accessorKey: "hexCode",
     header: ({ column }) => {
-      return <DataTableColumnHeader column={column} title="Color" />;
+      return <DataTableColumnHeader column={column} title="Hex code" />;
     },
     cell: ({ row }) => (
       <div className="font-medium">{row.getValue("hexCode")}</div>

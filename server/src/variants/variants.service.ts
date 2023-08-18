@@ -4,25 +4,21 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateVariationDto, UpdateVariationDto } from './dto';
+import { CreateVariantDto, UpdateVariantDto } from './dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { removeWhiteSpaces } from '../common/utils';
 import { Prisma } from '@prisma/client';
 import { PrismaError } from '../prisma/prisma-error';
 
 @Injectable()
-export class VariationsService {
+export class VariantsService {
   constructor(private prisma: PrismaService) {}
 
-  async create({ name, ...createVariationDto }: CreateVariationDto) {
+  async create(createVariantDto: CreateVariantDto) {
     try {
-      const newVariation = await this.prisma.variation.create({
-        data: {
-          name: removeWhiteSpaces(name),
-          ...createVariationDto,
-        },
+      const newVariant = await this.prisma.variant.create({
+        data: createVariantDto,
       });
-      return newVariation;
+      return newVariant;
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError)
         switch (error.code) {
@@ -30,12 +26,12 @@ export class VariationsService {
             throw new NotFoundException({
               success: false,
               message:
-                'Cannot create variation because the product, color, or size is not found',
+                'Cannot create variant because the product, color, or size is not found',
             });
           case PrismaError.UniqueViolation:
             throw new BadRequestException({
               success: false,
-              message: 'The variation name has already existed in the product',
+              message: 'The variant name has already existed in the product',
             });
           default:
             break;
@@ -48,32 +44,21 @@ export class VariationsService {
     }
   }
 
-  async update(
-    id: number,
-    { name, ...updateVariationDto }: UpdateVariationDto,
-  ) {
+  async update(id: number, updateVariantDto: UpdateVariantDto) {
     try {
-      const updatedVariation = await this.prisma.variation.update({
+      const updatedVariant = await this.prisma.variant.update({
         where: { id },
-        data: {
-          name: removeWhiteSpaces(name),
-          ...updateVariationDto,
-        },
+        data: updateVariantDto,
       });
-      return updatedVariation;
+      return updatedVariant;
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError)
         switch (error.code) {
-          case PrismaError.UniqueViolation:
-            throw new BadRequestException({
-              success: false,
-              message: 'The variation name has already existed in the product',
-            });
           case PrismaError.RecordNotFound:
             throw new BadRequestException({
               success: false,
               message:
-                'Cannot update the variation with the given `id` because it is not found',
+                'Cannot update the variant with the given `id` because it is not found',
             });
           default:
             break;
@@ -88,7 +73,7 @@ export class VariationsService {
 
   async remove(id: number) {
     try {
-      await this.prisma.variation.delete({ where: { id } });
+      await this.prisma.variant.delete({ where: { id } });
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError)
         switch (error.code) {
@@ -96,7 +81,7 @@ export class VariationsService {
             throw new BadRequestException({
               success: false,
               message:
-                'Cannot update the variation with the given `id` because it is not found',
+                'Cannot update the variant with the given `id` because it is not found',
             });
           default:
             break;

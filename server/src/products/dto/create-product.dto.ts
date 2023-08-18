@@ -18,7 +18,17 @@ export class CreateProductDto {
   @IsOptional()
   sizeChart?: string;
 
-  @IsInt({ each: true })
+  @IsInt()
   @Min(1)
-  categoryIds: number[];
+  categoryId: number;
+
+  @IsOptional()
+  @IsInt({ each: true })
+  @Min(1, { each: true })
+  colorIds?: number[];
+
+  @IsOptional()
+  @IsInt({ each: true })
+  @Min(1, { each: true })
+  sizeIds?: number[];
 }

@@ -11,11 +11,10 @@ import {
   Get,
 } from '@nestjs/common';
 import { SizesService } from './sizes.service';
-import { CreateSizeDto } from './dto/create-size.dto';
-import { UpdateSizeDto } from './dto/update-size.dto';
 import { DeleteManyDto, FindManyDto } from '../common/dto';
 import { Role } from '@prisma/client';
 import { RolesGuard } from '../auth/guards';
+import { CreateSizeDto, UpdateSizeDto } from './dto';
 
 @Controller('sizes')
 @UseGuards(RolesGuard(Role.Admin))

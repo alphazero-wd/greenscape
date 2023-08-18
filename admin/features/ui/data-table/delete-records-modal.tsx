@@ -15,7 +15,7 @@ import { useDeleteRecords } from "./use-delete-records";
 import { useDeleteRecordsModal } from "./use-delete-records-modal";
 
 interface DeleteRecordModalProps {
-  entityName: "categories" | "sizes" | "colors";
+  entityName: "categories" | "sizes" | "colors" | "products";
 }
 
 export const DeleteRecordsModal = ({ entityName }: DeleteRecordModalProps) => {

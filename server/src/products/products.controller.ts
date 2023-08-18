@@ -22,32 +22,42 @@ export class ProductsController {
 
   @Post()
   @UseGuards(RolesGuard(Role.Admin))
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productsService.create(createProductDto);
+  async create(@Body() createProductDto: CreateProductDto) {
+    const newProduct = await this.productsService.create(createProductDto);
+    return { data: newProduct, success: true };
   }
 
   @Get()
-  findAll(@Query() findManyDto: FindManyProductsDto) {
-    return this.productsService.findAll(findManyDto);
+  async findAll(@Query() findManyDto: FindManyProductsDto) {
+    const { count, products, sizes } = await this.productsService.findAll(
+      findManyDto,
+    );
+    return { count, data: products, sizes, success: true };
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.productsService.findOne(id);
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    const product = await this.productsService.findOne(id);
+    return { data: product, success: true };
   }
 
   @Patch(':id')
   @UseGuards(RolesGuard(Role.Admin))
-  update(
+  async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateProductDto: UpdateProductDto,
   ) {
-    return this.productsService.update(id, updateProductDto);
+    const updatedProduct = await this.productsService.update(
+      id,
+      updateProductDto,
+    );
+    return { success: true, data: updatedProduct };
   }
 
   @Delete()
   @UseGuards(RolesGuard(Role.Admin))
-  remove(@Query() { ids }: DeleteManyDto) {
-    return this.productsService.remove(ids);
+  async remove(@Query() { ids }: DeleteManyDto) {
+    await this.productsService.remove(ids);
+    return { success: true };
   }
 }

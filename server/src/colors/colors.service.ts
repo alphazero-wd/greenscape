@@ -9,15 +9,16 @@ import { Prisma } from '@prisma/client';
 import { PrismaError } from '../prisma/prisma-error';
 import { CreateColorDto, UpdateColorDto } from './dto';
 import { FindManyDto } from '../common/dto';
+import { removeWhiteSpaces } from '../common/utils';
 
 @Injectable()
 export class ColorsService {
   constructor(private prisma: PrismaService) {}
 
-  async create({ hexCode }: CreateColorDto) {
+  async create({ hexCode, name }: CreateColorDto) {
     try {
       const newColor = await this.prisma.color.create({
-        data: { hexCode },
+        data: { hexCode, name: removeWhiteSpaces(name) },
       });
       return newColor;
     } catch (error) {
@@ -45,24 +46,30 @@ export class ColorsService {
     offset = 0,
     q = '',
   }: FindManyDto) {
+    const where: Prisma.ColorWhereInput = {
+      hexCode: { startsWith: removeWhiteSpaces(q), mode: 'insensitive' },
+      OR: [
+        {
+          name: { startsWith: removeWhiteSpaces(q), mode: 'insensitive' },
+        },
+      ],
+    };
     const colors = await this.prisma.color.findMany({
       take: limit,
       orderBy: { [sortBy]: order || 'asc' },
       skip: offset,
-      where: { hexCode: { startsWith: q, mode: 'insensitive' } },
+      where,
       include: { _count: { select: { variants: true } } },
     });
-    const count = await this.prisma.color.count({
-      where: { hexCode: { startsWith: q, mode: 'insensitive' } },
-    });
+    const count = await this.prisma.color.count({ where });
     return { count, colors };
   }
 
-  async update(id: number, { hexCode }: UpdateColorDto) {
+  async update(id: number, { hexCode, name }: UpdateColorDto) {
     try {
       const updatedColor = await this.prisma.color.update({
         where: { id },
-        data: { hexCode },
+        data: { hexCode, name: removeWhiteSpaces(name) },
       });
       return updatedColor;
     } catch (error) {

@@ -49,12 +49,13 @@ export class CategoriesService {
   }
 
   async findAll({
-    limit = 10,
+    limit,
     order = 'asc',
     sortBy = 'id',
     offset = 0,
     q = '',
     pid = null,
+    hierarchy = false,
   }: FindManyCategoriesDto) {
     let orderBy = {};
     if (sortBy === 'products')
@@ -62,27 +63,27 @@ export class CategoriesService {
     else if (sortBy === 'subCategories')
       orderBy = { subCategories: { _count: order || 'asc' } };
     else orderBy = { [sortBy || 'id']: order || 'asc' };
-
+    const where: Prisma.CategoryWhereInput = {
+      parentCategoryId: pid,
+      name: { startsWith: q, mode: 'insensitive' },
+    };
     try {
       const categories = await this.prisma.category.findMany({
         take: limit,
         orderBy,
         skip: offset,
-        where: {
-          parentCategoryId: pid,
-          name: { startsWith: q, mode: 'insensitive' },
-        },
+        where,
         include: {
           _count: {
             select: { subCategories: true, products: true },
           },
+          subCategories: hierarchy
+            ? { include: { subCategories: true } }
+            : false,
         },
       });
       const count = await this.prisma.category.count({
-        where: {
-          name: { startsWith: q, mode: 'insensitive' },
-          parentCategoryId: pid,
-        },
+        where,
       });
       return {
         count,
@@ -91,7 +92,7 @@ export class CategoriesService {
     } catch (error) {
       throw new InternalServerErrorException({
         success: false,
-        message: 'Something went wrong',
+        message: error.message,
       });
     }
   }
@@ -100,7 +101,9 @@ export class CategoriesService {
     const category = await this.prisma.category.findUnique({
       where: { id },
       include: {
-        parentCategory: { select: { id: true, name: true } },
+        parentCategory: {
+          select: { id: true, name: true, parentCategory: true },
+        },
       },
     });
     if (!category)

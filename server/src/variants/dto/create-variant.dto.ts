@@ -1,7 +1,7 @@
 import { Type } from 'class-transformer';
 import { IsInt, IsOptional, Length, Min } from 'class-validator';
 
-export class CreateVariationDto {
+export class CreateVariantDto {
   @Length(1, 20)
   name: string;
 

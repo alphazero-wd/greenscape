@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { CreateProductDto, UpdateProductDto, FindManyProductsDto } from './dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { Prisma } from '@prisma/client';
+import { Prisma, Product } from '@prisma/client';
 import { PrismaError } from '../prisma/prisma-error';
 import { removeWhiteSpaces } from '../common/utils';
 
@@ -14,14 +14,22 @@ import { removeWhiteSpaces } from '../common/utils';
 export class ProductsService {
   constructor(private prisma: PrismaService) {}
 
-  async create({ categoryIds, name, ...createProductDto }: CreateProductDto) {
+  async create({
+    name,
+    colorIds,
+    sizeIds,
+    ...createProductDto
+  }: CreateProductDto) {
     try {
       const newProduct = await this.prisma.product.create({
         data: {
           name: removeWhiteSpaces(name),
           ...createProductDto,
-          categories: {
-            connect: categoryIds.map((id) => ({ id })),
+          colors: {
+            connect: colorIds.map((id) => ({ id })),
+          },
+          sizes: {
+            connect: sizeIds.map((id) => ({ id })),
           },
         },
       });
@@ -60,32 +68,39 @@ export class ProductsService {
     categoryIds,
   }: FindManyProductsDto) {
     try {
+      const where: Prisma.ProductWhereInput = {
+        name: {
+          startsWith: removeWhiteSpaces(q),
+          endsWith: removeWhiteSpaces(q),
+          mode: 'insensitive',
+        },
+        category: { id: { in: categoryIds } },
+      };
       let products = await this.prisma.product.findMany({
         take: limit,
         orderBy: { [sortBy]: order || 'asc' },
         skip: offset,
-        where: {
-          name: { startsWith: q, mode: 'insensitive' },
-          categories: { some: { id: { in: categoryIds } } },
-        },
+        where,
         include: {
           colors: true,
-          variations: { select: { images: { select: { id: true }, take: 1 } } },
-          _count: { select: { variations: true } },
+          variants: { select: { images: { select: { id: true }, take: 1 } } },
+          _count: { select: { variants: true } },
         },
       });
+      // for pagination
       const count = await this.prisma.product.count({
         where: {
           name: { startsWith: q, mode: 'insensitive' },
-          categories: { some: { id: { in: categoryIds } } },
+          category: { id: { in: categoryIds } },
         },
       });
+      // for filter purposes
       const distinctSizes = await this.prisma.product.findMany({
-        where: { categories: { some: { id: { in: categoryIds } } } },
+        where: { category: { id: { in: categoryIds } } },
         select: { sizes: { distinct: 'label' } },
       });
       for (let product of products) {
-        const { _min, _max } = await this.prisma.variation.aggregate({
+        const { _min, _max } = await this.prisma.variant.aggregate({
           _max: { price: true },
           _min: { price: true },
           where: { productId: product.id },
@@ -95,6 +110,13 @@ export class ProductsService {
           priceRange: [_min, _max],
         }));
       }
+
+      if (sortBy === 'price')
+        products = products.sort((pa: any, pb: any) => {
+          return order === 'asc'
+            ? pa.priceRange[0] - pb.priceRange[0]
+            : pb.priceRange[1] - pa.priceRange[1];
+        });
 
       return { count, products, sizes: distinctSizes };
     } catch (error) {
@@ -109,7 +131,7 @@ export class ProductsService {
     const product = await this.prisma.product.findUnique({
       where: { id },
       include: {
-        variations: { where: { colorId, sizeId } },
+        variants: { where: { colorId, sizeId } },
         colors: true,
         sizes: true,
       },
@@ -124,28 +146,19 @@ export class ProductsService {
 
   async update(
     id: number,
-    { categoryIds, ...updateProductDto }: UpdateProductDto,
+    { colorIds, sizeIds, ...updateProductDto }: UpdateProductDto,
   ) {
     try {
-      const categoryIdsObj = categoryIds.map((id) => ({ id }));
+      const data: Prisma.ProductUpdateInput = { ...updateProductDto };
+      if (colorIds) data.colors = { connect: colorIds.map((id) => ({ id })) };
+      if (sizeIds) data.sizes = { connect: sizeIds.map((id) => ({ id })) };
       const updatedProduct = await this.prisma.product.update({
         where: { id },
-        data: {
-          ...updateProductDto,
-          categories: {
-            connect: categoryIdsObj,
-          },
-        },
+        data,
       });
       return updatedProduct;
     } catch (error) {
       switch (error.code) {
-        case PrismaError.ForeignViolation:
-          throw new BadRequestException({
-            success: false,
-            message:
-              'Some categories in `categoryIds` were not found upon product creation',
-          });
         case PrismaError.UniqueViolation:
           throw new BadRequestException({
             success: false,

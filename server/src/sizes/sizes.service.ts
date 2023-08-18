@@ -39,16 +39,25 @@ export class SizesService {
     }
   }
 
-  async findAll({ limit, order, sortBy, offset, q }: FindManyDto) {
+  async findAll({
+    limit = 10,
+    order = 'asc',
+    sortBy = 'id',
+    offset = 0,
+    q = '',
+  }: FindManyDto) {
+    const where: Prisma.SizeWhereInput = {
+      label: { startsWith: removeWhiteSpaces(q), mode: 'insensitive' },
+    };
     const sizes = await this.prisma.size.findMany({
       take: limit,
       orderBy: { [sortBy || 'id']: order || 'asc' },
       skip: offset,
-      where: { label: { startsWith: q, mode: 'insensitive' } },
+      where,
       include: { _count: { select: { variants: true } } },
     });
     const count = await this.prisma.size.count({
-      where: { label: { startsWith: q, mode: 'insensitive' } },
+      where,
     });
     return { count, sizes };
   }

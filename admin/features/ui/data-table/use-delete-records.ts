@@ -8,7 +8,7 @@ export const useDeleteRecords = () => {
   const { onClose, ids } = useDeleteRecordsModal();
   const [loading, setLoading] = useState(false);
   const deleteRecords = async (
-    entityName: "categories" | "sizes" | "colors",
+    entityName: "categories" | "sizes" | "colors" | "products",
   ) => {
     try {
       setLoading(true);

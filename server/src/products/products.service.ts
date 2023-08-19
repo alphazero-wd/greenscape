@@ -16,8 +16,8 @@ export class ProductsService {
 
   async create({
     name,
-    colorIds,
-    sizeIds,
+    colorIds = [],
+    sizeIds = [],
     ...createProductDto
   }: CreateProductDto) {
     try {
@@ -37,11 +37,11 @@ export class ProductsService {
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         switch (error.code) {
-          case PrismaError.ForeignViolation:
+          case PrismaError.RecordNotFound:
             throw new BadRequestException({
               success: false,
               message:
-                'Some categories in `categoryIds` were not found upon product creation',
+                'Cannot find category, sizes, or colors with the given ids',
             });
           case PrismaError.UniqueViolation:
             throw new BadRequestException({
@@ -149,12 +149,24 @@ export class ProductsService {
 
   async update(
     id: number,
-    { colorIds, sizeIds, ...updateProductDto }: UpdateProductDto,
+    { colorId, sizeId, ...updateProductDto }: UpdateProductDto,
   ) {
     try {
+      const product = await this.findOne(id);
       const data: Prisma.ProductUpdateInput = { ...updateProductDto };
-      if (colorIds) data.colors = { connect: colorIds.map((id) => ({ id })) };
-      if (sizeIds) data.sizes = { connect: sizeIds.map((id) => ({ id })) };
+      const existingColors = product.colors.map((color) => color.id);
+      const existingSizes = product.sizes.map((size) => size.id);
+      if (colorId) {
+        if (existingColors.includes(colorId))
+          data.colors = { disconnect: { id: colorId } };
+        else data.colors = { connect: { id: colorId } };
+      }
+
+      if (sizeId) {
+        if (existingSizes.includes(sizeId))
+          data.sizes = { disconnect: { id: sizeId } };
+        else data.sizes = { connect: { id: sizeId } };
+      }
       const updatedProduct = await this.prisma.product.update({
         where: { id },
         data,
@@ -170,14 +182,15 @@ export class ProductsService {
         case PrismaError.RecordNotFound:
           throw new NotFoundException({
             success: false,
-            message: 'Cannot update product because it is not found',
+            message:
+              'Cannot update product because either it or the given category is not found',
           });
         default:
           break;
       }
       throw new InternalServerErrorException({
         success: false,
-        message: 'Something went wrong',
+        message: error.message,
       });
     }
   }

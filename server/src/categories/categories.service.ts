@@ -66,7 +66,7 @@ export class CategoriesService {
     const where: Prisma.CategoryWhereInput = {
       parentCategoryId: pid,
       name: {
-        search: removeWhiteSpaces(q).split(' ').join(' & '),
+        search: q ? removeWhiteSpaces(q).split(' ').join(' & ') : undefined,
         mode: 'insensitive',
       },
     };

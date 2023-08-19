@@ -78,12 +78,6 @@ export const columns: ColumnDef<Product>[] = [
   },
 
   {
-    id: "sizes",
-    accessorKey: "sizes",
-    header: "Sizes",
-    cell: ({ row }) => row.original.sizes.map((size) => size.label).join(", "),
-  },
-  {
     id: "isPublic",
     accessorKey: "isPublic",
     header: "Status",
@@ -108,7 +102,7 @@ export const columns: ColumnDef<Product>[] = [
     accessorKey: "colors",
     header: "Colors",
     cell: ({ row }) => (
-      <div className="flex gap-x-2">
+      <div className="grid grid-cols-4 gap-2">
         {row.original.colors.map((color) => (
           <TooltipProvider key={color.id}>
             <Tooltip>
@@ -121,6 +115,12 @@ export const columns: ColumnDef<Product>[] = [
         ))}
       </div>
     ),
+  },
+  {
+    id: "sizes",
+    accessorKey: "sizes",
+    header: "Sizes",
+    cell: ({ row }) => row.original.sizes.map((size) => size.label).join(", "),
   },
   {
     id: "actions",

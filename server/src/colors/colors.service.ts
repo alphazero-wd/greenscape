@@ -47,12 +47,10 @@ export class ColorsService {
     q = '',
   }: FindManyDto) {
     const where: Prisma.ColorWhereInput = {
-      hexCode: { startsWith: removeWhiteSpaces(q), mode: 'insensitive' },
-      OR: [
-        {
-          name: { startsWith: removeWhiteSpaces(q), mode: 'insensitive' },
-        },
-      ],
+      name: {
+        search: q ? removeWhiteSpaces(q).split(' ').join(' & ') : undefined,
+        mode: 'insensitive',
+      },
     };
     const colors = await this.prisma.color.findMany({
       take: limit,

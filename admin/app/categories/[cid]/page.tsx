@@ -5,6 +5,7 @@ import {
 } from "@/features/categories/create-category";
 import { EditCategoryModal } from "@/features/categories/edit-category";
 import { CategoriesTable } from "@/features/categories/table";
+import { displayHierarchy } from "@/features/categories/utils";
 import { Breadcrumb, DeleteRecordsModal } from "@/features/ui";
 import { getCurrentUser } from "@/features/user/utils";
 import { redirect } from "next/navigation";
@@ -26,10 +27,7 @@ interface CategoryPageProps {
 export async function generateMetadata({ params: { cid } }: CategoryPageProps) {
   const { data: category } = await getCategory(cid);
   let title = "Categories - ";
-  if (category.parentCategory?.parentCategory)
-    title += category.parentCategory.parentCategory.name + "/";
-  if (category.parentCategory) title += category.parentCategory.name + "/";
-  title += category.name;
+  title = displayHierarchy(category, title);
   return { title };
 }
 

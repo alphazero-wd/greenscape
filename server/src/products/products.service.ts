@@ -66,15 +66,17 @@ export class ProductsService {
     offset = 0,
     q = '',
     categoryIds,
+    status = 'public',
   }: FindManyProductsDto) {
     try {
       const where: Prisma.ProductWhereInput = {
         name: {
-          startsWith: removeWhiteSpaces(q),
-          endsWith: removeWhiteSpaces(q),
+          search: q ? removeWhiteSpaces(q).split(' ').join(' & ') : undefined,
           mode: 'insensitive',
         },
         category: { id: { in: categoryIds } },
+        isPublic:
+          status === 'public' ? true : status === 'private' ? false : {},
       };
       let products = await this.prisma.product.findMany({
         take: limit,
@@ -83,21 +85,22 @@ export class ProductsService {
         where,
         include: {
           colors: true,
+          sizes: true,
+          category: {
+            include: { parentCategory: { include: { parentCategory: true } } },
+          },
           variants: { select: { images: { select: { id: true }, take: 1 } } },
           _count: { select: { variants: true } },
         },
       });
       // for pagination
       const count = await this.prisma.product.count({
-        where: {
-          name: { startsWith: q, mode: 'insensitive' },
-          category: { id: { in: categoryIds } },
-        },
+        where,
       });
       // for filter purposes
-      const distinctSizes = await this.prisma.product.findMany({
-        where: { category: { id: { in: categoryIds } } },
-        select: { sizes: { distinct: 'label' } },
+      const distinctSizes = await this.prisma.size.findMany({
+        distinct: 'label',
+        where: { products: { some: { categoryId: { in: categoryIds } } } },
       });
       for (let product of products) {
         const { _min, _max } = await this.prisma.variant.aggregate({
@@ -107,7 +110,7 @@ export class ProductsService {
         });
         products = products.map((product) => ({
           ...product,
-          priceRange: [_min, _max],
+          priceRange: [_min.price || 0.0, _max.price || 0.0],
         }));
       }
 

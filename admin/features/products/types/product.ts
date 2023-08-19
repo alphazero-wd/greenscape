@@ -11,6 +11,7 @@ export interface Product {
   sizes: Size[];
   colors: Color[];
   priceRange: [number, number];
+  isPublic: boolean;
   category: Category;
   variants: Variant[];
 }

@@ -65,7 +65,10 @@ export class CategoriesService {
     else orderBy = { [sortBy || 'id']: order || 'asc' };
     const where: Prisma.CategoryWhereInput = {
       parentCategoryId: pid,
-      name: { startsWith: q, mode: 'insensitive' },
+      name: {
+        search: removeWhiteSpaces(q).split(' ').join(' & '),
+        mode: 'insensitive',
+      },
     };
     try {
       const categories = await this.prisma.category.findMany({

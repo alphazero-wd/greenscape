@@ -17,17 +17,18 @@ interface CategoriesPageProps {
     sortBy?: string;
     order?: "asc" | "desc";
     q?: string;
+    status?: "public" | "private" | "all";
   };
 }
 
 export default async function CategoriesPage({
-  searchParams,
+  searchParams: { limit, offset, order, q, sortBy, status = "all" },
 }: CategoriesPageProps) {
   const user = await getCurrentUser();
   if (!user) redirect("/auth/login");
   const url = qs.stringifyUrl({
     url: process.env.NEXT_PUBLIC_API_URL! + "/products",
-    query: searchParams,
+    query: { limit, offset, order, q, sortBy, status },
   });
   const { count, data, sizes } = await getProducts(url);
   const { data: categories } = await getCategories(
@@ -36,7 +37,7 @@ export default async function CategoriesPage({
 
   return (
     <>
-      <div className="max-w-3xl">
+      <div className="max-w-7xl">
         <div className="mb-4">
           <Breadcrumb links={[{ name: "Products", href: `/products` }]} />
         </div>

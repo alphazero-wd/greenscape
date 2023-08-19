@@ -47,7 +47,10 @@ export class SizesService {
     q = '',
   }: FindManyDto) {
     const where: Prisma.SizeWhereInput = {
-      label: { startsWith: removeWhiteSpaces(q), mode: 'insensitive' },
+      label: {
+        search: q ? removeWhiteSpaces(q).split(' ').join(' & ') : undefined,
+        mode: 'insensitive',
+      },
     };
     const sizes = await this.prisma.size.findMany({
       take: limit,

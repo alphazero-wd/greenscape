@@ -55,7 +55,7 @@ export const columns: ColumnDef<Category>[] = [
       />
     ),
     cell: ({ row }) => (
-      <div className="text-right">{row.original._count.products}</div>
+      <div className="mr-3 text-right">{row.original._count.products}</div>
     ),
   },
   {
@@ -69,7 +69,7 @@ export const columns: ColumnDef<Category>[] = [
       />
     ),
     cell: ({ row }) => (
-      <div className="text-right">{row.original._count.subCategories}</div>
+      <div className="mr-3 text-right">{row.original._count.subCategories}</div>
     ),
   },
   {

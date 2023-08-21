@@ -4,7 +4,7 @@ export interface Category {
   parentCategoryId?: number;
   parentCategory?: Category;
   _count: {
-    products: number;
     subCategories: number;
   };
+  subCategories: Category[];
 }

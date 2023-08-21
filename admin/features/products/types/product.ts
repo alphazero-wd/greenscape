@@ -15,3 +15,11 @@ export interface Product {
   category: Category;
   variants: Variant[];
 }
+
+export interface CreateProductDto {
+  name: string;
+  desc: string;
+  categoryIds: number[];
+  colorIds?: number[];
+  sizeIds?: number[];
+}

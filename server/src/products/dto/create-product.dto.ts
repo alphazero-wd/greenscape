@@ -1,4 +1,6 @@
 import {
+  ArrayMaxSize,
+  ArrayMinSize,
   IsInt,
   IsNotEmpty,
   IsOptional,
@@ -18,9 +20,11 @@ export class CreateProductDto {
   @IsOptional()
   sizeChart?: string;
 
-  @IsInt()
-  @Min(1)
-  categoryId: number;
+  @ArrayMinSize(3)
+  @ArrayMaxSize(3)
+  @IsInt({ each: true })
+  @Min(1, { each: true })
+  categoryIds: [number, number, number];
 
   @IsOptional()
   @IsInt({ each: true })

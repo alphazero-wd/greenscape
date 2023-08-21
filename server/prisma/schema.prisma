@@ -61,17 +61,16 @@ model Category {
 }
 
 model Product {
-  id         Int     @id @default(autoincrement())
-  name       String  @unique @db.VarChar(120)
-  desc       String
-  categoryId Int
-  sizeChart  String?
-  isPublic   Boolean @default(false)
+  id        Int     @id @default(autoincrement())
+  name      String  @unique @db.VarChar(120)
+  desc      String
+  sizeChart String?
+  isPublic  Boolean @default(false)
 
-  sizes    Size[]
-  colors   Color[]
-  category Category  @relation(references: [id], fields: [categoryId])
-  variants Variant[]
+  sizes      Size[]
+  colors     Color[]
+  categories Category[]
+  variants   Variant[]
 }
 
 model Variant {

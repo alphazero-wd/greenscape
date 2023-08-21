@@ -2,14 +2,7 @@
 
 import { displayHierarchy } from "@/features/categories/utils";
 import { ColorCircle } from "@/features/colors/circle";
-import {
-  Checkbox,
-  CopyButton,
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/features/ui";
+import { Checkbox, CopyButton } from "@/features/ui";
 import {
   DataTableColumnHeader,
   DataTableRowActions,
@@ -104,14 +97,7 @@ export const columns: ColumnDef<Product>[] = [
     cell: ({ row }) => (
       <div className="grid grid-cols-4 gap-2">
         {row.original.colors.map((color) => (
-          <TooltipProvider key={color.id}>
-            <Tooltip>
-              <TooltipContent>{color.name}</TooltipContent>
-              <TooltipTrigger>
-                <ColorCircle color={color.hexCode} />
-              </TooltipTrigger>
-            </Tooltip>
-          </TooltipProvider>
+          <ColorCircle color={color.hexCode} />
         ))}
       </div>
     ),

@@ -58,9 +58,7 @@ export class CategoriesService {
     hierarchy = false,
   }: FindManyCategoriesDto) {
     let orderBy = {};
-    if (sortBy === 'products')
-      orderBy = { products: { _count: order || 'asc' } };
-    else if (sortBy === 'subCategories')
+    if (sortBy === 'subCategories')
       orderBy = { subCategories: { _count: order || 'asc' } };
     else orderBy = { [sortBy || 'id']: order || 'asc' };
     const where: Prisma.CategoryWhereInput = {
@@ -78,13 +76,16 @@ export class CategoriesService {
         where,
         include: {
           _count: {
-            select: { subCategories: true, products: true },
+            select: {
+              subCategories: true,
+            },
           },
           subCategories: hierarchy
             ? { include: { subCategories: true } }
             : false,
         },
       });
+
       const count = await this.prisma.category.count({
         where,
       });

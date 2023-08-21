@@ -1,0 +1,118 @@
+"use client";
+
+import * as React from "react";
+
+import { Category } from "@/features/categories/types";
+import {
+  Button,
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuLabel,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/features/ui";
+
+import { cn } from "@/lib/utils";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { UseFormReturn } from "react-hook-form";
+import { CreateProductDto } from "../types";
+
+interface CategoriesInputProps {
+  form: UseFormReturn<CreateProductDto, any, undefined>;
+  categories: Category[];
+}
+
+export function CategoriesInput({ categories, form }: CategoriesInputProps) {
+  const [open, setOpen] = React.useState(false);
+  const hierarchy = React.useMemo(() => {
+    const value = form.getValues("categoryIds");
+    if (value) {
+      const category = categories.find((c) => c.id === value[0]);
+      const subCategory = category!.subCategories.find(
+        (sc) => sc.id === value[1],
+      );
+      const subSubCategory = subCategory!.subCategories.find(
+        (ssc) => ssc.id === value[2],
+      );
+      return [category?.name, subCategory?.name, subSubCategory?.name];
+    }
+  }, [form.getValues("categoryIds")]);
+
+  return (
+    <DropdownMenu open={open} onOpenChange={setOpen}>
+      <DropdownMenuTrigger asChild>
+        <Button className="flex gap-x-4" variant="outline">
+          {!form.getValues("categoryIds")
+            ? "Select category"
+            : hierarchy?.join(" / ")}
+          <ChevronsUpDown className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-[200px] bg-white">
+        <DropdownMenuLabel>Categories</DropdownMenuLabel>
+        <DropdownMenuGroup>
+          {categories.map((c) => (
+            <DropdownMenuSub key={c.id}>
+              <DropdownMenuSubTrigger>{c.name}</DropdownMenuSubTrigger>
+              <DropdownMenuSubContent className="p-0">
+                {c.subCategories.map((sc) => (
+                  <DropdownMenuSub key={sc.id}>
+                    <DropdownMenuSubTrigger>{sc.name}</DropdownMenuSubTrigger>
+                    <DropdownMenuSubContent className="p-0">
+                      <Command>
+                        <CommandInput
+                          placeholder="Search categories..."
+                          autoFocus={true}
+                        />
+                        <CommandList>
+                          <CommandEmpty>No category found.</CommandEmpty>
+                          <CommandGroup>
+                            {sc.subCategories.map((ssc) => (
+                              <CommandItem
+                                key={ssc.id}
+                                value={ssc.name}
+                                onSelect={() => {
+                                  setOpen(false);
+                                  form.setValue("categoryIds", [
+                                    c.id,
+                                    sc.id,
+                                    ssc.id,
+                                  ]);
+                                }}
+                              >
+                                <Check
+                                  className={cn(
+                                    "mr-2 h-4 w-4",
+                                    (
+                                      form.getValues("categoryIds") || []
+                                    ).includes(ssc.id)
+                                      ? "opacity-100"
+                                      : "opacity-0",
+                                  )}
+                                />
+                                {ssc.name}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </DropdownMenuSubContent>
+                  </DropdownMenuSub>
+                ))}
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
+          ))}
+        </DropdownMenuGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}

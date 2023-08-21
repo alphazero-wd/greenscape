@@ -3,7 +3,8 @@ import { SizesService } from './sizes.service';
 import { SizesController } from './sizes.controller';
 
 @Module({
+  exports: [SizesService],
   controllers: [SizesController],
-  providers: [SizesService]
+  providers: [SizesService],
 })
 export class SizesModule {}

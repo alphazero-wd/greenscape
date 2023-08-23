@@ -13,27 +13,26 @@ import {
 import { CommandGroup } from "cmdk";
 import { ChevronsUpDown } from "lucide-react";
 import { useMemo, useState } from "react";
-import { UseFormReturn } from "react-hook-form";
-import { CreateProductDto } from "../types";
 
 interface SizesInputProps {
-  form: UseFormReturn<CreateProductDto, any, undefined>;
   sizes: Size[];
+  sizeIds?: number[];
+  onSelect?: (ids: number[]) => void;
 }
 
-export const SizesInput: React.FC<SizesInputProps> = ({ form, sizes }) => {
+export const SizesInput: React.FC<SizesInputProps> = ({
+  sizes,
+  sizeIds = [],
+  onSelect = () => {},
+}) => {
   const [open, setOpen] = useState(false);
-  const curSizeIds = useMemo(
-    () => form.getValues("sizeIds") || [],
-    [form.getValues("sizeIds")],
-  );
 
   const sortedBySelectedSizes = useMemo(
     () =>
       sizes.sort((a, b) => {
-        return +curSizeIds.includes(b.id) - +curSizeIds.includes(a.id);
+        return +sizeIds.includes(b.id) - +sizeIds.includes(a.id);
       }),
-    [curSizeIds, sizes],
+    [sizeIds, sizes],
   );
 
   return (
@@ -43,15 +42,13 @@ export const SizesInput: React.FC<SizesInputProps> = ({ form, sizes }) => {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="w-full justify-between"
         >
-          {curSizeIds
-            ? `${curSizeIds.length} Sizes selected`
-            : "Select Sizes..."}
+          {sizeIds ? `${sizeIds.length} Sizes selected` : "Select Sizes..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[300px] p-0">
+      <PopoverContent className="w-full p-0">
         <Command>
           <CommandInput placeholder="Search Sizes..." />
           <CommandEmpty>No sizes found.</CommandEmpty>
@@ -63,16 +60,15 @@ export const SizesInput: React.FC<SizesInputProps> = ({ form, sizes }) => {
                   key={size.id}
                   value={size.label}
                   onSelect={() => {
-                    form.setValue(
-                      "sizeIds",
-                      curSizeIds.includes(size.id)
-                        ? curSizeIds.filter((id) => id !== size.id)
-                        : [...curSizeIds, size.id],
+                    onSelect(
+                      sizeIds.includes(size.id)
+                        ? sizeIds.filter((id) => id !== size.id)
+                        : [...sizeIds, size.id],
                     );
                   }}
                 >
                   <SizeSelect
-                    isSelected={curSizeIds.includes(size.id)}
+                    isSelected={sizeIds.includes(size.id)}
                     label={size.label}
                   />
                 </CommandItem>

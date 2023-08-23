@@ -52,11 +52,11 @@ export default async function CategoryPage({
     ? [
         {
           name: category.parentCategory.parentCategory.name,
-          href: `/categories/${category.parentCategory.parentCategory}`,
+          href: `/categories/${category.parentCategory.parentCategory.id}`,
         },
         {
           name: category.parentCategory.name,
-          href: `/categories/${category.parentCategory}`,
+          href: `/categories/${category.parentCategory.id}`,
         },
         { name: category.name, href: `/categories/${category.id}` },
       ]

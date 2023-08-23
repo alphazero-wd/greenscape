@@ -29,11 +29,11 @@ export default async function CategoriesPage({
 }: CategoriesPageProps) {
   const user = await getCurrentUser();
   if (!user) redirect("/auth/login");
-  const url = qs.stringifyUrl({
-    url: process.env.NEXT_PUBLIC_API_URL! + "/sizes",
+  const query = qs.stringifyUrl({
+    url: "",
     query: searchParams,
   });
-  const { count, data } = await getSizes(url);
+  const { count, data } = await getSizes(query);
 
   return (
     <>

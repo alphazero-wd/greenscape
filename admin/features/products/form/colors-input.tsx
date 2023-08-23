@@ -13,27 +13,26 @@ import {
 import { CommandGroup } from "cmdk";
 import { ChevronsUpDown } from "lucide-react";
 import { useMemo, useState } from "react";
-import { UseFormReturn } from "react-hook-form";
-import { CreateProductDto } from "../types";
 
 interface ColorsInputProps {
-  form: UseFormReturn<CreateProductDto, any, undefined>;
   colors: Color[];
+  colorIds?: number[];
+  onSelect?: (ids: number[]) => void;
 }
 
-export const ColorsInput: React.FC<ColorsInputProps> = ({ form, colors }) => {
+export const ColorsInput: React.FC<ColorsInputProps> = ({
+  colors,
+  colorIds = [],
+  onSelect = () => {},
+}) => {
   const [open, setOpen] = useState(false);
-  const curColorIds = useMemo(
-    () => form.getValues("colorIds") || [],
-    [form.getValues("colorIds")],
-  );
 
   const sortedBySelectedColors = useMemo(
     () =>
       colors.sort((a, b) => {
-        return +curColorIds.includes(b.id) - +curColorIds.includes(a.id);
+        return +colorIds.includes(b.id) - +colorIds.includes(a.id);
       }),
-    [curColorIds, colors],
+    [colorIds, colors],
   );
 
   return (
@@ -43,15 +42,13 @@ export const ColorsInput: React.FC<ColorsInputProps> = ({ form, colors }) => {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="w-full justify-between"
         >
-          {curColorIds
-            ? `${curColorIds.length} colors selected`
-            : "Select colors..."}
+          {colorIds ? `${colorIds.length} colors selected` : "Select colors..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="w-full p-0">
         <Command>
           <CommandInput placeholder="Search colors..." />
           <CommandEmpty>No colors found.</CommandEmpty>
@@ -63,16 +60,15 @@ export const ColorsInput: React.FC<ColorsInputProps> = ({ form, colors }) => {
                   key={color.id}
                   value={color.name + color.hexCode}
                   onSelect={() => {
-                    form.setValue(
-                      "colorIds",
-                      curColorIds.includes(color.id)
-                        ? curColorIds.filter((id) => id !== color.id)
-                        : [...curColorIds, color.id],
+                    onSelect(
+                      colorIds.includes(color.id)
+                        ? colorIds.filter((id) => id !== color.id)
+                        : [...colorIds, color.id],
                     );
                   }}
                 >
                   <ColorCircle
-                    isSelected={curColorIds.includes(color.id)}
+                    isSelected={colorIds.includes(color.id)}
                     color={color.hexCode}
                   />
                 </CommandItem>

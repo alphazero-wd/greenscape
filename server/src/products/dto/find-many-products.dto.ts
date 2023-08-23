@@ -1,6 +1,6 @@
-import { Transform, Type } from 'class-transformer';
+import { Transform } from 'class-transformer';
 import { FindManyDto } from '../../common/dto';
-import { IsBoolean, IsIn, IsInt, IsOptional } from 'class-validator';
+import { IsIn, IsInt, IsOptional } from 'class-validator';
 
 export class FindManyProductsDto extends FindManyDto {
   @Transform(({ value }: { value: string }) =>
@@ -18,6 +18,6 @@ export class FindManyProductsDto extends FindManyDto {
   sizeIds?: number[];
 
   @IsOptional()
-  @IsIn(['public', 'private', 'all'])
-  status?: 'public' | 'private' | 'all';
+  @IsIn(['Active', 'Draft'])
+  status?: 'Active' | 'Draft';
 }

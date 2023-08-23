@@ -10,15 +10,16 @@ import { PrismaError } from '../prisma/prisma-error';
 import { CreateColorDto, UpdateColorDto } from './dto';
 import { FindManyDto } from '../common/dto';
 import { removeWhiteSpaces } from '../common/utils';
+import { GetColorName } from 'hex-color-to-color-name';
 
 @Injectable()
 export class ColorsService {
   constructor(private prisma: PrismaService) {}
 
-  async create({ hexCode, name }: CreateColorDto) {
+  async create({ hexCode }: CreateColorDto) {
     try {
       const newColor = await this.prisma.color.create({
-        data: { hexCode, name: removeWhiteSpaces(name) },
+        data: { hexCode, name: GetColorName(hexCode) },
       });
       return newColor;
     } catch (error) {
@@ -63,11 +64,11 @@ export class ColorsService {
     return { count, colors };
   }
 
-  async update(id: number, { hexCode, name }: UpdateColorDto) {
+  async update(id: number, { hexCode }: UpdateColorDto) {
     try {
       const updatedColor = await this.prisma.color.update({
         where: { id },
-        data: { hexCode, name: removeWhiteSpaces(name) },
+        data: { hexCode, name: GetColorName(hexCode) },
       });
       return updatedColor;
     } catch (error) {
@@ -89,7 +90,7 @@ export class ColorsService {
         }
       throw new InternalServerErrorException({
         success: false,
-        message: 'Something went wrong',
+        message: error.message,
       });
     }
   }

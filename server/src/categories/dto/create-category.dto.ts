@@ -1,7 +1,7 @@
-import { IsInt, IsOptional, IsString, Length, Min } from 'class-validator';
+import { IsInt, IsOptional, Length, Min } from 'class-validator';
 
 export class CreateCategoryDto {
-  @Length(1, 20)
+  @Length(1, 60)
   name: string;
 
   @IsOptional()

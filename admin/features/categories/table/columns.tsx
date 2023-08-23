@@ -1,6 +1,14 @@
 "use client";
 
-import { Button, Checkbox, CopyButton } from "@/features/ui";
+import {
+  Button,
+  Checkbox,
+  CopyButton,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/features/ui";
 import {
   DataTableColumnHeader,
   DataTableRowActions,
@@ -67,11 +75,18 @@ export const columns: ColumnDef<Category>[] = [
       return (
         <div className="flex items-center justify-end">
           <CopyButton text={row.original.name} />
-          <Button variant="ghost" size="icon">
-            <Link href={`/categories/${row.original.id}`}>
-              <EyeIcon className="h-5 w-5" />
-            </Link>
-          </Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <Link href={`/categories/${row.original.id}`}>
+                    <EyeIcon className="h-5 w-5" />
+                  </Link>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>View sub-categories</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           <DataTableRowActions
             row={row}
             onEditAction={onEditOpen}

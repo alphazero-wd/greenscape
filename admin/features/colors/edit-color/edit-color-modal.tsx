@@ -8,12 +8,14 @@ import {
   DialogTitle,
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
   Input,
 } from "@/features/ui";
+import { GetColorName } from "hex-color-to-color-name";
 import { Loader2 } from "lucide-react";
 import { ColorCircle } from "../circle";
 import { useEditColor } from "./use-edit-color";
@@ -49,6 +51,9 @@ export const EditColorModal = () => {
                     </FormControl>
                     <ColorCircle color={field.value} />
                   </div>
+                  <FormDescription className="my-2">
+                    {GetColorName(field.value)}
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

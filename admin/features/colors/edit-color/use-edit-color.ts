@@ -31,11 +31,12 @@ export const useEditColor = (color: Color | null) => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setLoading(true);
-      await axios.patch(
+      const res = await axios.patch(
         `${process.env.NEXT_PUBLIC_API_URL}/colors/${color?.id}`,
         values,
         { withCredentials: true },
       );
+      console.log({ data: res.data });
       toast.success("Color updated");
       router.refresh();
       onClose();

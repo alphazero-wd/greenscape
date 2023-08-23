@@ -65,17 +65,6 @@ export class SizesService {
     return { count, sizes };
   }
 
-  async findByCategories(categoryIds: number[]) {
-    const sizes = await this.prisma.size.findMany({
-      where: {
-        products: {
-          some: { categories: { some: { id: { in: categoryIds } } } },
-        },
-      },
-    });
-    return sizes;
-  }
-
   async update(id: number, { label }: UpdateSizeDto) {
     try {
       const updatedSize = await this.prisma.size.update({

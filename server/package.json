@@ -33,6 +33,7 @@
     "class-validator": "^0.14.0",
     "connect-redis": "6",
     "express-session": "^1.17.3",
+    "hex-color-to-color-name": "^1.0.2",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
     "redis": "3.1.2",

@@ -29,10 +29,8 @@ export class ProductsController {
 
   @Get()
   async findAll(@Query() findManyDto: FindManyProductsDto) {
-    const { count, products, sizes } = await this.productsService.findAll(
-      findManyDto,
-    );
-    return { count, data: products, sizes, success: true };
+    const { count, products } = await this.productsService.findAll(findManyDto);
+    return { count, data: products, success: true };
   }
 
   @Get(':id')

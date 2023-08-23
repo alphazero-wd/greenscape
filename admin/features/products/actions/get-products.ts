@@ -8,9 +8,9 @@ interface ProductsResponse {
   data: Product[];
 }
 
-export const getProducts = async (url: string): Promise<ProductsResponse> => {
+export const getProducts = async (query = ""): Promise<ProductsResponse> => {
   const {
     data: { sizes, count, data },
-  } = await axios.get(url);
+  } = await axios.get(process.env.NEXT_PUBLIC_API_URL + "/products" + query);
   return { sizes, count, data };
 };

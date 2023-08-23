@@ -1,6 +1,7 @@
 import {
   ArrayMaxSize,
   ArrayMinSize,
+  IsIn,
   IsInt,
   IsNotEmpty,
   IsOptional,
@@ -27,12 +28,6 @@ export class CreateProductDto {
   categoryIds: [number, number, number];
 
   @IsOptional()
-  @IsInt({ each: true })
-  @Min(1, { each: true })
-  colorIds?: number[];
-
-  @IsOptional()
-  @IsInt({ each: true })
-  @Min(1, { each: true })
-  sizeIds?: number[];
+  @IsIn(['Active', 'Draft'])
+  status?: 'Active' | 'Draft';
 }

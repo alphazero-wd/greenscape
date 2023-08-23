@@ -26,7 +26,6 @@ model Size {
   id    Int    @id @default(autoincrement())
   label String @unique @db.VarChar(20)
 
-  products Product[]
   variants Variant[]
 }
 
@@ -35,7 +34,6 @@ model Color {
   name    String @unique @db.VarChar(20)
   hexCode String @unique @db.VarChar(7)
 
-  products Product[]
   variants Variant[]
 }
 
@@ -65,21 +63,20 @@ model Product {
   name      String  @unique @db.VarChar(120)
   desc      String
   sizeChart String?
-  isPublic  Boolean @default(false)
+  status    Status  @default(Active)
 
-  sizes      Size[]
-  colors     Color[]
   categories Category[]
   variants   Variant[]
 }
 
 model Variant {
-  id        Int  @id @default(autoincrement())
-  price     Int  @default(0)
+  id        Int     @id @default(autoincrement())
+  price     Int     @default(0)
   productId Int
   colorId   Int?
   sizeId    Int?
-  inStock   Int  @default(0)
+  sku       String?
+  inStock   Int     @default(0)
 
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   color   Color?  @relation(fields: [colorId], references: [id], onDelete: Cascade)
@@ -92,4 +89,9 @@ model Variant {
 enum Role {
   User
   Admin
+}
+
+enum Status {
+  Active
+  Draft
 }

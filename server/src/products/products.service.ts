@@ -18,24 +18,13 @@ export class ProductsService {
     private sizesService: SizesService,
   ) {}
 
-  async create({
-    name,
-    colorIds = [],
-    sizeIds = [],
-    categoryIds,
-    ...createProductDto
-  }: CreateProductDto) {
+  async create({ name, categoryIds, ...createProductDto }: CreateProductDto) {
     try {
       const newProduct = await this.prisma.product.create({
         data: {
           name: removeWhiteSpaces(name),
           ...createProductDto,
-          colors: {
-            connect: colorIds.map((id) => ({ id })),
-          },
-          sizes: {
-            connect: sizeIds.map((id) => ({ id })),
-          },
+
           categories: {
             connect: categoryIds.map((id) => ({ id })),
           },
@@ -74,7 +63,7 @@ export class ProductsService {
     offset = 0,
     q = '',
     categoryIds,
-    status = 'public',
+    status = 'Active',
   }: FindManyProductsDto) {
     try {
       const where: Prisma.ProductWhereInput = {
@@ -83,8 +72,7 @@ export class ProductsService {
           mode: 'insensitive',
         },
         categories: { some: { id: { in: categoryIds } } },
-        isPublic:
-          status === 'public' ? true : status === 'private' ? false : {},
+        status,
       };
       let products = await this.prisma.product.findMany({
         take: limit,
@@ -92,8 +80,6 @@ export class ProductsService {
         skip: offset,
         where,
         include: {
-          sizes: true,
-          colors: true,
           categories: true,
           variants: {
             select: {
@@ -107,8 +93,6 @@ export class ProductsService {
       });
       // for pagination
       const count = await this.prisma.product.count({ where });
-      // for filter purposes
-      const sizes = await this.sizesService.findByCategories(categoryIds);
 
       products = (await this.findPriceRange(products)) as any[];
 
@@ -119,7 +103,7 @@ export class ProductsService {
             : pb.priceRange[1] - pa.priceRange[1];
         });
 
-      return { count, products, sizes };
+      return { count, products };
     } catch (error) {
       throw new InternalServerErrorException({
         success: false,
@@ -148,8 +132,6 @@ export class ProductsService {
       where: { id },
       include: {
         variants: { where: { colorId, sizeId } },
-        colors: true,
-        sizes: true,
         categories: { select: { id: true } },
       },
     });
@@ -163,25 +145,14 @@ export class ProductsService {
 
   async update(
     id: number,
-    { colorId, sizeId, categoryIds, ...updateProductDto }: UpdateProductDto,
+    { categoryIds, ...updateProductDto }: UpdateProductDto,
   ) {
     try {
       const product = await this.findOne(id);
       const data: Prisma.ProductUpdateInput = { ...updateProductDto };
-      const existingColors = product.colors.map((color) => color.id);
-      const existingSizes = product.sizes.map((size) => size.id);
-      const existingCategoryIds = product.categories.map((c) => ({ id: c.id }));
-      if (colorId) {
-        if (existingColors.includes(colorId))
-          data.colors = { disconnect: { id: colorId } };
-        else data.colors = { connect: { id: colorId } };
-      }
 
-      if (sizeId) {
-        if (existingSizes.includes(sizeId))
-          data.sizes = { disconnect: { id: sizeId } };
-        else data.sizes = { connect: { id: sizeId } };
-      }
+      const existingCategoryIds = product.categories.map((c) => ({ id: c.id }));
+
       if (categoryIds) {
         data.categories = {
           disconnect: existingCategoryIds,

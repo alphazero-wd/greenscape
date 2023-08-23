@@ -23,41 +23,43 @@ import {
 
 import { cn } from "@/lib/utils";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { UseFormReturn } from "react-hook-form";
-import { CreateProductDto } from "../types";
 
 interface CategoriesInputProps {
-  form: UseFormReturn<CreateProductDto, any, undefined>;
   categories: Category[];
+  categoryIds?: number[];
+  onSelect?: (ids: [number, number, number]) => void;
 }
 
-export function CategoriesInput({ categories, form }: CategoriesInputProps) {
+export function CategoriesInput({
+  categories,
+  categoryIds = [],
+  onSelect = () => {},
+}: CategoriesInputProps) {
   const [open, setOpen] = React.useState(false);
   const hierarchy = React.useMemo(() => {
-    const value = form.getValues("categoryIds");
-    if (value) {
-      const category = categories.find((c) => c.id === value[0]);
-      const subCategory = category!.subCategories.find(
-        (sc) => sc.id === value[1],
+    if (categoryIds) {
+      const category = categories.find((c) => c.id === categoryIds[0]);
+      const subCategory = category?.subCategories.find(
+        (sc) => sc.id === categoryIds[1],
       );
-      const subSubCategory = subCategory!.subCategories.find(
-        (ssc) => ssc.id === value[2],
+      const subSubCategory = subCategory?.subCategories.find(
+        (ssc) => ssc.id === categoryIds[2],
       );
       return [category?.name, subCategory?.name, subSubCategory?.name];
     }
-  }, [form.getValues("categoryIds")]);
+  }, [categoryIds]);
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <Button className="flex gap-x-4" variant="outline">
-          {!form.getValues("categoryIds")
+        <Button variant="outline" className="w-full justify-between">
+          {categoryIds.length === 0
             ? "Select category"
             : hierarchy?.join(" / ")}
-          <ChevronsUpDown className="h-4 w-4" />
+          <ChevronsUpDown className="h-4 w-4 text-gray-500" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[200px] bg-white">
+      <DropdownMenuContent align="end" className="w-[300px] bg-white">
         <DropdownMenuLabel>Categories</DropdownMenuLabel>
         <DropdownMenuGroup>
           {categories.map((c) => (
@@ -82,19 +84,13 @@ export function CategoriesInput({ categories, form }: CategoriesInputProps) {
                                 value={ssc.name}
                                 onSelect={() => {
                                   setOpen(false);
-                                  form.setValue("categoryIds", [
-                                    c.id,
-                                    sc.id,
-                                    ssc.id,
-                                  ]);
+                                  onSelect([c.id, sc.id, ssc.id]);
                                 }}
                               >
                                 <Check
                                   className={cn(
                                     "mr-2 h-4 w-4",
-                                    (
-                                      form.getValues("categoryIds") || []
-                                    ).includes(ssc.id)
+                                    categoryIds.includes(ssc.id)
                                       ? "opacity-100"
                                       : "opacity-0",
                                   )}

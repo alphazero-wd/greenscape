@@ -149,7 +149,7 @@ export class CategoriesService {
       }
       throw new InternalServerErrorException({
         success: false,
-        message: 'Something went wrong',
+        message: error.message,
       });
     }
   }

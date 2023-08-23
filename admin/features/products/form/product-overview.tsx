@@ -11,6 +11,7 @@ import {
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
 import { CreateProductDto } from "../types";
+import { FormSection } from "./form-section";
 
 interface ProductOverviewProps {
   form: UseFormReturn<CreateProductDto, any, undefined>;
@@ -22,20 +23,18 @@ export const ProductOverview: React.FC<ProductOverviewProps> = ({
   loading,
 }) => {
   return (
-    <>
+    <FormSection
+      heading="Overview"
+      description="Provide some basic information about the product"
+    >
       <FormField
         control={form.control}
         name="name"
         render={({ field }) => (
-          <FormItem className="py-4">
-            <FormLabel className="flex-1">Product name</FormLabel>
+          <FormItem className="sm:col-span-4">
+            <FormLabel className="block">Product name</FormLabel>
             <FormControl>
-              <Input
-                disabled={loading}
-                placeholder="Product name"
-                {...field}
-                className="col-span-3 w-full"
-              />
+              <Input disabled={loading} placeholder="Product name" {...field} />
             </FormControl>
             <FormDescription>
               Keep it short and easy to remember.
@@ -48,8 +47,8 @@ export const ProductOverview: React.FC<ProductOverviewProps> = ({
         control={form.control}
         name="desc"
         render={({ field }) => (
-          <FormItem className="py-4">
-            <FormLabel className="flex-1">Description</FormLabel>
+          <FormItem className="col-span-full">
+            <FormLabel className="block">Description</FormLabel>
             <FormControl>
               <Textarea
                 disabled={loading}
@@ -66,6 +65,6 @@ export const ProductOverview: React.FC<ProductOverviewProps> = ({
           </FormItem>
         )}
       />
-    </>
+    </FormSection>
   );
 };

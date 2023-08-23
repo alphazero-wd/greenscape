@@ -11,8 +11,8 @@ import { useCreateCategoryModal } from "./use-create-category-modal";
 const formSchema = z.object({
   name: z
     .string()
-    .min(1, { message: "Category name must be between 1 and 20 characters" })
-    .max(20, { message: "Category name must be between 1 and 20 characters" }),
+    .min(1, { message: "Category name must be between 1 and 60 characters" })
+    .max(60, { message: "Category name must be between 1 and 60 characters" }),
   parentCategoryId: z.number().int().gte(1).optional(),
 });
 

@@ -26,11 +26,11 @@ export default async function CategoriesPage({
 }: CategoriesPageProps) {
   const user = await getCurrentUser();
   if (!user) redirect("/auth/login");
-  const url = qs.stringifyUrl({
-    url: process.env.NEXT_PUBLIC_API_URL! + "/products",
+  const query = qs.stringifyUrl({
+    url: "",
     query: { limit, offset, order, q, sortBy, status },
   });
-  const { count, data, sizes } = await getProducts(url);
+  const { count, data, sizes } = await getProducts(query);
   const { data: categories } = await getCategories(
     process.env.NEXT_PUBLIC_API_URL! + "/categories?hierarchy=true",
   );

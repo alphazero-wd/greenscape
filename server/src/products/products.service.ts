@@ -9,14 +9,10 @@ import { PrismaService } from '../prisma/prisma.service';
 import { Prisma, Product } from '@prisma/client';
 import { PrismaError } from '../prisma/prisma-error';
 import { removeWhiteSpaces } from '../common/utils';
-import { SizesService } from '../sizes/sizes.service';
 
 @Injectable()
 export class ProductsService {
-  constructor(
-    private prisma: PrismaService,
-    private sizesService: SizesService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async create({ name, categoryIds, ...createProductDto }: CreateProductDto) {
     try {
@@ -34,12 +30,6 @@ export class ProductsService {
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         switch (error.code) {
-          case PrismaError.RecordNotFound:
-            throw new BadRequestException({
-              success: false,
-              message:
-                'Cannot find category, sizes, or colors with the given ids',
-            });
           case PrismaError.UniqueViolation:
             throw new BadRequestException({
               success: false,
@@ -76,7 +66,7 @@ export class ProductsService {
       };
       let products = await this.prisma.product.findMany({
         take: limit,
-        orderBy: sortBy !== 'price' ? { [sortBy]: order || 'asc' } : undefined,
+        orderBy: { [sortBy]: order || 'asc' },
         skip: offset,
         where,
         include: {
@@ -145,11 +135,14 @@ export class ProductsService {
 
   async update(
     id: number,
-    { categoryIds, ...updateProductDto }: UpdateProductDto,
+    { categoryIds, name, ...updateProductDto }: UpdateProductDto,
   ) {
     try {
       const product = await this.findOne(id);
-      const data: Prisma.ProductUpdateInput = { ...updateProductDto };
+      const data: Prisma.ProductUpdateInput = {
+        name: removeWhiteSpaces(name),
+        ...updateProductDto,
+      };
 
       const existingCategoryIds = product.categories.map((c) => ({ id: c.id }));
 

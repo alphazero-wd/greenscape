@@ -41,6 +41,7 @@
     "eslint": "8.45.0",
     "eslint-config-next": "13.4.12",
     "hex-color-to-color-name": "^1.0.2",
+    "lodash": "^4.17.21",
     "lucide-react": "^0.263.1",
     "next": "13.4.12",
     "postcss": "8.4.27",
@@ -62,6 +63,7 @@
   "devDependencies": {
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@types/contrast-color": "^1.0.0",
+    "@types/lodash": "^4.14.197",
     "prettier": "^3.0.0",
     "prettier-plugin-organize-imports": "^3.2.3",
     "prettier-plugin-tailwindcss": "^0.4.1"

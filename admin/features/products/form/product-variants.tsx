@@ -1,10 +1,12 @@
 import { Color } from "@/features/colors/types";
 import { Size } from "@/features/sizes/types";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { CreateProductDto } from "../types";
+import { groupVariants } from "../utils";
 import { ColorsInput } from "./colors-input";
 import { FormSection } from "./form-section";
+import { ProductVariant } from "./product-variant";
 import { SizesInput } from "./sizes-input";
 
 interface ProductVariantsProps {
@@ -20,6 +22,7 @@ export const ProductVariants: React.FC<ProductVariantsProps> = ({
   const [colorIds, setColorIds] = useState<number[]>([]);
   const [sizeIds, setSizeIds] = useState<number[]>([]);
   const variants = form.watch("variants");
+  const groupedVariants = useMemo(() => groupVariants(variants), [variants]);
 
   useEffect(() => {
     if (colorIds.length === 0 && sizeIds.length === 0)
@@ -77,16 +80,15 @@ export const ProductVariants: React.FC<ProductVariantsProps> = ({
         />
       </div>
       <ul className="col-span-full w-full space-y-4">
-        {variants.map((variant) => {
-          const color = colors.find((c) => c.id === variant.colorId);
-          const size = sizes.find((s) => s.id === variant.sizeId);
-          return (
-            <li key={`${variant.colorId} ${variant.sizeId}`}>
-              <div>{color?.name ? `Color: ${color.name}` : "No color"}</div>
-              <div>{size?.label ? `Size: ${size.label}` : "No size"}</div>
-            </li>
-          );
-        })}
+        {Object.entries(groupedVariants).map(([colorId, variants]) => (
+          <ProductVariant
+            key={colorId}
+            sizes={sizes}
+            colorId={colorId}
+            variants={variants}
+            color={colors.find((color) => color.id === +colorId)}
+          />
+        ))}
       </ul>
     </FormSection>
   );

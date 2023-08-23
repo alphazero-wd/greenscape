@@ -25,7 +25,7 @@ export const ColorCircle: React.FC<ColorCircleProps> = ({
     <TooltipProvider>
       <Tooltip>
         <TooltipContent>{GetColorName(color)}</TooltipContent>
-        <TooltipTrigger>
+        <TooltipTrigger asChild>
           <div
             className={cn(
               "relative flex h-8 w-8 items-center justify-center rounded-full border border-black border-opacity-10",

@@ -1,3 +1,4 @@
+export { Badge } from "./badge";
 export { Button } from "./button";
 export {
   Card,
@@ -18,6 +19,15 @@ export {
   CommandSeparator,
   CommandShortcut,
 } from "./command";
+export {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./dialog";
 export {
   Form,
   FormControl,
@@ -45,16 +55,6 @@ export { Separator } from "./separator";
 export { Toaster } from "./toaster";
 
 export {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "./dialog";
-
-export {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
@@ -79,10 +79,10 @@ export {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
   DropdownMenuSub,
   DropdownMenuSubContent,
-  DropdownMenuSubTrigger
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
 } from "./dropdown-menu";
 
 export {

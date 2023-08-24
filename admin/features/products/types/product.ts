@@ -8,3 +8,12 @@ export interface Product {
   status: "Active" | "Draft";
   category: Category;
 }
+
+export interface CreateProductDto {
+  name: string;
+  desc: string;
+  price: number;
+  inStock: number;
+  status: "Active" | "Draft";
+  categoryId: number;
+}

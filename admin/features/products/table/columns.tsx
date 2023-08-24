@@ -1,6 +1,6 @@
 "use client";
 
-import { Checkbox, CopyButton } from "@/features/ui";
+import { Badge, Checkbox, CopyButton } from "@/features/ui";
 import {
   DataTableColumnHeader,
   DataTableRowActions,
@@ -64,11 +64,15 @@ export const columns: ColumnDef<Product>[] = [
     cell: ({ row }) => row.original.category.name,
   },
   {
-    id: "isPublic",
-    accessorKey: "isPublic",
+    id: "status",
+    accessorKey: "status",
     header: "Status",
     cell: ({ row }) => (
-      <div className="flex items-center gap-x-2">{row.original.status}</div>
+      <Badge
+        variant={row.original.status === "Active" ? "default" : "secondary"}
+      >
+        {row.original.status}
+      </Badge>
     ),
   },
   {

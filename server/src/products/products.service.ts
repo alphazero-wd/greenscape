@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -69,7 +68,18 @@ export class ProductsService {
         skip: offset,
         orderBy: { [sortBy]: order },
         where,
-        include: { images: true, category: true },
+        select: {
+          id: true,
+          name: true,
+          inStock: true,
+          price: true,
+          createdAt: true,
+          updatedAt: true,
+          status: true,
+          desc: false,
+          images: true,
+          category: true,
+        },
       });
       const count = await this.prisma.product.count();
       return { count, products };

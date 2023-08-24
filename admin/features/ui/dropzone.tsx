@@ -12,7 +12,6 @@ interface DropzoneProps {
 
 export const Dropzone: React.FC<DropzoneProps> = ({
   children,
-  onChange,
   state: { fileRejections, getRootProps, getInputProps, inputRef },
 }) => {
   useEffect(() => {
@@ -42,7 +41,7 @@ export const Dropzone: React.FC<DropzoneProps> = ({
         {...getRootProps()}
         className="flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10"
       >
-        <input ref={inputRef} {...getInputProps({ onChange })} />
+        <input ref={inputRef} {...getInputProps()} />
         {children}
       </div>
     </section>

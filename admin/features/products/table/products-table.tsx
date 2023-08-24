@@ -1,6 +1,4 @@
 "use client";
-import { Category } from "@/features/categories/types";
-import { Size } from "@/features/sizes/types";
 import {
   DataTable,
   DataTablePagination,
@@ -15,14 +13,10 @@ import { columns } from "./columns";
 interface ProductsTableProps {
   products: Product[];
   count: number;
-  categories: Category[];
-  sizes: Size[];
 }
 
 export const ProductsTable: React.FC<ProductsTableProps> = ({
-  sizes,
   count,
-  categories,
   products,
 }) => {
   const { q, setQ, table } = useTable(columns, products, count);

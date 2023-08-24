@@ -1,25 +1,19 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { useEffect } from "react";
+import { ChangeEventHandler, useEffect } from "react";
 import { DropzoneState, ErrorCode } from "react-dropzone";
 import { toast } from "react-hot-toast";
 
 interface DropzoneProps {
   children: React.ReactNode;
   state: DropzoneState;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
 }
 
 export const Dropzone: React.FC<DropzoneProps> = ({
   children,
-  state: {
-    fileRejections,
-    getRootProps,
-    getInputProps,
-    isFocused,
-    isDragActive,
-    inputRef,
-  },
+  onChange,
+  state: { fileRejections, getRootProps, getInputProps, inputRef },
 }) => {
   useEffect(() => {
     if (fileRejections.length > 0) {
@@ -46,13 +40,9 @@ export const Dropzone: React.FC<DropzoneProps> = ({
     <section className="container">
       <div
         {...getRootProps()}
-        className={cn(
-          "relative flex h-96 flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-400 bg-gray-50 p-4 text-gray-700 shadow-sm",
-          (isFocused || isDragActive) &&
-            "border-dashed border-gray-900 bg-gray-100",
-        )}
+        className="flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10"
       >
-        <input ref={inputRef} {...getInputProps()} />
+        <input ref={inputRef} {...getInputProps({ onChange })} />
         {children}
       </div>
     </section>

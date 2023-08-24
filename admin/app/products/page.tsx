@@ -1,4 +1,3 @@
-import { getCategories } from "@/features/categories/actions";
 import { getProducts } from "@/features/products/actions";
 import { ProductsTable } from "@/features/products/table/products-table";
 import { Breadcrumb, DeleteRecordsModal } from "@/features/ui";
@@ -17,12 +16,12 @@ interface CategoriesPageProps {
     sortBy?: string;
     order?: "asc" | "desc";
     q?: string;
-    status?: "public" | "private" | "all";
+    status?: "Active" | "Draft";
   };
 }
 
 export default async function CategoriesPage({
-  searchParams: { limit, offset, order, q, sortBy, status = "all" },
+  searchParams: { limit, offset, order, q, sortBy, status },
 }: CategoriesPageProps) {
   const user = await getCurrentUser();
   if (!user) redirect("/auth/login");
@@ -30,10 +29,8 @@ export default async function CategoriesPage({
     url: "",
     query: { limit, offset, order, q, sortBy, status },
   });
-  const { count, data, sizes } = await getProducts(query);
-  const { data: categories } = await getCategories(
-    process.env.NEXT_PUBLIC_API_URL! + "/categories?hierarchy=true",
-  );
+  const { count, data } = await getProducts(query);
+  // const { data: categories } = await getCategories();
 
   return (
     <>
@@ -46,12 +43,7 @@ export default async function CategoriesPage({
         </h1>
 
         <div className="mt-6 space-y-8">
-          <ProductsTable
-            categories={categories}
-            count={count}
-            products={data}
-            sizes={sizes}
-          />
+          <ProductsTable count={count} products={data} />
         </div>
       </div>
       <DeleteRecordsModal entityName="products" />

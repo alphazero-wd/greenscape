@@ -22,68 +22,36 @@ model User {
   roles     Role[]   @default([User])
 }
 
-model Size {
-  id    Int    @id @default(autoincrement())
-  label String @unique @db.VarChar(20)
-
-  variants Variant[]
-}
-
-model Color {
-  id      Int    @id @default(autoincrement())
-  name    String @unique @db.VarChar(20)
-  hexCode String @unique @db.VarChar(7)
-
-  variants Variant[]
-}
-
 model File {
-  id       Int    @id @default(autoincrement())
-  filename String
-  path     String
-  mimetype String
+  id        Int    @id @default(autoincrement())
+  filename  String
+  path      String
+  mimetype  String
+  productId Int?
 
-  variants Variant[]
+  product Product? @relation(fields: [productId], references: [id])
 }
 
 model Category {
-  id               Int    @id @default(autoincrement())
-  name             String @db.VarChar(60)
-  parentCategoryId Int?
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar(60)
 
-  parentCategory Category?  @relation("ParentSubCategories", fields: [parentCategoryId], references: [id], onDelete: Cascade)
-  subCategories  Category[] @relation("ParentSubCategories")
-  products       Product[]
-
-  @@unique([parentCategoryId, name])
+  products Product[]
 }
 
 model Product {
-  id        Int     @id @default(autoincrement())
-  name      String  @unique @db.VarChar(120)
-  desc      String
-  sizeChart String?
-  status    Status  @default(Active)
+  id         Int      @id @default(autoincrement())
+  name       String   @unique @db.VarChar(120)
+  desc       String
+  price      Decimal  @db.Money
+  inStock    Int
+  categoryId Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  status     Status   @default(Active)
 
-  categories Category[]
-  variants   Variant[]
-}
-
-model Variant {
-  id        Int     @id @default(autoincrement())
-  price     Int     @default(0)
-  productId Int
-  colorId   Int?
-  sizeId    Int?
-  sku       String?
-  inStock   Int     @default(0)
-
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  color   Color?  @relation(fields: [colorId], references: [id], onDelete: Cascade)
-  size    Size?   @relation(fields: [sizeId], references: [id], onDelete: Cascade)
-  images  File[]
-
-  @@unique([productId, colorId, sizeId])
+  images   File[]
+  category Category @relation(fields: [categoryId], references: [id])
 }
 
 enum Role {

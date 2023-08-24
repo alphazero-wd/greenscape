@@ -5,25 +5,21 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import {
-  CreateCategoryDto,
-  UpdateCategoryDto,
-  FindManyCategoriesDto,
-} from './dto';
+import { CreateCategoryDto, UpdateCategoryDto } from './dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { removeWhiteSpaces } from '../common/utils';
 import { Prisma } from '@prisma/client';
 import { PrismaError } from '../prisma/prisma-error';
+import { FindManyDto } from '../common/dto';
 
 @Injectable()
 export class CategoriesService {
   constructor(private prisma: PrismaService) {}
 
-  async create({ name, parentCategoryId }: CreateCategoryDto) {
+  async create({ name }: CreateCategoryDto) {
     try {
       const newCategory = await this.prisma.category.create({
-        data: { name: removeWhiteSpaces(name), parentCategoryId },
-        include: { parentCategory: true, subCategories: true },
+        data: { name: removeWhiteSpaces(name) },
       });
       return newCategory;
     } catch (error) {
@@ -33,12 +29,6 @@ export class CategoriesService {
             success: false,
             message:
               'Category with the given `name` already exists in the store',
-          });
-        if (error.code === PrismaError.ForeignViolation)
-          throw new NotFoundException({
-            success: false,
-            message:
-              'Cannot create category because the parent category with the given `parentCategoryId` is not found',
           });
       }
       throw new InternalServerErrorException({
@@ -54,36 +44,23 @@ export class CategoriesService {
     sortBy = 'id',
     offset = 0,
     q = '',
-    pid = null,
-    hierarchy = false,
-  }: FindManyCategoriesDto) {
-    let orderBy = {};
-    if (sortBy === 'subCategories')
-      orderBy = { subCategories: { _count: order || 'asc' } };
-    else orderBy = { [sortBy || 'id']: order || 'asc' };
+  }: FindManyDto) {
     const where: Prisma.CategoryWhereInput = {
-      parentCategoryId: pid,
       name: {
         search: q ? removeWhiteSpaces(q).split(' ').join(' & ') : undefined,
         mode: 'insensitive',
       },
     };
+    let orderBy = {};
+    if (sortBy === 'products') orderBy = { products: { _count: order } };
+    else orderBy = { [sortBy]: order };
     try {
       const categories = await this.prisma.category.findMany({
         take: limit,
         orderBy,
         skip: offset,
         where,
-        include: {
-          _count: {
-            select: {
-              subCategories: true,
-            },
-          },
-          subCategories: hierarchy
-            ? { include: { subCategories: true } }
-            : false,
-        },
+        include: { _count: { select: { products: true } } },
       });
 
       const count = await this.prisma.category.count({
@@ -101,29 +78,11 @@ export class CategoriesService {
     }
   }
 
-  async findOne(id: number) {
-    const category = await this.prisma.category.findUnique({
-      where: { id },
-      include: {
-        parentCategory: {
-          select: { id: true, name: true, parentCategory: true },
-        },
-      },
-    });
-    if (!category)
-      throw new NotFoundException({
-        success: false,
-        message: 'Cannot find category with the given `id`',
-      });
-    return category;
-  }
-
-  async update(id: number, { name, parentCategoryId }: UpdateCategoryDto) {
+  async update(id: number, { name }: UpdateCategoryDto) {
     try {
       const updatedCategory = await this.prisma.category.update({
         where: { id },
-        data: { name: removeWhiteSpaces(name), parentCategoryId },
-        include: { subCategories: true, parentCategory: true },
+        data: { name: removeWhiteSpaces(name) },
       });
       return updatedCategory;
     } catch (error) {
@@ -139,12 +98,6 @@ export class CategoriesService {
             success: false,
             message:
               'Cannot update the category because it is not found with the given `id`',
-          });
-        if (error.code === PrismaError.ForeignViolation)
-          throw new NotFoundException({
-            success: false,
-            message:
-              'Cannot update category because the parent category with the given `parentCategoryId` is not found',
           });
       }
       throw new InternalServerErrorException({

@@ -6,15 +6,15 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
   Query,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto, FindManyProductsDto, UpdateProductDto } from './dto';
+import { DeleteManyDto } from '../common/dto';
 import { Role } from '@prisma/client';
 import { RolesGuard } from '../auth/guards';
-import { DeleteManyDto } from '../common/dto';
 
 @Controller('products')
 export class ProductsController {
@@ -24,19 +24,21 @@ export class ProductsController {
   @UseGuards(RolesGuard(Role.Admin))
   async create(@Body() createProductDto: CreateProductDto) {
     const newProduct = await this.productsService.create(createProductDto);
-    return { data: newProduct, success: true };
+    return { success: true, data: newProduct };
   }
 
   @Get()
-  async findAll(@Query() findManyDto: FindManyProductsDto) {
-    const { count, products } = await this.productsService.findAll(findManyDto);
-    return { count, data: products, success: true };
+  async findAll(@Query() findManyProductsDto: FindManyProductsDto) {
+    const { products, count } = await this.productsService.findAll(
+      findManyProductsDto,
+    );
+    return { data: products, count, success: true };
   }
 
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
     const product = await this.productsService.findOne(id);
-    return { data: product, success: true };
+    return { success: true, data: product };
   }
 
   @Patch(':id')

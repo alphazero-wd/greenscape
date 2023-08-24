@@ -1,10 +1,7 @@
 import {
-  ArrayMaxSize,
-  ArrayMinSize,
-  IsIn,
   IsInt,
   IsNotEmpty,
-  IsOptional,
+  IsNumber,
   IsString,
   Length,
   Min,
@@ -15,19 +12,18 @@ export class CreateProductDto {
   name: string;
 
   @IsNotEmpty()
+  @IsString()
   desc: string;
 
-  @IsString()
-  @IsOptional()
-  sizeChart?: string;
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0)
+  price: number;
 
-  @ArrayMinSize(3)
-  @ArrayMaxSize(3)
-  @IsInt({ each: true })
-  @Min(1, { each: true })
-  categoryIds: [number, number, number];
+  @IsInt()
+  @Min(0)
+  inStock: number;
 
-  @IsOptional()
-  @IsIn(['Active', 'Draft'])
-  status?: 'Active' | 'Draft';
+  @IsInt()
+  @Min(1)
+  categoryId: number;
 }

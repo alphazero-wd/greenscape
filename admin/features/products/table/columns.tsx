@@ -1,14 +1,11 @@
 "use client";
 
-import { displayHierarchy } from "@/features/categories/utils";
-import { ColorCircle } from "@/features/colors/circle";
 import { Checkbox, CopyButton } from "@/features/ui";
 import {
   DataTableColumnHeader,
   DataTableRowActions,
   useDeleteRecordsModal,
 } from "@/features/ui/data-table";
-import { GlobeAltIcon, LockClosedIcon } from "@heroicons/react/24/outline";
 import { ColumnDef } from "@tanstack/react-table";
 import { Product } from "../types";
 
@@ -52,61 +49,27 @@ export const columns: ColumnDef<Product>[] = [
         <DataTableColumnHeader
           column={column}
           className="justify-end"
-          title="Price range"
+          title="Price"
         />
       );
     },
     cell: ({ row }) => (
-      <div className="mr-3 text-right">
-        ${row.original.priceRange[0].toFixed(2)} - $
-        {row.original.priceRange[1].toFixed(2)}
-      </div>
+      <div className="mr-3 text-right">${row.original.price}</div>
     ),
   },
   {
     id: "category",
     accessorKey: "category",
     header: () => <div>Category</div>,
-    cell: ({ row }) => displayHierarchy(row.original.category),
+    cell: ({ row }) => row.original.category.name,
   },
-
   {
     id: "isPublic",
     accessorKey: "isPublic",
     header: "Status",
     cell: ({ row }) => (
-      <div className="flex items-center gap-x-2">
-        {row.original.isPublic ? (
-          <>
-            <GlobeAltIcon className="h-4 w-4 text-gray-500" />
-            Public
-          </>
-        ) : (
-          <>
-            <LockClosedIcon className="h-4 w-4 text-gray-500" />
-            Private
-          </>
-        )}
-      </div>
+      <div className="flex items-center gap-x-2">{row.original.status}</div>
     ),
-  },
-  {
-    id: "colors",
-    accessorKey: "colors",
-    header: "Colors",
-    cell: ({ row }) => (
-      <div className="grid grid-cols-4 gap-2">
-        {row.original.colors.map((color) => (
-          <ColorCircle color={color.hexCode} />
-        ))}
-      </div>
-    ),
-  },
-  {
-    id: "sizes",
-    accessorKey: "sizes",
-    header: "Sizes",
-    cell: ({ row }) => row.original.sizes.map((size) => size.label).join(", "),
   },
   {
     id: "actions",

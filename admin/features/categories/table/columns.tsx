@@ -1,22 +1,12 @@
 "use client";
 
-import {
-  Button,
-  Checkbox,
-  CopyButton,
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/features/ui";
+import { Checkbox, CopyButton } from "@/features/ui";
 import {
   DataTableColumnHeader,
   DataTableRowActions,
   useDeleteRecordsModal,
 } from "@/features/ui/data-table";
-import { EyeIcon } from "@heroicons/react/24/outline";
 import { ColumnDef } from "@tanstack/react-table";
-import Link from "next/link";
 import { useEditCategoryModal } from "../edit-category";
 import { Category } from "../types";
 
@@ -53,17 +43,19 @@ export const columns: ColumnDef<Category>[] = [
     ),
   },
   {
-    id: "subCategories",
-    accessorKey: "subCategories",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        className="justify-end"
-        title="Sub-categories"
-      />
-    ),
+    id: "products",
+    accessorKey: "products",
+    header: ({ column }) => {
+      return (
+        <DataTableColumnHeader
+          className="justify-end"
+          column={column}
+          title="No. of products"
+        />
+      );
+    },
     cell: ({ row }) => (
-      <div className="mr-3 text-right">{row.original._count.subCategories}</div>
+      <div className="text-right">{row.original._count.products}</div>
     ),
   },
   {
@@ -75,18 +67,6 @@ export const columns: ColumnDef<Category>[] = [
       return (
         <div className="flex items-center justify-end">
           <CopyButton text={row.original.name} />
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <Link href={`/categories/${row.original.id}`}>
-                    <EyeIcon className="h-5 w-5" />
-                  </Link>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>View sub-categories</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
           <DataTableRowActions
             row={row}
             onEditAction={onEditOpen}

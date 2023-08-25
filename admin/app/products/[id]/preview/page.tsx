@@ -39,7 +39,7 @@ export default async function ProductPage({
         />
       </div>
       <ImagesGallery product={product} />
-      <div>
+      <div className="mt-6">
         <h1 className="text-4xl font-bold tracking-tight text-gray-900">
           {product.name}
         </h1>
@@ -52,12 +52,14 @@ export default async function ProductPage({
           <QtySelect product={product} />
         </div>
         <div className="mt-6 flex items-center gap-x-6">
-          {product.inStock > 0 && (
-            <Button size="lg" className="text-base">
-              <ShoppingCartIcon className="mr-5 h-6 w-6" />
-              Add to cart
-            </Button>
-          )}
+          <Button
+            disabled={product.inStock === 0}
+            size="lg"
+            className="text-base"
+          >
+            <ShoppingCartIcon className="mr-5 h-6 w-6" />
+            Add to cart
+          </Button>
           <Button size="icon" variant="ghost">
             <HeartIcon className="h-6 w-6 text-gray-400" />
           </Button>

@@ -8,11 +8,11 @@ interface ImagesGalleryProps {
 
 export const ImagesGallery: React.FC<ImagesGalleryProps> = ({ product }) => {
   return (
-    <Carousel>
+    <Carousel className="h-screen">
       {product.images.map((image) => (
         <img
           key={image.id}
-          className="aspect-square h-auto w-full rounded-xl object-cover"
+          className="aspect-[4/3] h-full w-full rounded-xl object-cover"
           src={`${process.env.NEXT_PUBLIC_API_URL}/files/${image.id}`}
           alt={product.name}
         />

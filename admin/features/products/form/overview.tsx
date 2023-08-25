@@ -86,7 +86,7 @@ export const ProductOverview: React.FC<ProductOverviewProps> = ({
 
       <FormField
         control={form.control}
-        name="price"
+        name="inStock"
         render={({ field }) => (
           <FormItem className="sm:col-span-3">
             <FormLabel className="block">In stock</FormLabel>

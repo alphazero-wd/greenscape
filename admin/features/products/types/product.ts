@@ -6,7 +6,9 @@ export interface Product {
   desc: string;
   price: number;
   status: "Active" | "Draft";
+  inStock: number;
   category: Category;
+  images: { id: number }[];
 }
 
 export interface CreateProductDto {

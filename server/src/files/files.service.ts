@@ -8,10 +8,8 @@ import { join } from 'path';
 export class FilesService {
   constructor(private prisma: PrismaService) {}
 
-  create(uploadFileDto: UploadFileDto) {
-    return this.prisma.$transaction(async (transactionClient) =>
-      transactionClient.file.create({ data: uploadFileDto }),
-    );
+  async create(uploadFileDto: UploadFileDto, productId?: number) {
+    await this.prisma.file.create({ data: { ...uploadFileDto, productId } });
   }
 
   async findOne(id: number) {

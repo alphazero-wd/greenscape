@@ -1,5 +1,5 @@
 import { getProducts } from "@/features/products/actions";
-import { ProductsTable } from "@/features/products/table/products-table";
+import { ProductsTable } from "@/features/products/table";
 import { Breadcrumb, DeleteRecordsModal } from "@/features/ui";
 import { getCurrentUser } from "@/features/user/utils";
 import { redirect } from "next/navigation";

@@ -8,10 +8,16 @@ import { CreateProductDto, FindManyProductsDto, UpdateProductDto } from './dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 import { PrismaError } from '../prisma/prisma-error';
+import { UploadFileDto } from '../files/dto';
+import { FilesService } from '../files/files.service';
+import { removeWhiteSpaces } from '../common/utils';
 
 @Injectable()
 export class ProductsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private filesService: FilesService,
+  ) {}
 
   async create(createProductDto: CreateProductDto) {
     try {
@@ -40,6 +46,12 @@ export class ProductsService {
     }
   }
 
+  async uploadImages(productId: number, uploadFilesDto: UploadFileDto[]) {
+    for (let uploadFileDto of uploadFilesDto) {
+      await this.filesService.create({ ...uploadFileDto }, productId);
+    }
+  }
+
   async findAll({
     limit = 10,
     categoryIds,
@@ -53,9 +65,14 @@ export class ProductsService {
   }: FindManyProductsDto) {
     try {
       const where: Prisma.ProductWhereInput = {};
-      where.name = q ? { search: q, mode: 'insensitive' } : undefined;
-      where.status = status ?? undefined;
-      where.categoryId = { in: categoryIds };
+      where.name = q
+        ? {
+            search: removeWhiteSpaces(q).split(' ').join(' & '),
+            mode: 'insensitive',
+          }
+        : undefined;
+      if (where.status) where.status = status;
+      if (categoryIds) where.categoryId = { in: categoryIds };
       if (price) {
         if (price.length >= 1) where.price = { gte: price[0] };
         if (price.length == 2) where.price = { lte: price[1] };
@@ -76,12 +93,11 @@ export class ProductsService {
           createdAt: true,
           updatedAt: true,
           status: true,
-          desc: false,
-          images: true,
+          images: { select: { id: true } },
           category: true,
         },
       });
-      const count = await this.prisma.product.count();
+      const count = await this.prisma.product.count({ where });
       return { count, products };
     } catch (error) {
       throw new InternalServerErrorException({
@@ -94,7 +110,7 @@ export class ProductsService {
   async findOne(id: number) {
     const product = await this.prisma.product.findUnique({
       where: { id },
-      include: { images: true, category: true },
+      include: { images: { select: { id: true } }, category: true },
     });
     if (!product)
       throw new NotFoundException({
@@ -132,19 +148,37 @@ export class ProductsService {
     }
   }
 
+  async removeImage(productId: number, imageId: number) {
+    const { images } = await this.findOne(productId);
+    if (!images.some((image) => image.id === imageId))
+      throw new NotFoundException({
+        success: false,
+        message: 'Cannot delete image because it is not found',
+      });
+    await this.filesService.remove([imageId]);
+  }
+
   async remove(ids: number[]) {
     return this.prisma.$transaction(async (transactionClient) => {
       try {
-        const { count } = await transactionClient.product.deleteMany({
+        const images = await transactionClient.product.findMany({
           where: { id: { in: ids } },
+          select: { images: { select: { id: true } } },
         });
-        if (count !== ids.length)
+        if (images.length !== ids.length)
           throw new NotFoundException({
             success: false,
             message: `${
-              ids.length - count
+              ids.length - images.length
             } products were not deleted because they were not found`,
           });
+        const imageIds = images.flatMap((img) =>
+          img.images.flatMap(({ id }) => id),
+        );
+        await this.filesService.remove(imageIds);
+        await transactionClient.product.deleteMany({
+          where: { id: { in: ids } },
+        });
       } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError)
           if (error instanceof NotFoundException) throw error;

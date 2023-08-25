@@ -1,7 +1,9 @@
+import { FilePreview } from "@/features/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useDropzone } from "react-dropzone";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import * as z from "zod";
@@ -33,12 +35,49 @@ export const useCreateProduct = () => {
     resolver: zodResolver(formSchema),
     defaultValues: { name: "", desc: "", status: "Draft" },
   });
+  const [files, setFiles] = useState<FilePreview[]>([]);
+  const dropzoneState = useDropzone({
+    multiple: true,
+    maxFiles: 4,
+    maxSize: Math.pow(1024, 2) * 5, // 5MB
+    accept: {
+      "image/png": [".png"],
+      "image/jpeg": [".jpg", ".jpeg"],
+    },
+    onDrop: (acceptedFiles) => {
+      setFiles(
+        acceptedFiles.map((file) =>
+          Object.assign(file, {
+            preview: URL.createObjectURL(file),
+          }),
+        ),
+      );
+    },
+  });
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    if (files.length < 4) {
+      toast.error("Please provide exactly 4 files");
+      return;
+    }
     try {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
+      const formData = new FormData();
+      files.forEach((file) => {
+        formData.append("images", file);
+      });
       setLoading(true);
-      await axios.post("/products", values, { withCredentials: true });
+      const {
+        data: { data },
+      } = await axios.post(API_URL + "/products", values, {
+        withCredentials: true,
+      });
+      await axios.patch(
+        `${API_URL}/products/${data.id}/upload-images`,
+        formData,
+        { withCredentials: true },
+      );
       toast.success("Product created");
       router.refresh();
       router.push("/products");
@@ -53,5 +92,7 @@ export const useCreateProduct = () => {
     loading,
     form,
     handleSubmit: form.handleSubmit(onSubmit),
+    dropzoneState,
+    files,
   };
 };

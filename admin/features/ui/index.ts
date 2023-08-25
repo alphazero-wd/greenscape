@@ -122,6 +122,7 @@ export {
 export { CopyButton } from "./copy-button";
 export { Dropzone } from "./dropzone";
 export { Switch } from "./switch";
+export { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs";
 export { Textarea } from "./textarea";
 export {
   Tooltip,

@@ -8,6 +8,7 @@ import {
 } from "@/features/ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { Product } from "../types";
+import { PreviewButton } from "./preview-button";
 
 export const columns: ColumnDef<Product>[] = [
   {
@@ -83,6 +84,7 @@ export const columns: ColumnDef<Product>[] = [
       return (
         <div className="flex justify-end">
           <CopyButton text={row.original.name} />
+          <PreviewButton id={row.original.id} />
           <DataTableRowActions
             row={row}
             onEditAction={() => {}}

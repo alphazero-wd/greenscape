@@ -1,4 +1,5 @@
 import {
+  IsIn,
   IsInt,
   IsNotEmpty,
   IsNumber,
@@ -26,4 +27,7 @@ export class CreateProductDto {
   @IsInt()
   @Min(1)
   categoryId: number;
+
+  @IsIn(['Active', 'Draft'])
+  status: 'Active' | 'Draft';
 }

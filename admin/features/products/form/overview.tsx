@@ -93,6 +93,7 @@ export const ProductOverview: React.FC<ProductOverviewProps> = ({
             <FormControl>
               <Input
                 type="number"
+                placeholder="4"
                 min={0}
                 {...field}
                 onChange={(e) => field.onChange(+e.target.value)}

@@ -26,6 +26,8 @@ export const Dropzone: React.FC<DropzoneProps> = ({
                 return <li>Image sizes are too large</li>;
               case ErrorCode.FileInvalidType:
                 return <li>Image types are invalid</li>;
+              case ErrorCode.TooManyFiles:
+                return <li>Too many files uploaded</li>;
               default:
                 return <></>;
             }

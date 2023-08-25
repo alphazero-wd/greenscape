@@ -1,1 +1,5 @@
-export { type CreateProductDto, type Product } from "./product";
+export {
+  type CreateProductDto,
+  type Product,
+  type UpdateProductDto,
+} from "./product";

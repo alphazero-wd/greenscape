@@ -17,3 +17,5 @@ export interface CreateProductDto {
   status: "Active" | "Draft";
   categoryId: number;
 }
+
+export interface UpdateProductDto extends CreateProductDto {}

@@ -1,18 +1,21 @@
+import { cn } from "@/lib/utils";
 import React from "react";
 
 interface FormSectionProps {
   children: React.ReactNode;
   heading: string;
   description: string;
+  isLast?: boolean;
 }
 
 export const FormSection: React.FC<FormSectionProps> = ({
   children,
   heading,
   description,
+  isLast = false,
 }) => {
   return (
-    <div className="border-b border-gray-900/10 pb-12">
+    <div className={cn("pb-12", !isLast && "border-b border-gray-900/10")}>
       <h2 className="text-base font-semibold leading-7 text-gray-900">
         {heading}
       </h2>

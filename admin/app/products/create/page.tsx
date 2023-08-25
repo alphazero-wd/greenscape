@@ -22,7 +22,7 @@ export default async function CreateProductPage() {
               { name: "Products", href: `/products` },
               {
                 name: "Create",
-                href: "/products/create",
+                href: "#",
               },
             ]}
           />

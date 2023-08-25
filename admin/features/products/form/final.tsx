@@ -15,11 +15,11 @@ interface ProductPreviewProps {
   form: UseFormReturn<CreateProductDto>;
 }
 
-export const ProductPreview: React.FC<ProductPreviewProps> = ({ form }) => {
+export const ProductFinal: React.FC<ProductPreviewProps> = ({ form }) => {
   return (
     <FormSection
-      heading="Preview"
-      description="Have a look at how the product will be displayed before launching"
+      heading="Staging"
+      description="Get ready to make your first sale with the product"
       isLast
     >
       <FormField

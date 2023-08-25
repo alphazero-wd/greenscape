@@ -2,11 +2,12 @@ import { FilePreview } from "@/features/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import * as z from "zod";
+import { Product } from "../types";
 
 const formSchema = z.object({
   name: z
@@ -16,7 +17,7 @@ const formSchema = z.object({
 
   desc: z.string().nonempty({ message: "Please provide a description" }),
   price: z.coerce
-    .number({ invalid_type_error: "Price must be a number" })
+    .number()
     .gt(0, { message: "Price cannot be negative or equal to 0" })
     .multipleOf(0.01, { message: "Price needs to have 2 decimal digits" }),
   inStock: z.coerce
@@ -29,11 +30,10 @@ const formSchema = z.object({
   status: z.enum(["Active", "Draft"]),
 });
 
-export const useCreateProduct = () => {
+export const useEditProduct = (product: Product) => {
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { name: "", desc: "", status: "Draft" },
   });
   const [files, setFiles] = useState<FilePreview[]>([]);
   const dropzoneState = useDropzone({
@@ -56,7 +56,28 @@ export const useCreateProduct = () => {
   });
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    form.reset({
+      categoryId: product.category.id,
+      desc: product.desc,
+      name: product.name,
+      inStock: product.inStock,
+      price: product.price,
+      status: product.status,
+    });
+  }, [product]);
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    if (product.images.length + files.length > 4) {
+      toast.error(
+        `The product already has ${product.images.length} images. ${
+          product.images.length === 4
+            ? "You cannot upload any more images"
+            : `You can only upload ${4 - product.images.length} images left.`
+        }`,
+      );
+      return;
+    }
     try {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
       const formData = new FormData();
@@ -64,18 +85,16 @@ export const useCreateProduct = () => {
         formData.append("images", file);
       });
       setLoading(true);
-      const {
-        data: { data },
-      } = await axios.post(API_URL + "/products", values, {
+      await axios.patch(API_URL + "/products/" + product.id, values, {
         withCredentials: true,
       });
-      await axios.patch(
-        `${API_URL}/products/${data.id}/upload-images`,
-        formData,
-        { withCredentials: true },
-      );
-      form.reset();
-      toast.success("Product created");
+      if (files.length > 0)
+        await axios.patch(
+          `${API_URL}/products/${product.id}/upload-images`,
+          formData,
+          { withCredentials: true },
+        );
+      toast.success("Product updated");
       router.refresh();
       router.push("/products");
     } catch (error: any) {

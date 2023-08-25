@@ -74,10 +74,7 @@ export const ProductOverview: React.FC<ProductOverviewProps> = ({
           <FormItem className="sm:col-span-3">
             <FormLabel className="block">Pricing</FormLabel>
             <FormControl>
-              <PriceInput
-                {...field}
-                onChange={(e) => field.onChange(+e.target.value)}
-              />
+              <PriceInput {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -91,13 +88,7 @@ export const ProductOverview: React.FC<ProductOverviewProps> = ({
           <FormItem className="sm:col-span-3">
             <FormLabel className="block">In stock</FormLabel>
             <FormControl>
-              <Input
-                type="number"
-                placeholder="4"
-                min={0}
-                {...field}
-                onChange={(e) => field.onChange(+e.target.value)}
-              />
+              <Input type="number" placeholder="4" min={0} {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>

@@ -2,7 +2,9 @@
 
 import { Category } from "@/features/categories/types";
 import { Button, Form } from "@/features/ui";
+import { TrashIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
+import Link from "next/link";
 import React, { useEffect } from "react";
 import {
   FormSection,
@@ -11,15 +13,22 @@ import {
   ProductFinal,
   ProductOverview,
 } from "../form";
-import { useCreateProduct } from "./use-create-product";
+import { Product } from "../types";
+import { useDeleteImageModal } from "./use-delete-image-modal";
+import { useEditProduct } from "./use-edit-product";
 
-interface CreateProductProps {
+interface EditProductProps {
   categories: Category[];
+  product: Product;
 }
 
-export const CreateProduct: React.FC<CreateProductProps> = ({ categories }) => {
+export const EditProduct: React.FC<EditProductProps> = ({
+  categories,
+  product,
+}) => {
   const { loading, form, handleSubmit, files, dropzoneState } =
-    useCreateProduct();
+    useEditProduct(product);
+  const { onOpen } = useDeleteImageModal();
 
   useEffect(() => {
     // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
@@ -38,9 +47,25 @@ export const CreateProduct: React.FC<CreateProductProps> = ({ categories }) => {
         >
           <ImagesUpload files={files} dropzoneState={dropzoneState} />
           <div className="relative col-span-full grid grid-cols-2 gap-4 lg:grid-cols-4">
+            {product.images.map((image) => (
+              <div className="relative">
+                <img
+                  alt={product.name}
+                  src={`${process.env.NEXT_PUBLIC_API_URL}/files/${image.id}`}
+                  className="aspect-square h-auto w-full rounded object-cover"
+                />
+                <Button
+                  className="absolute right-3 top-3 h-8 w-8"
+                  variant="destructive"
+                  size="icon"
+                  onClick={() => onOpen(image.id)}
+                >
+                  <TrashIcon className="h-4 w-4" />
+                </Button>
+              </div>
+            ))}
             {files.map((file) => (
               <Image
-                key={file.webkitRelativePath}
                 alt="Preview images"
                 src={file?.preview || ""}
                 width={0}
@@ -55,9 +80,14 @@ export const CreateProduct: React.FC<CreateProductProps> = ({ categories }) => {
           </div>
         </FormSection>
         <ProductFinal form={form} />
-        <Button disabled={loading} className="mt-8" type="submit">
-          Create
-        </Button>
+        <div className="mt-8 flex gap-x-4">
+          <Button disabled={loading} variant="secondary" type="button">
+            <Link href="/products">Cancel</Link>
+          </Button>
+          <Button disabled={loading} type="submit">
+            Edit
+          </Button>
+        </div>
       </form>
     </Form>
   );

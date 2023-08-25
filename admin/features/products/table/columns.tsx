@@ -7,6 +7,7 @@ import {
   useDeleteRecordsModal,
 } from "@/features/ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
+import { useRouter } from "next/navigation";
 import { Product } from "../types";
 import { PreviewButton } from "./preview-button";
 
@@ -80,6 +81,7 @@ export const columns: ColumnDef<Product>[] = [
     id: "actions",
     header: () => <div className="text-right">Actions</div>,
     cell: ({ row }) => {
+      const router = useRouter();
       const { onOpen: onDeleteOpen } = useDeleteRecordsModal();
       return (
         <div className="flex justify-end">
@@ -87,7 +89,9 @@ export const columns: ColumnDef<Product>[] = [
           <PreviewButton id={row.original.id} />
           <DataTableRowActions
             row={row}
-            onEditAction={() => {}}
+            onEditAction={() =>
+              router.push(`/products/${row.original.id}/settings`)
+            }
             onDeleteAction={onDeleteOpen}
           />
         </div>

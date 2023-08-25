@@ -29,7 +29,7 @@ export default async function ProductPage({
   if (!product) redirect("/not-found");
 
   return (
-    <div className="container grid w-full max-w-2xl gap-x-8 px-4 py-16 sm:px-6 sm:py-24 md:px-4 lg:max-w-7xl lg:grid-cols-5 lg:px-8">
+    <div className="container grid w-full max-w-2xl gap-x-8 px-4 py-16 sm:px-6 sm:py-24 md:px-4 lg:max-w-7xl lg:grid-cols-2 lg:px-8">
       <div className="col-span-full mb-6">
         <Breadcrumb
           links={[
@@ -39,7 +39,7 @@ export default async function ProductPage({
         />
       </div>
       <ImagesGallery product={product} />
-      <div className="col-span-3">
+      <div>
         <h1 className="text-4xl font-bold tracking-tight text-gray-900">
           {product.name}
         </h1>

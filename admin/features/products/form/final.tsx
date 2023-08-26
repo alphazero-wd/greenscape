@@ -8,11 +8,11 @@ import {
 } from "@/features/ui";
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
-import { CreateProductDto } from "../types";
+import { ProductFormDto } from "../types";
 import { FormSection } from "./form-section";
 
 interface ProductPreviewProps {
-  form: UseFormReturn<CreateProductDto>;
+  form: UseFormReturn<ProductFormDto>;
 }
 
 export const ProductFinal: React.FC<ProductPreviewProps> = ({ form }) => {

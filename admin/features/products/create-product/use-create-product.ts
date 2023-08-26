@@ -75,6 +75,7 @@ export const useCreateProduct = () => {
         { withCredentials: true },
       );
       form.reset();
+      setFiles([]);
       toast.success("Product created");
       router.refresh();
       router.push("/products");

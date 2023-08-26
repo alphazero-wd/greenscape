@@ -2,11 +2,11 @@ import { Category } from "@/features/categories/types";
 import { FormControl, FormField, FormItem, FormMessage } from "@/features/ui";
 import { UseFormReturn } from "react-hook-form";
 import { CategoriesSelect } from "../components";
-import { CreateProductDto } from "../types";
+import { ProductFormDto } from "../types";
 import { FormSection } from "./form-section";
 
 interface ProductCategoryProps {
-  form: UseFormReturn<CreateProductDto, any, undefined>;
+  form: UseFormReturn<ProductFormDto, any, undefined>;
   categories: Category[];
 }
 

@@ -1,5 +1,7 @@
 export {
-  type CreateProductDto,
+  type CategoryGroup,
+  type InStockGroup,
   type Product,
-  type UpdateProductDto,
+  type ProductFormDto,
+  type StatusGroup,
 } from "./product";

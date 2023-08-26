@@ -1,3 +1,4 @@
+import { getCategories } from "@/features/categories/actions";
 import { getProducts } from "@/features/products/actions";
 import { ProductsTable } from "@/features/products/table";
 import { Breadcrumb, Button, DeleteRecordsModal } from "@/features/ui";
@@ -19,20 +20,23 @@ interface CategoriesPageProps {
     order?: "asc" | "desc";
     q?: string;
     status?: "Active" | "Draft";
+    categoryIds?: string;
   };
 }
 
-export default async function CategoriesPage({
-  searchParams: { limit, offset, order, q, sortBy, status },
+export default async function ProductsPage({
+  searchParams: { limit, offset, order, q, sortBy, status, categoryIds },
 }: CategoriesPageProps) {
   const user = await getCurrentUser();
   if (!user) redirect("/auth/login");
   const query = qs.stringifyUrl({
     url: "",
-    query: { limit, offset, order, q, sortBy, status },
+    query: { limit, offset, order, q, sortBy, status, categoryIds },
   });
-  const { count, data } = await getProducts(query);
-  // const { data: categories } = await getCategories();
+  const { count, data, statusGroups, categoryGroups } = await getProducts(
+    query,
+  );
+  const { data: categories } = await getCategories();
 
   return (
     <>
@@ -50,7 +54,13 @@ export default async function CategoriesPage({
               Create new product
             </Link>
           </Button>
-          <ProductsTable count={count} products={data} />
+          <ProductsTable
+            categoryGroups={categoryGroups}
+            categories={categories}
+            statusGroups={statusGroups}
+            count={count}
+            products={data}
+          />
         </div>
       </div>
       <DeleteRecordsModal entityName="products" />

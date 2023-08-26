@@ -60,7 +60,7 @@ export class ProductsService {
     sortBy = 'id',
     order = 'asc',
     price,
-    status = 'Active',
+    status,
     inStock,
   }: FindManyProductsDto) {
     try {
@@ -71,11 +71,12 @@ export class ProductsService {
             mode: 'insensitive',
           }
         : undefined;
-      if (where.status) where.status = status;
+      if (status) where.status = status;
       if (categoryIds) where.categoryId = { in: categoryIds };
-      if (price) {
-        if (price.length >= 1) where.price = { gte: price[0] };
-        if (price.length == 2) where.price = { lte: price[1] };
+      if (price && price.length === 2) {
+        where.price = {};
+        if (price[0]) where.price.gte = price[0];
+        if (price[1]) where.price.lte = price[1];
       }
       if (inStock !== undefined)
         where.inStock = inStock ? { gt: 0 } : { equals: 0 };
@@ -97,8 +98,33 @@ export class ProductsService {
           category: true,
         },
       });
+
+      const whereStatusGroups = { ...where };
+      delete whereStatusGroups.status;
+      const statusGroups = await this.prisma.product.groupBy({
+        by: ['status'],
+        _count: { id: true },
+        where: whereStatusGroups,
+      });
+
+      const whereCategoryGroups = { ...where };
+      delete whereCategoryGroups.categoryId;
+      const categoryGroups = await this.prisma.product.groupBy({
+        by: ['categoryId'],
+        _count: { id: true },
+        where: whereCategoryGroups,
+      });
+
+      const whereInStockGroups = { ...where };
+      delete whereInStockGroups.inStock;
+      const inStockGroups = await this.prisma.product.groupBy({
+        by: ['inStock'],
+        _count: { id: true },
+        where: whereInStockGroups,
+      });
+
       const count = await this.prisma.product.count({ where });
-      return { count, products };
+      return { count, products, statusGroups, inStockGroups, categoryGroups };
     } catch (error) {
       throw new InternalServerErrorException({
         success: false,

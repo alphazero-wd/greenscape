@@ -18,14 +18,14 @@ export const useTable = <TData>(
 ) => {
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [q, setQ] = useState("");
-  const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  });
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [q, setQ] = useState(searchParams.get("q") || "");
+  const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
+    pageIndex: parseInt(searchParams.get("offset") || "0"),
+    pageSize: parseInt(searchParams.get("limit") || "10"),
+  });
 
   const pagination = useMemo(
     () => ({

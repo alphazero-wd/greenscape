@@ -54,6 +54,13 @@ export function DataTableColumnHeader<TData, TValue>({
     if (column.getIsSorted()) toggleSortingServer();
   }, [column.getIsSorted(), searchParams, router]);
 
+  useEffect(() => {
+    const order = searchParams.get("order");
+    const sortBy = searchParams.get("sortBy") || "id";
+    if (!order || !["asc", "desc"].includes(order)) return;
+    if (column.id === sortBy) column.toggleSorting(order === "desc");
+  }, [searchParams.get("sortBy"), searchParams.get("order")]);
+
   return (
     <div className={cn("flex items-center space-x-2", className)}>
       <DropdownMenu>

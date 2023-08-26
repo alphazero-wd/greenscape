@@ -44,7 +44,7 @@ export function CategoriesSelect({
           <ChevronsUpDown className="h-4 w-4 text-gray-500" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="end" className="w-[300px] bg-white">
+      <PopoverContent align="end" className="w-[300px] bg-white p-0">
         <Command>
           <CommandInput placeholder="Search categories..." autoFocus={true} />
           <CommandList>

@@ -45,7 +45,7 @@ export const CreateProduct: React.FC<CreateProductProps> = ({ categories }) => {
                 src={file?.preview || ""}
                 width={0}
                 height={0}
-                className="aspect-[4/3] h-auto w-full rounded object-cover"
+                className="h-auto w-full rounded object-contain"
                 // Revoke data uri after image is loaded
                 onLoad={() => {
                   URL.revokeObjectURL(file?.preview || "");

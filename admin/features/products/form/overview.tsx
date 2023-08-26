@@ -11,11 +11,11 @@ import {
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
 import { PriceInput } from "../components";
-import { CreateProductDto } from "../types";
+import { ProductFormDto } from "../types";
 import { FormSection } from "./form-section";
 
 interface ProductOverviewProps {
-  form: UseFormReturn<CreateProductDto, any, undefined>;
+  form: UseFormReturn<ProductFormDto, any, undefined>;
   loading: boolean;
 }
 

@@ -7,7 +7,7 @@ interface ProductsResponse {
   statusGroups: StatusGroup[];
   inStockGroups: InStockGroup[];
   categoryGroups: CategoryGroup[];
-  priceRange: [number, number];
+  priceRange: [string, string];
 }
 
 export const getProducts = async (query = ""): Promise<ProductsResponse> => {

@@ -12,9 +12,10 @@ import qs from "query-string";
 import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { PriceInput } from "../components";
+import { formatPrice } from "../utils";
 
 interface PriceFilterProps {
-  priceRange: [number, number];
+  priceRange: [string, string];
 }
 
 export const PriceFilter: React.FC<PriceFilterProps> = ({ priceRange }) => {
@@ -25,9 +26,14 @@ export const PriceFilter: React.FC<PriceFilterProps> = ({ priceRange }) => {
   const searchParams = useSearchParams();
 
   useEffect(() => {
+    setMinPrice(priceRange[0]);
+    setMaxPrice(priceRange[1]);
+  }, [priceRange]);
+
+  useEffect(() => {
     const price = searchParams.get("price");
     if (!price || isNaN(parseFloat(price))) return;
-    const [min, max] = price.split(",").map((val) => +val);
+    const [min, max] = price.split(",").map((val) => val);
     setMinPrice(min);
     setMaxPrice(max);
   }, [searchParams.get("price")]);
@@ -51,7 +57,7 @@ export const PriceFilter: React.FC<PriceFilterProps> = ({ priceRange }) => {
       <PopoverTrigger asChild>
         <Button variant="outline" size="sm" className="h-8 border-dashed">
           <PlusCircledIcon className="mr-2 h-4 w-4" />
-          Price: ${minPrice} - ${maxPrice}
+          Price: {formatPrice(+minPrice)} - {formatPrice(+maxPrice)}
         </Button>
       </PopoverTrigger>
       <PopoverContent align="start">
@@ -62,7 +68,7 @@ export const PriceFilter: React.FC<PriceFilterProps> = ({ priceRange }) => {
               value={minPrice}
               min={priceRange[0]}
               max={priceRange[1]}
-              onChange={(e) => setMinPrice(+e.target.value)}
+              onChange={(e) => setMinPrice(e.target.value)}
             />
           </div>
           <div className="space-y-2">
@@ -71,7 +77,7 @@ export const PriceFilter: React.FC<PriceFilterProps> = ({ priceRange }) => {
               value={maxPrice}
               min={priceRange[0]}
               max={priceRange[1]}
-              onChange={(e) => setMaxPrice(+e.target.value)}
+              onChange={(e) => setMaxPrice(e.target.value)}
             />
           </div>
         </div>

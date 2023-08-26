@@ -21,7 +21,7 @@ interface ProductsTableProps {
   categories: Category[];
   statusGroups: StatusGroup[];
   categoryGroups: CategoryGroup[];
-  priceRange: [number, number];
+  priceRange: [string, string];
   inStockGroups: InStockGroup[];
 }
 
@@ -38,15 +38,15 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div className="flex flex-1 items-center gap-x-2">
+      <div className="flex justify-between">
+        <div className="flex flex-col gap-x-2 gap-y-4 lg:flex-1 lg:flex-row lg:items-center">
           <Input
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Search products..."
             className="h-8 w-[250px]"
           />
-          <div className="flex items-center gap-x-3">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
             <CategoriesFilter
               categoryGroups={categoryGroups}
               categories={categories}

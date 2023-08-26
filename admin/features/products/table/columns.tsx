@@ -9,6 +9,7 @@ import {
 import { ColumnDef } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
 import { Product } from "../types";
+import { formatPrice } from "../utils";
 import { PreviewButton } from "./preview-button";
 
 export const columns: ColumnDef<Product>[] = [
@@ -56,7 +57,7 @@ export const columns: ColumnDef<Product>[] = [
       );
     },
     cell: ({ row }) => (
-      <div className="mr-3 text-right">${row.original.price}</div>
+      <div className="mr-3 text-right">{formatPrice(row.original.price)}</div>
     ),
   },
   {

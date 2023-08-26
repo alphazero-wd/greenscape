@@ -8,9 +8,11 @@ import {
   useTable,
 } from "@/features/ui";
 import React from "react";
-import { CategoryGroup, Product, StatusGroup } from "../types";
+import { CategoryGroup, InStockGroup, Product, StatusGroup } from "../types";
 import { CategoriesFilter } from "./categories-filter";
 import { columns } from "./columns";
+import { InStockFilter } from "./in-stock-filter";
+import { PriceFilter } from "./price-filter";
 import { StatusFilter } from "./status-filter";
 
 interface ProductsTableProps {
@@ -19,6 +21,8 @@ interface ProductsTableProps {
   categories: Category[];
   statusGroups: StatusGroup[];
   categoryGroups: CategoryGroup[];
+  priceRange: [number, number];
+  inStockGroups: InStockGroup[];
 }
 
 export const ProductsTable: React.FC<ProductsTableProps> = ({
@@ -27,6 +31,8 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({
   categories,
   statusGroups,
   categoryGroups,
+  priceRange,
+  inStockGroups,
 }) => {
   const { q, setQ, table } = useTable(columns, products, count);
 
@@ -46,6 +52,8 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({
               categories={categories}
             />
             <StatusFilter statusGroups={statusGroups} />
+            <PriceFilter priceRange={priceRange} />
+            <InStockFilter inStockGroups={inStockGroups} />
           </div>
         </div>
         <DataTableViewOptions table={table} />

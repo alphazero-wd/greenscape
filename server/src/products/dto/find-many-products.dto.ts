@@ -13,7 +13,7 @@ import {
 
 export class FindManyProductsDto extends FindManyDto {
   @Transform(({ value }: { value: string }) =>
-    value.split(',').map((id) => +id),
+    value.split(',').map((val) => +val),
   )
   @ArrayMinSize(1)
   @ArrayMaxSize(2)
@@ -36,7 +36,7 @@ export class FindManyProductsDto extends FindManyDto {
   @IsIn(['Active', 'Draft'])
   status?: 'Active' | 'Draft';
 
-  @Type(() => Boolean)
+  @Transform(({ value }) => (value === 'false' ? false : true))
   @IsOptional()
   @IsBoolean()
   inStock?: boolean;

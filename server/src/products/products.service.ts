@@ -73,7 +73,7 @@ export class ProductsService {
         : undefined;
       if (status) where.status = status;
       if (categoryIds) where.categoryId = { in: categoryIds };
-      if (price && price.length === 2) {
+      if (price) {
         where.price = {};
         if (price[0]) where.price.gte = price[0];
         if (price[1]) where.price.lte = price[1];
@@ -123,8 +123,23 @@ export class ProductsService {
         where: whereInStockGroups,
       });
 
+      const whereWithoutPrice = { ...where };
+      delete whereWithoutPrice.price;
+      const priceRange = await this.prisma.product.aggregate({
+        _min: { price: true },
+        _max: { price: true },
+        where: whereWithoutPrice,
+      });
+
       const count = await this.prisma.product.count({ where });
-      return { count, products, statusGroups, inStockGroups, categoryGroups };
+      return {
+        count,
+        products,
+        statusGroups,
+        inStockGroups,
+        categoryGroups,
+        priceRange: [priceRange._min.price, priceRange._max.price],
+      };
     } catch (error) {
       throw new InternalServerErrorException({
         success: false,

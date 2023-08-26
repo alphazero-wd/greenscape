@@ -78,6 +78,18 @@ export const columns: ColumnDef<Product>[] = [
     ),
   },
   {
+    id: "inStock",
+    accessorKey: "inStock",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="In Stock"
+        className="justify-end"
+      />
+    ),
+    cell: ({ row }) => <div className="text-right">{row.original.inStock}</div>,
+  },
+  {
     id: "actions",
     header: () => <div className="text-right">Actions</div>,
     cell: ({ row }) => {

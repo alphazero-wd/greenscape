@@ -21,21 +21,48 @@ interface CategoriesPageProps {
     q?: string;
     status?: "Active" | "Draft";
     categoryIds?: string;
+    price?: string;
+    inStock?: string;
   };
 }
 
 export default async function ProductsPage({
-  searchParams: { limit, offset, order, q, sortBy, status, categoryIds },
+  searchParams: {
+    limit,
+    offset,
+    order,
+    q,
+    sortBy,
+    status,
+    categoryIds,
+    price,
+    inStock,
+  },
 }: CategoriesPageProps) {
   const user = await getCurrentUser();
   if (!user) redirect("/auth/login");
   const query = qs.stringifyUrl({
     url: "",
-    query: { limit, offset, order, q, sortBy, status, categoryIds },
+    query: {
+      limit,
+      offset,
+      order,
+      q,
+      sortBy,
+      status,
+      categoryIds,
+      price,
+      inStock,
+    },
   });
-  const { count, data, statusGroups, categoryGroups } = await getProducts(
-    query,
-  );
+  const {
+    count,
+    data,
+    statusGroups,
+    categoryGroups,
+    priceRange,
+    inStockGroups,
+  } = await getProducts(query);
   const { data: categories } = await getCategories();
 
   return (
@@ -55,11 +82,13 @@ export default async function ProductsPage({
             </Link>
           </Button>
           <ProductsTable
+            priceRange={priceRange}
             categoryGroups={categoryGroups}
             categories={categories}
             statusGroups={statusGroups}
             count={count}
             products={data}
+            inStockGroups={inStockGroups}
           />
         </div>
       </div>

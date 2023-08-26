@@ -52,9 +52,10 @@ export const EditProduct: React.FC<EditProductProps> = ({
                 <img
                   alt={product.name}
                   src={`${process.env.NEXT_PUBLIC_API_URL}/files/${image.id}`}
-                  className="aspect-[4/3] h-auto w-full rounded object-cover"
+                  className="h-auto w-full rounded object-contain"
                 />
                 <Button
+                  type="button"
                   className="absolute right-3 top-3 h-8 w-8"
                   variant="destructive"
                   size="icon"
@@ -70,7 +71,7 @@ export const EditProduct: React.FC<EditProductProps> = ({
                 src={file?.preview || ""}
                 width={0}
                 height={0}
-                className="aspect-[4/3] h-auto w-full rounded object-cover"
+                className="h-auto w-full rounded object-contain"
                 // Revoke data uri after image is loaded
                 onLoad={() => {
                   URL.revokeObjectURL(file?.preview || "");

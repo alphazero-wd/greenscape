@@ -1,5 +1,6 @@
 import { getProduct } from "@/features/products/actions";
 import { ImagesGallery, QtySelect } from "@/features/products/preview";
+import { formatPrice } from "@/features/products/utils";
 import { Breadcrumb, Button, Label } from "@/features/ui";
 import { getCurrentUser } from "@/features/user/utils";
 import { HeartIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
@@ -29,7 +30,7 @@ export default async function ProductPage({
   if (!product) redirect("/not-found");
 
   return (
-    <div className="container grid w-full max-w-2xl items-center gap-x-8 px-4 py-16 sm:px-6 sm:py-24 md:max-w-3xl md:grid-cols-2 md:px-4 lg:max-w-7xl lg:px-8">
+    <div className="container grid w-full max-w-2xl items-center gap-x-8 lg:max-w-7xl lg:grid-cols-2">
       <div className="col-span-full mb-6">
         <Breadcrumb
           links={[
@@ -44,7 +45,7 @@ export default async function ProductPage({
           {product.name}
         </h1>
         <p className="mt-3 text-4xl tracking-tight text-gray-900">
-          ${product.price}
+          {formatPrice(product.price)}
         </p>
         <p className="mt-6 text-gray-700">{product.desc}</p>
         <div className="mt-6">

@@ -94,7 +94,7 @@ export class ProductsService {
           createdAt: true,
           updatedAt: true,
           status: true,
-          images: { select: { id: true } },
+          images: { select: { id: true }, take: 1 },
           category: true,
         },
       });
@@ -189,14 +189,8 @@ export class ProductsService {
     }
   }
 
-  async removeImage(productId: number, imageId: number) {
-    const { images } = await this.findOne(productId);
-    if (!images.some((image) => image.id === imageId))
-      throw new NotFoundException({
-        success: false,
-        message: 'Cannot delete image because it is not found',
-      });
-    await this.filesService.remove([imageId]);
+  async removeImages(productId: number, imageIds: number[]) {
+    await this.filesService.remove(imageIds, productId);
   }
 
   async remove(ids: number[]) {

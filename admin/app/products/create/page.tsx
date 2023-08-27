@@ -16,7 +16,7 @@ export default async function CreateProductPage() {
   return (
     <div className="container max-w-7xl">
       <div className="container max-w-xl">
-        <div className="mb-4">
+        <div className="mb-8">
           <Breadcrumb
             links={[
               { name: "Products", href: `/products` },
@@ -28,7 +28,11 @@ export default async function CreateProductPage() {
           />
         </div>
 
-        <div className="relative mt-8 flex flex-col gap-8 lg:flex-row">
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+          Create Product
+        </h1>
+
+        <div className="relative mt-4 flex flex-col gap-8 lg:flex-row">
           <CreateProduct categories={categories} />
         </div>
       </div>

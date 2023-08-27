@@ -1,9 +1,6 @@
 import { getCategories } from "@/features/categories/actions";
 import { getProduct } from "@/features/products/actions";
-import {
-  DeleteImageModal,
-  EditProduct,
-} from "@/features/products/edit-product";
+import { EditProduct } from "@/features/products/edit-product";
 import { Breadcrumb } from "@/features/ui";
 import { getCurrentUser } from "@/features/user/utils";
 import { redirect } from "next/navigation";
@@ -39,7 +36,7 @@ export default async function ProductSettingsPage({
     <>
       <div className="container max-w-7xl">
         <div className="container max-w-xl">
-          <div className="mb-4">
+          <div className="mb-8">
             <Breadcrumb
               links={[
                 { name: "Products", href: `/products` },
@@ -48,13 +45,15 @@ export default async function ProductSettingsPage({
               ]}
             />
           </div>
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+            Edit Product
+          </h1>
 
-          <div className="relative mt-8 flex flex-col gap-8 lg:flex-row">
+          <div className="relative mt-4 flex flex-col gap-8 lg:flex-row">
             <EditProduct product={product} categories={categories} />
           </div>
         </div>
       </div>
-      <DeleteImageModal productId={product.id} />
     </>
   );
 }

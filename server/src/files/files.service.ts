@@ -13,7 +13,9 @@ export class FilesService {
   }
 
   async findOne(id: number) {
-    const file = await this.prisma.file.findUnique({ where: { id } });
+    const file = await this.prisma.file.findUnique({
+      where: { id },
+    });
     if (!file)
       throw new NotFoundException({
         success: false,
@@ -22,10 +24,11 @@ export class FilesService {
     return file;
   }
 
-  async remove(ids: number[]) {
+  async remove(ids: number[], productId?: number) {
     return this.prisma.$transaction(async (transactionClient) => {
       const files = await transactionClient.file.findMany({
         where: {
+          productId,
           id: { in: ids },
         },
       });

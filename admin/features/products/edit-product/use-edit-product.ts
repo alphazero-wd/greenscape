@@ -54,7 +54,12 @@ export const useEditProduct = (product: Product) => {
       );
     },
   });
+  const [tempImageIds, setTempImageIds] = useState<number[]>([]);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setTempImageIds(product.images.map((img) => img.id));
+  }, [product.images]);
 
   useEffect(() => {
     form.reset({
@@ -68,12 +73,12 @@ export const useEditProduct = (product: Product) => {
   }, [product]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    if (product.images.length + files.length > 4) {
+    if (tempImageIds.length + files.length > 4) {
       toast.error(
-        `The product already has ${product.images.length} images. ${
-          product.images.length === 4
+        `The product already has ${tempImageIds.length} images. ${
+          tempImageIds.length === 4
             ? "You cannot upload any more images"
-            : `You can only upload ${4 - product.images.length} images left.`
+            : `You can only upload ${4 - tempImageIds.length} images left.`
         }`,
       );
       return;
@@ -94,6 +99,15 @@ export const useEditProduct = (product: Product) => {
           formData,
           { withCredentials: true },
         );
+      const deletedImages = product.images
+        .map((image) => image.id)
+        .filter((imageId) => !tempImageIds.includes(imageId));
+      await axios.delete(
+        `${API_URL}/products/${
+          product.id
+        }/remove-images?ids=${deletedImages.join(",")}`,
+        { withCredentials: true },
+      );
       toast.success("Product updated");
       router.refresh();
       router.push("/products");
@@ -110,5 +124,7 @@ export const useEditProduct = (product: Product) => {
     handleSubmit: form.handleSubmit(onSubmit),
     dropzoneState,
     files,
+    tempImageIds,
+    setTempImageIds,
   };
 };

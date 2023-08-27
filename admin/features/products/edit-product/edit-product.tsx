@@ -4,7 +4,7 @@ import { Category } from "@/features/categories/types";
 import { Button, Form } from "@/features/ui";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import {
   FormSection,
@@ -14,7 +14,6 @@ import {
   ProductOverview,
 } from "../form";
 import { Product } from "../types";
-import { useDeleteImageModal } from "./use-delete-image-modal";
 import { useEditProduct } from "./use-edit-product";
 
 interface EditProductProps {
@@ -26,15 +25,32 @@ export const EditProduct: React.FC<EditProductProps> = ({
   categories,
   product,
 }) => {
-  const { loading, form, handleSubmit, files, dropzoneState } =
-    useEditProduct(product);
-  const { onOpen } = useDeleteImageModal();
+  const {
+    loading,
+    form,
+    handleSubmit,
+    files,
+    dropzoneState,
+    tempImageIds,
+    setTempImageIds,
+  } = useEditProduct(product);
+  const router = useRouter();
 
   useEffect(() => {
     // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
     return () =>
       files.forEach((file) => URL.revokeObjectURL(file?.preview || ""));
   }, []);
+
+  const onDeleteImage = (imageId: number) => {
+    if (confirm("Do you want to delete this image?"))
+      setTempImageIds(tempImageIds.filter((id) => id !== imageId));
+  };
+
+  const onCancel = () => {
+    if (confirm("Do you want to discard the changes?"))
+      router.push("/products");
+  };
 
   return (
     <Form {...form}>
@@ -47,19 +63,21 @@ export const EditProduct: React.FC<EditProductProps> = ({
         >
           <ImagesUpload files={files} dropzoneState={dropzoneState} />
           <div className="relative col-span-full grid grid-cols-2 gap-4 lg:grid-cols-4">
-            {product.images.map((image) => (
+            {tempImageIds.map((imageId) => (
               <div className="relative">
-                <img
+                <Image
+                  width={132}
+                  height={132}
                   alt={product.name}
-                  src={`${process.env.NEXT_PUBLIC_API_URL}/files/${image.id}`}
-                  className="h-auto w-full rounded object-contain"
+                  src={`${process.env.NEXT_PUBLIC_API_URL}/files/${imageId}`}
+                  className="aspect-square h-auto w-full rounded object-cover"
                 />
                 <Button
                   type="button"
                   className="absolute right-3 top-3 h-8 w-8"
                   variant="destructive"
                   size="icon"
-                  onClick={() => onOpen(image.id)}
+                  onClick={() => onDeleteImage(imageId)}
                 >
                   <TrashIcon className="h-4 w-4" />
                 </Button>
@@ -71,7 +89,7 @@ export const EditProduct: React.FC<EditProductProps> = ({
                 src={file?.preview || ""}
                 width={0}
                 height={0}
-                className="h-auto w-full rounded object-contain"
+                className="aspect-square h-auto w-full rounded object-cover"
                 // Revoke data uri after image is loaded
                 onLoad={() => {
                   URL.revokeObjectURL(file?.preview || "");
@@ -82,8 +100,13 @@ export const EditProduct: React.FC<EditProductProps> = ({
         </FormSection>
         <ProductFinal form={form} />
         <div className="mt-8 flex gap-x-4">
-          <Button disabled={loading} variant="secondary" type="button">
-            <Link href="/products">Cancel</Link>
+          <Button
+            onClick={onCancel}
+            disabled={loading}
+            variant="secondary"
+            type="button"
+          >
+            Cancel
           </Button>
           <Button disabled={loading} type="submit">
             Edit

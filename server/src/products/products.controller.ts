@@ -88,13 +88,13 @@ export class ProductsController {
     return { success: true };
   }
 
-  @Delete(':productId/remove/:imageId')
+  @Delete(':productId/remove-images')
   @UseGuards(RolesGuard(Role.Admin))
   async removeImage(
     @Param('productId', ParseIntPipe) productId: number,
-    @Param('imageId', ParseIntPipe) imageId: number,
+    @Query() { ids: imageIds }: DeleteManyDto,
   ) {
-    await this.productsService.removeImage(productId, imageId);
+    await this.productsService.removeImages(productId, imageIds);
     return { success: true };
   }
 

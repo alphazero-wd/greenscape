@@ -67,7 +67,7 @@ export default async function ProductsPage({
 
   return (
     <>
-      <div className="max-w-7xl">
+      <div className="container max-w-7xl">
         <div className="mb-4">
           <Breadcrumb links={[{ name: "Products", href: `/products` }]} />
         </div>

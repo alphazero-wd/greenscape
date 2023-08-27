@@ -37,7 +37,7 @@ export default async function CategoriesPage({
 
   return (
     <>
-      <div className="max-w-5xl">
+      <div className="container max-w-3xl">
         <div className="mb-4">
           <Breadcrumb links={[{ name: "Categories", href: `/categories` }]} />
         </div>

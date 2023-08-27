@@ -17,7 +17,7 @@ const formSchema = z.object({
   desc: z.string().nonempty({ message: "Please provide a description" }),
   price: z.coerce
     .number({ invalid_type_error: "Price must be a number" })
-    .gt(0, { message: "Price cannot be negative or equal to 0" })
+    .gte(0.01, { message: "Price cannot be less than 0.01" })
     .multipleOf(0.01, { message: "Price needs to have 2 decimal digits" }),
   inStock: z.coerce
     .number()
@@ -38,7 +38,6 @@ export const useCreateProduct = () => {
   const [files, setFiles] = useState<FilePreview[]>([]);
   const dropzoneState = useDropzone({
     multiple: true,
-    maxFiles: 4,
     maxSize: Math.pow(1024, 2) * 5, // 5MB
     accept: {
       "image/png": [".png"],

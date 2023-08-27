@@ -72,9 +72,9 @@ export const ProductOverview: React.FC<ProductOverviewProps> = ({
         name="price"
         render={({ field }) => (
           <FormItem className="sm:col-span-3">
-            <FormLabel className="block">Pricing</FormLabel>
+            <FormLabel className="block">Pricing: {field.value}</FormLabel>
             <FormControl>
-              <PriceInput {...field} />
+              <PriceInput {...field} value={field.value || ""} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -86,9 +86,15 @@ export const ProductOverview: React.FC<ProductOverviewProps> = ({
         name="inStock"
         render={({ field }) => (
           <FormItem className="sm:col-span-3">
-            <FormLabel className="block">In stock</FormLabel>
+            <FormLabel className="block">In stock: {field.value}</FormLabel>
             <FormControl>
-              <Input type="number" placeholder="4" min={0} {...field} />
+              <Input
+                type="number"
+                placeholder="4"
+                min={0}
+                {...field}
+                value={field.value || ""}
+              />
             </FormControl>
             <FormMessage />
           </FormItem>

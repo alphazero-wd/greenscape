@@ -18,7 +18,6 @@ import { CreateProductDto, FindManyProductsDto, UpdateProductDto } from './dto';
 import { DeleteManyDto } from '../common/dto';
 import { Role } from '@prisma/client';
 import { RolesGuard } from '../auth/guards';
-import { UploadFileDto } from '../files/dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { imageValidators } from '../files/validators';
@@ -64,7 +63,7 @@ export class ProductsController {
   @Patch(':id/upload-images')
   @UseGuards(RolesGuard(Role.Admin))
   @UseInterceptors(
-    FilesInterceptor('images', 4, {
+    FilesInterceptor('images', Infinity, {
       storage: diskStorage({ destination: './uploads/products' }),
     }),
   )
@@ -75,12 +74,12 @@ export class ProductsController {
         validators: imageValidators,
       }),
     )
-    files: UploadFileDto[],
+    files: Express.Multer.File[],
   ) {
     await this.productsService.uploadImages(
       id,
       files.map((file) => ({
-        filename: file.filename,
+        filename: file.originalname,
         path: file.path,
         mimetype: file.mimetype,
       })),

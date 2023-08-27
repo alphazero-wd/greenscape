@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UploadFileDto } from './dto';
 import { rm } from 'fs/promises';
@@ -8,8 +12,15 @@ import { join } from 'path';
 export class FilesService {
   constructor(private prisma: PrismaService) {}
 
-  async create(uploadFileDto: UploadFileDto, productId?: number) {
-    await this.prisma.file.create({ data: { ...uploadFileDto, productId } });
+  async createMany(uploadFilesDto: UploadFileDto[], productId?: number) {
+    return this.prisma.$transaction([
+      this.prisma.file.createMany({
+        data: uploadFilesDto.map((uploadFileDto) => ({
+          ...uploadFileDto,
+          productId,
+        })),
+      }),
+    ])[0];
   }
 
   async findOne(id: number) {
@@ -24,11 +35,10 @@ export class FilesService {
     return file;
   }
 
-  async remove(ids: number[], productId?: number) {
+  async remove(ids: number[]) {
     return this.prisma.$transaction(async (transactionClient) => {
       const files = await transactionClient.file.findMany({
         where: {
-          productId,
           id: { in: ids },
         },
       });

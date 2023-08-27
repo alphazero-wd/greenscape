@@ -69,7 +69,7 @@ export default async function ProductsPage({
     <>
       <div className="container max-w-7xl">
         <div className="mb-4">
-          <Breadcrumb links={[{ name: "Products", href: `/products` }]} />
+          <Breadcrumb links={[{ name: "Products", href: "#" }]} />
         </div>
         <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
           Products ({count})

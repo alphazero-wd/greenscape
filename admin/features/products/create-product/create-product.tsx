@@ -38,14 +38,14 @@ export const CreateProduct: React.FC<CreateProductProps> = ({ categories }) => {
         >
           <ImagesUpload files={files} dropzoneState={dropzoneState} />
           <div className="relative col-span-full grid grid-cols-2 gap-4 lg:grid-cols-4">
-            {files.map((file) => (
+            {files.map((file, i) => (
               <Image
-                key={file.webkitRelativePath}
+                key={i}
                 alt="Preview images"
                 src={file?.preview || ""}
                 width={0}
                 height={0}
-                className="h-auto w-full rounded object-contain"
+                className="aspect-square h-auto w-full rounded object-contain"
                 // Revoke data uri after image is loaded
                 onLoad={() => {
                   URL.revokeObjectURL(file?.preview || "");

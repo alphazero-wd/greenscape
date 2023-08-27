@@ -100,9 +100,11 @@ export const InStockFilter: React.FC<InStockFilterProps> = ({
                     <DotFilledIcon className="h-4 w-4" />
                   </div>
                   <span>{s}</span>
-                  <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
-                    {inStockSum[i]}
-                  </span>
+                  {inStockSum[i] > 0 && (
+                    <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
+                      {inStockSum[i]}
+                    </span>
+                  )}
                 </CommandItem>
               ))}
             </CommandGroup>

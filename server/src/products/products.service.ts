@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -47,9 +48,7 @@ export class ProductsService {
   }
 
   async uploadImages(productId: number, uploadFilesDto: UploadFileDto[]) {
-    for (let uploadFileDto of uploadFilesDto) {
-      await this.filesService.create({ ...uploadFileDto }, productId);
-    }
+    await this.filesService.createMany(uploadFilesDto, productId);
   }
 
   async findAll({
@@ -190,7 +189,19 @@ export class ProductsService {
   }
 
   async removeImages(productId: number, imageIds: number[]) {
-    await this.filesService.remove(imageIds, productId);
+    const product = await this.findOne(productId);
+    const productImageIds = product.images.map((img) => img.id);
+    if (imageIds.some((id) => !productImageIds.includes(id)))
+      throw new NotFoundException({
+        success: false,
+        message: 'Cannot delete images because some of which are not found',
+      });
+    if (imageIds.length === product.images.length)
+      throw new ForbiddenException({
+        success: false,
+        message: 'Cannot delete all images of the product',
+      });
+    await this.filesService.remove(imageIds);
   }
 
   async remove(ids: number[]) {

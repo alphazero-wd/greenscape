@@ -18,7 +18,7 @@ const formSchema = z.object({
   desc: z.string().nonempty({ message: "Please provide a description" }),
   price: z.coerce
     .number()
-    .gt(0, { message: "Price cannot be negative or equal to 0" })
+    .gte(0.01, { message: "Price cannot be less than 0.01" })
     .multipleOf(0.01, { message: "Price needs to have 2 decimal digits" }),
   inStock: z.coerce
     .number()
@@ -73,16 +73,11 @@ export const useEditProduct = (product: Product) => {
   }, [product]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    if (tempImageIds.length + files.length > 4) {
-      toast.error(
-        `The product already has ${tempImageIds.length} images. ${
-          tempImageIds.length === 4
-            ? "You cannot upload any more images"
-            : `You can only upload ${4 - tempImageIds.length} images left.`
-        }`,
-      );
+    if (tempImageIds.length + files.length === 0) {
+      toast.error("Please upload at least 1 image");
       return;
     }
+
     try {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
       const formData = new FormData();

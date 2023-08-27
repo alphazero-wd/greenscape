@@ -30,7 +30,7 @@ export default async function ProductPage({
   if (!product) redirect("/not-found");
 
   return (
-    <div className="container grid w-full max-w-2xl items-center gap-x-8 lg:max-w-7xl lg:grid-cols-2">
+    <div className="container grid w-full max-w-2xl gap-x-8 lg:max-w-7xl lg:grid-cols-2">
       <div className="col-span-full mb-6">
         <Breadcrumb
           links={[

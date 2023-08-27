@@ -39,7 +39,7 @@ export default async function CategoriesPage({
     <>
       <div className="container max-w-3xl">
         <div className="mb-4">
-          <Breadcrumb links={[{ name: "Categories", href: `/categories` }]} />
+          <Breadcrumb links={[{ name: "Categories", href: "#" }]} />
         </div>
         <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
           Categories ({count})

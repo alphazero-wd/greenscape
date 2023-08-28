@@ -18,7 +18,8 @@ import { ProductsModule } from './products/products.module';
       validationSchema: Joi.object({
         DATABASE_URL: Joi.string().required(),
         SESSION_SECRET: Joi.string().required(),
-        CORS_ORIGIN: Joi.string().required(),
+        CORS_ORIGIN_ADMIN: Joi.string().required(),
+        CORS_ORIGIN_STORE: Joi.string().required(),
         REDIS_HOST: Joi.string().required(),
         REDIS_PORT: Joi.string().required(),
       }),

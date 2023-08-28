@@ -97,12 +97,13 @@ export const useEditProduct = (product: Product) => {
       const deletedImages = product.images
         .map((image) => image.id)
         .filter((imageId) => !tempImageIds.includes(imageId));
-      await axios.delete(
-        `${API_URL}/products/${
-          product.id
-        }/remove-images?ids=${deletedImages.join(",")}`,
-        { withCredentials: true },
-      );
+      if (deletedImages.length > 0)
+        await axios.delete(
+          `${API_URL}/products/${
+            product.id
+          }/remove-images?ids=${deletedImages.join(",")}`,
+          { withCredentials: true },
+        );
       toast.success("Product updated");
       router.refresh();
       router.push("/products");

@@ -71,16 +71,19 @@ export default async function ProductsPage({
         <div className="mb-4">
           <Breadcrumb links={[{ name: "Products", href: "#" }]} />
         </div>
-        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-          Products ({count})
-        </h1>
-        <div className="mt-6 space-y-3">
-          <Button variant="outline">
+        <div className="flex items-center justify-between gap-x-4">
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+            Products ({count})
+          </h1>
+
+          <Button>
             <Link href="/products/create" className="flex items-center">
               <PlusIcon className="mr-2 h-4 w-4" />
-              Create new product
+              Add
             </Link>
           </Button>
+        </div>
+        <div className="mt-6 space-y-3">
           <ProductsTable
             priceRange={priceRange}
             categoryGroups={categoryGroups}

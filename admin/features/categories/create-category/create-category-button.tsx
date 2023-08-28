@@ -7,9 +7,9 @@ export const CreateCategoryButton = () => {
   const { onOpen } = useCreateCategoryModal();
 
   return (
-    <Button onClick={onOpen} variant="outline">
+    <Button onClick={onOpen}>
       <PlusIcon className="mr-2 h-4 w-4" />
-      Create new category
+      Add
     </Button>
   );
 };

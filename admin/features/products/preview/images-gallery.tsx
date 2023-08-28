@@ -22,7 +22,7 @@ export const ImagesGallery: React.FC<ImagesGalleryProps> = ({ product }) => {
           className="aspect-square h-full w-full object-contain"
         />
       </div>
-      <div className="grid h-full w-full grid-cols-4 gap-6">
+      <div className="grid h-fit w-full grid-cols-4 gap-6">
         {product.images.map((image, i) => (
           <div
             onClick={() => setPos(i)}
@@ -37,7 +37,7 @@ export const ImagesGallery: React.FC<ImagesGalleryProps> = ({ product }) => {
               key={image.id}
               className={cn(
                 "aspect-square cursor-pointer rounded object-cover",
-                pos === i && "opacity-50",
+                pos !== i && "opacity-50",
               )}
               src={`${process.env.NEXT_PUBLIC_API_URL}/files/${image.id}`}
               alt={product.name}

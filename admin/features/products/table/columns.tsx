@@ -41,7 +41,9 @@ export const columns: ColumnDef<Product>[] = [
       return <DataTableColumnHeader column={column} title="Product" />;
     },
     cell: ({ row }) => (
-      <div className="font-medium">{row.getValue("name")}</div>
+      <div className="line-clamp-2 max-w-xs font-medium">
+        {row.getValue("name")}
+      </div>
     ),
   },
   {

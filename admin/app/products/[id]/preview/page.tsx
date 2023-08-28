@@ -30,7 +30,7 @@ export default async function ProductPage({
   if (!product) redirect("/not-found");
 
   return (
-    <div className="container grid w-full max-w-2xl gap-x-8 lg:max-w-7xl lg:grid-cols-2">
+    <div className="container grid w-full max-w-2xl gap-x-8 lg:max-w-7xl lg:grid-cols-5">
       <div className="col-span-full mb-6">
         <Breadcrumb
           links={[
@@ -39,15 +39,22 @@ export default async function ProductPage({
           ]}
         />
       </div>
-      <ImagesGallery product={product} />
-      <div className="mt-6">
+      <div className="lg:col-span-2">
+        <ImagesGallery product={product} />
+      </div>
+      <div className="mt-6 lg:col-span-3">
         <h1 className="text-4xl font-bold tracking-tight text-gray-900">
           {product.name}
         </h1>
         <p className="mt-3 text-4xl tracking-tight text-gray-900">
           {formatPrice(product.price)}
         </p>
-        <p className="mt-6 text-gray-700">{product.desc}</p>
+        <div className="mt-6 space-y-2">
+          <Label>Description</Label>
+          <p className="mt-6 whitespace-pre-wrap text-sm leading-[1.7142857] text-gray-500">
+            {product.desc}
+          </p>
+        </div>
         <div className="mt-6">
           <Label className="mb-2 mr-4">Quantity</Label>
           <QtySelect product={product} />

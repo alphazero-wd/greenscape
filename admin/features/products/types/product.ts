@@ -8,6 +8,8 @@ export interface Product {
   status: "Active" | "Draft";
   inStock: number;
   category: Category;
+  createdAt: Date;
+  updatedAt: Date;
   images: { id: number }[];
 }
 

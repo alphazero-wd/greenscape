@@ -1,5 +1,8 @@
-import Image from "next/image";
+import { FavoritesSection, HeroSection } from "@/features/ui";
 
 export default function Home() {
-  return <div>Home page</div>;
+  return <>
+    <HeroSection />
+    <FavoritesSection />
+  </>
 }

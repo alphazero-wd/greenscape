@@ -21,12 +21,7 @@ export const Navbar = () => {
               {navLinks.map((link) => (
                 <Link
                   href={link.href}
-                  className={cn(
-                    "font-medium block shadow-sm h-16 pt-5 text-sm",
-                    pathname !== link.href
-                      ? "text-gray-900"
-                      : "text-green-500 border-b-2 border-green-500"
-                  )}
+                  className="font-semibold block shadow-sm h-16 pt-5 text-sm hover:border-b-2 hover:border-green-500 text-gray-900"
                   key={link.name}
                 >
                   {link.name}
@@ -35,12 +30,12 @@ export const Navbar = () => {
             </div>
           </div>
           <div className="flex items-center gap-x-8">
-            <div className="lg:flex hidden h-5 items-center space-x-6">
-              <button className="font-medium block text-sm">Sign in</button>
+            <div className="lg:flex hidden h-5 space-x-6">
+              <Link href="/auth/signin" className="font-semibold h-[2.625rem] block text-sm hover:border-b-2 hover:border-b-green-500">Sign in</Link>
               <Separator orientation="vertical" />
-              <button className="font-medium block text-sm">
+              <Link href="auth/create-account" className="font-semibold h-[2.625rem] block text-sm hover:border-b-2 hover:border-b-green-500">
                 Create account
-              </button>
+              </Link>
             </div>
 
             <ProfileMenu />

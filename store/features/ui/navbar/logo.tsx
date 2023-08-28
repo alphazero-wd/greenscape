@@ -9,7 +9,7 @@ const DesktopLogo = () => (
     xmlns="http://www.w3.org/2000/svg"
   >
     <path
-      fill-rule="evenodd"
+      fillRule="evenodd"
       clipRule="evenodd"
       d="M24 44C15.164 44 8 36.708 8 27.714C8 18.79 13.106 8.374 21.074 4.652C21.9898 4.22305 22.9887 4.00047 24 4V44Z"
       fill="#22C55E"
@@ -54,7 +54,7 @@ const DesktopLogo = () => (
         filterUnits="userSpaceOnUse"
         color-interpolation-filters="sRGB"
       >
-        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+        <feFlood floodOpacity="0" result="BackgroundImageFix" />
         <feColorMatrix
           in="SourceAlpha"
           type="matrix"
@@ -94,7 +94,7 @@ const MobileLogo = () => {
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
-        fill-rule="evenodd"
+        fillRule="evenodd"
         clipRule="evenodd"
         d="M24 44C15.164 44 8 36.708 8 27.714C8 18.79 13.106 8.374 21.074 4.652C21.9898 4.22305 22.9887 4.00047 24 4V44Z"
         fill="#22C55E"

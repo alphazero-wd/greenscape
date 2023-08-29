@@ -51,6 +51,7 @@ export const SortSelect = () => {
         const [sortBy, order] = val.split(":");
         setSortValue({ sortBy, order });
       }}
+      value={`${sortValue.sortBy}:${sortValue.order}`}
     >
       <SelectTrigger className="w-[180px] font-medium">
         {!sortValue.sortBy || !sortValue.order ? "Sort" : <SelectValue />}

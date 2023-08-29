@@ -1,5 +1,3 @@
-import { Category } from "@/features/categories/types";
-
 export interface Product {
   id: number;
   name: string;
@@ -34,4 +32,9 @@ export interface InStockGroup {
 export interface CategoryGroup {
   _count: { id: number };
   categoryId: number;
+}
+
+export interface Category {
+  id: number;
+  name: string;
 }

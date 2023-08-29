@@ -18,8 +18,8 @@ const socialLinks = [
 
 export const Footer = () => {
   return (
-    <footer className="bg-gray-100 mt-32">
-      <div className="lg:px-8 md:justify-between md:flex md:items-center py-12 px-6 max-w-7xl container">
+    <footer className="mt-32 border-t border-gray-200">
+      <div className="lg:px-8 md:justify-between md:flex md:items-center py-10 px-6 max-w-7xl container">
         <div className="md:order-2 justify-center flex gap-x-6">
           {socialLinks.map((link) => (
             <Link href={link.href} key={link.href}>

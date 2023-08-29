@@ -1,9 +1,4 @@
-import {
-  FavoritesSection,
-  Footer,
-  HeroSection,
-  Testimonials,
-} from "@/features/ui";
+import { FavoritesSection, HeroSection, Testimonials } from "@/features/ui";
 
 export default function Home() {
   return (
@@ -11,7 +6,6 @@ export default function Home() {
       <HeroSection />
       <FavoritesSection />
       <Testimonials />
-      <Footer />
     </>
   );
 }

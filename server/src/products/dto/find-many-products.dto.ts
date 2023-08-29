@@ -21,8 +21,8 @@ export class FindManyProductsDto extends FindManyDto {
     { allowInfinity: false, allowNaN: false, maxDecimalPlaces: 2 },
     { each: true },
   )
-  @IsOptional()
-  price?: [number] | [number, number];
+  @IsOptional({ each: true })
+  price?: [number, number];
 
   @Transform(({ value }: { value: string }) =>
     value.split(',').map((id) => +id),

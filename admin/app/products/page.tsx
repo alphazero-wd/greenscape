@@ -12,7 +12,7 @@ export const metadata = {
   title: "Products",
 };
 
-interface CategoriesPageProps {
+interface ProductsPageProps {
   searchParams: {
     limit?: string;
     offset?: string;
@@ -38,7 +38,7 @@ export default async function ProductsPage({
     price,
     inStock,
   },
-}: CategoriesPageProps) {
+}: ProductsPageProps) {
   const user = await getCurrentUser();
   if (!user) redirect("/auth/login");
   const query = qs.stringifyUrl({

@@ -4,4 +4,5 @@ export {
   type Product,
   type ProductFormDto,
   type StatusGroup,
+  type Category,
 } from "./product";

@@ -48,7 +48,7 @@ const MobileLogo = () => {
 
 export const Logo = () => {
   return (
-    <Link href="/">
+    <Link href="/" className="-ml-1">
       <div className="lg:hidden">
         <MobileLogo />
       </div>

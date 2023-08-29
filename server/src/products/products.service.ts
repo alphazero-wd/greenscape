@@ -121,15 +121,6 @@ export class ProductsService {
         _count: { id: true },
         where: whereInStockGroups,
       });
-
-      const whereWithoutPrice = { ...where };
-      delete whereWithoutPrice.price;
-      const priceRange = await this.prisma.product.aggregate({
-        _min: { price: true },
-        _max: { price: true },
-        where: whereWithoutPrice,
-      });
-
       const count = await this.prisma.product.count({ where });
       return {
         count,
@@ -137,7 +128,6 @@ export class ProductsService {
         statusGroups,
         inStockGroups,
         categoryGroups,
-        priceRange: [priceRange._min.price, priceRange._max.price],
       };
     } catch (error) {
       throw new InternalServerErrorException({

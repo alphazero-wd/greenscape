@@ -7,19 +7,11 @@ interface ProductsResponse {
   statusGroups: StatusGroup[];
   inStockGroups: InStockGroup[];
   categoryGroups: CategoryGroup[];
-  priceRange: [string, string];
 }
 
 export const getProducts = async (query = ""): Promise<ProductsResponse> => {
   const {
-    data: {
-      count,
-      data,
-      statusGroups,
-      inStockGroups,
-      categoryGroups,
-      priceRange,
-    },
+    data: { count, data, statusGroups, inStockGroups, categoryGroups },
   } = await axios.get(process.env.NEXT_PUBLIC_API_URL + "/products" + query);
   return {
     count,
@@ -27,6 +19,5 @@ export const getProducts = async (query = ""): Promise<ProductsResponse> => {
     statusGroups,
     inStockGroups,
     categoryGroups,
-    priceRange,
   };
 };

@@ -40,3 +40,13 @@ export {
 } from "./card";
 export { Slider } from "./slider";
 export { PriceInput } from "./price-input";
+export {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  SelectGroup,
+  SelectLabel,
+  SelectSeparator,
+} from "./select";

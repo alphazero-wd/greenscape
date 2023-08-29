@@ -2,8 +2,7 @@
 import React, { useEffect, useState } from "react";
 import qs from "query-string";
 import { Button, Label, PriceInput } from "@/features/ui";
-import { formatPrice } from "../utils";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
 
 export const PriceFilter = () => {
@@ -11,7 +10,6 @@ export const PriceFilter = () => {
   const [maxPrice, setMaxPrice] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
-  const pathname = usePathname();
 
   useEffect(() => {
     const price = searchParams.get("price");
@@ -27,7 +25,7 @@ export const PriceFilter = () => {
     if (minPrice || maxPrice) currentQuery.price = `${minPrice},${maxPrice}`;
     else delete currentQuery.price;
     const urlWithPriceRange = qs.stringifyUrl({
-      url: pathname,
+      url: "/products",
       query: currentQuery,
     });
     router.push(urlWithPriceRange);

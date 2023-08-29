@@ -2,7 +2,12 @@ import qs from "query-string";
 import { getCategories, getProducts } from "@/features/products/actions";
 import { Breadcrumb } from "@/features/ui";
 import { ProductList } from "@/features/products/product-list";
-import { DesktopFilter, MobileFilter } from "@/features/products/filter";
+import {
+  DesktopFilter,
+  MobileFilter,
+  Search,
+} from "@/features/products/filter";
+import { SortSelect } from "@/features/products/sort";
 
 interface ProductsPageProps {
   searchParams: {
@@ -62,10 +67,24 @@ export default async function ProductsPage({
             categories={categories}
             categoryGroups={categoryGroups}
           />
-          <ProductList
-            products={products}
-            className="sm:grid-cols-2 lg:pl-12 xl:grid-cols-3"
-          />
+          <div className="mt-6 space-y-4 lg:pl-12 lg:mt-0">
+            <div className="flex items-center gap-x-4">
+              <Search />
+              <SortSelect />
+            </div>
+            {q && (
+              <div className="text-gray-500 text-sm">
+                Search results for{" "}
+                <span className="font-semibold text-gray-800">
+                  &quot;{q}&quot;
+                </span>
+              </div>
+            )}
+            <ProductList
+              products={products}
+              className="sm:grid-cols-2 xl:grid-cols-3"
+            />
+          </div>
         </div>
       </main>
     </>

@@ -1,38 +1,41 @@
-import Link from 'next/link'
-import React from 'react'
-import { Button } from './button'
-import Image from 'next/image'
+import Link from "next/link";
+import React from "react";
+import { Button } from "./button";
+import Image from "next/image";
 
 export const HeroSection = () => {
   return (
-    <header className="relative">
-      <div className="lg:block bg-gray-100 w-1/2 h-full hidden absolute" />
+    <header className="relative py-16">
+      <div className="md:block w-1/2 h-full hidden absolute" />
       <div className="relative bg-transparent">
-        <div className="lg:px-8 sm:px-6 px-4 lg:grid lg:grid-cols-2 max-w-7xl container">
-          <div className="lg:py-64 lg:max-w-none py-8 max-w-2xl">
+        <div className="md:px-8 sm:px-6 px-4 md:grid items-center md:grid-cols-2 max-w-7xl container">
+          <div className="mb-8 lg:mb-0 md:max-w-none max-w-2xl">
             <div className="pr-16">
-              <h1 className="text-4xl sm:text-5xl text-gray-900 tracking-tight font-bold">
-                Bringing nature to you, one plant at a time
+              <h1 className="text-4xl md:text-5xl text-gray-900 tracking-tight font-bold">
+                Let's shop, let's play, let's smile all day!
               </h1>
-              <p className="text-lg text-gray-500 mt-4">Shop our selection of healthy plants, shipped directly to your home. Transform your space with ease.</p>
+              <p className="text-md text-gray-500 mt-4">
+                Our e-commerce store is all about happy shopping! We've got
+                playful and trendy products that will put a smile on your face.
+                Join us and let's shop for some happiness!
+              </p>
               <div className="mt-6">
-                <Button size="lg" asChild>
-                  <Link href="/products">Shop plants</Link>
+                <Button className="text-base px-12" size="lg" asChild>
+                  <Link href="/products">Shop now</Link>
                 </Button>
               </div>
             </div>
           </div>
 
-          <div className="lg:w-1/2 relative lg:h-full lg:top-0 lg:right-0 lg:absolute sm:h-64 w-full h-48">
-            <Image
-              src="/hero-image.png"
-              alt="Hero image displaying plants"
-              fill
-              className="object-center object-cover w-full h-full"
-            />
-          </div>
+          <Image
+            src="/hero-image.jpg"
+            alt="Hero image"
+            width={1024}
+            height={1024}
+            className="object-center rounded-lg sm:h-96 lg:h-full object-cover w-full"
+          />
         </div>
       </div>
     </header>
-  )
-}
+  );
+};

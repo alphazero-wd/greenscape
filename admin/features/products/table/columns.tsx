@@ -1,12 +1,14 @@
 "use client";
-
-import { Badge, Checkbox, CopyButton } from "@/features/ui";
 import {
+  Badge,
+  Checkbox,
+  CopyButton,
   DataTableColumnHeader,
   DataTableRowActions,
   useDeleteRecordsModal,
-} from "@/features/ui/data-table";
+} from "@/features/ui";
 import { ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 import { Product } from "../types";
 import { formatPrice } from "../utils";
@@ -78,6 +80,27 @@ export const columns: ColumnDef<Product>[] = [
       >
         {row.original.status}
       </Badge>
+    ),
+  },
+
+  {
+    id: "createdAt",
+    accessorKey: "createdAt",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Created at" />
+    ),
+    cell: ({ row }) => (
+      <div>{format(new Date(row.original.createdAt), "Pp")}</div>
+    ),
+  },
+  {
+    id: "updatedAt",
+    accessorKey: "updatedAt",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Updated at" />
+    ),
+    cell: ({ row }) => (
+      <div>{format(new Date(row.original.updatedAt), "Pp")}</div>
     ),
   },
   {

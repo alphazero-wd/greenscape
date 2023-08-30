@@ -27,10 +27,17 @@ export class FindManyProductsDto extends FindManyDto {
   @Transform(({ value }: { value: string }) =>
     value.split(',').map((id) => +id),
   )
+  @ArrayMinSize(1)
   @IsInt({ each: true })
   @Min(1, { each: true })
   @IsOptional()
   categoryIds?: number[];
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  refId?: number;
 
   @IsOptional()
   @IsIn(['Active', 'Draft'])

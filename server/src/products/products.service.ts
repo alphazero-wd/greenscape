@@ -61,6 +61,7 @@ export class ProductsService {
     price,
     status,
     inStock,
+    refId,
   }: FindManyProductsDto) {
     try {
       const where: Prisma.ProductWhereInput = {};
@@ -79,6 +80,7 @@ export class ProductsService {
       }
       if (inStock !== undefined)
         where.inStock = inStock ? { gt: 0 } : { equals: 0 };
+      if (refId) where.id = { not: refId };
 
       const products = await this.prisma.product.findMany({
         take: limit,

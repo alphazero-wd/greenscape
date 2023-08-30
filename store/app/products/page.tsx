@@ -49,6 +49,7 @@ export default async function ProductsPage({
       price,
       inStock,
       categoryIds,
+      status: "Active",
     },
   });
   const { data: products, categoryGroups, count } = await getProducts(query);

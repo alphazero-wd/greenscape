@@ -24,7 +24,7 @@ export const ImagesUpload: React.FC<ImagesUploadProps> = ({
             <p className="pl-1">or drag and drop</p>
           </div>
           <p className="text-xs leading-5 text-gray-600">
-            Accept PNG, JPG up to 5MB
+            Accept PNG, JPG up to 5MB with aspect ratio of 1 / 1
           </p>
         </div>
       </Dropzone>

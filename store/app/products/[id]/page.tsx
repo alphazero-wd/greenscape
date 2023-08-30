@@ -2,7 +2,11 @@ import { getProduct, getProducts } from "@/features/products/actions";
 import { redirect } from "next/navigation";
 import { Breadcrumb, Button, Label } from "@/features/ui";
 import { HeartIcon, ShoppingBagIcon } from "@heroicons/react/24/outline";
-import { ImagesGallery, QtySelect } from "@/features/products/product";
+import {
+  CollapsibleDesc,
+  ImagesGallery,
+  QtySelect,
+} from "@/features/products/product";
 import { formatPrice } from "@/features/products/utils";
 import { ProductList } from "../../../features/products/product-list";
 
@@ -55,12 +59,7 @@ export default async function ProductPage({
             <p className="mt-3 text-4xl tracking-tight text-gray-900">
               {formatPrice(product.price)}
             </p>
-            <div className="mt-6 space-y-2">
-              <Label>Description</Label>
-              <p className="mt-6 whitespace-pre-wrap text-sm leading-[1.7142857] text-gray-500">
-                {product.desc}
-              </p>
-            </div>
+            <CollapsibleDesc desc={product.desc} />
             <QtySelect product={product} />
             <div className="mt-6 flex items-center gap-x-6">
               <Button

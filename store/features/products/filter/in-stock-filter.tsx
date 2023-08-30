@@ -11,17 +11,23 @@ export const InStockFilter = () => {
 
   useEffect(() => {
     const inStock = searchParams.get("inStock");
-    if (inStock === "true") setIsOutOfStockIncluded(true);
+    if (inStock === "true") setIsOutOfStockIncluded(false);
+    else setIsOutOfStockIncluded(true);
   }, [searchParams.get("inStock")]);
 
   const filterProductsByAvailability = useDebouncedCallback(() => {
     const currentQuery = qs.parse(searchParams.toString());
-    if (isOutOfStockIncluded) currentQuery.inStock = "true";
-    else delete currentQuery.inStock;
+    if (isOutOfStockIncluded) {
+      delete currentQuery.inStock;
+    } else {
+      currentQuery.inStock = "true";
+      currentQuery.offset = "0";
+    }
     const urlWithAvailability = qs.stringifyUrl({
       url: "/products",
       query: currentQuery,
     });
+
     router.push(urlWithAvailability);
   }, 1000);
 
@@ -37,7 +43,9 @@ export const InStockFilter = () => {
           checked={isOutOfStockIncluded}
           onCheckedChange={() => setIsOutOfStockIncluded(!isOutOfStockIncluded)}
         />
-        <Label>Include out of stock</Label>
+        <Label className="text-gray-600 font-normal">
+          Include out of stock
+        </Label>
       </div>
     </div>
   );

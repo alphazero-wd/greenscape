@@ -21,8 +21,8 @@ export const CategoriesFilter: React.FC<CategoriesFilterProps> = ({
 
   useEffect(() => {
     const categoryIds = searchParams.get("categoryIds");
-    if (!categoryIds) return;
-    setSelectedCategoryIds(categoryIds.split(",").map((id) => +id));
+    if (categoryIds)
+      setSelectedCategoryIds(categoryIds.split(",").map((id) => +id));
   }, [searchParams.get("categoryIds")]);
 
   useEffect(() => {
@@ -54,7 +54,7 @@ export const CategoriesFilter: React.FC<CategoriesFilterProps> = ({
                   )
                 }
               />
-              <Label>{c.name}</Label>
+              <Label className="font-normal text-gray-600">{c.name}</Label>
             </div>
 
             {countProductsInCategory(c.id)?._count && (

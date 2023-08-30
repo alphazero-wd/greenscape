@@ -1,5 +1,6 @@
 "use client";
 import { useMemo } from "react";
+import { DOTS, PAGE_SIZE } from "@/constants";
 
 interface IPagination {
   totalCount: number;
@@ -17,11 +18,9 @@ const range = (start: number, end: number) => {
   return Array.from({ length }, (_, idx) => idx + start);
 };
 
-export const DOTS = "...";
-
 export const usePagination = ({
   totalCount,
-  pageSize = 10,
+  pageSize = PAGE_SIZE,
   siblingCount = 1,
   currentPage,
 }: IPagination) => {

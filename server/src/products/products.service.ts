@@ -92,6 +92,7 @@ export class ProductsService {
           price: true,
           createdAt: true,
           updatedAt: true,
+          desc: true,
           status: true,
           images: { select: { id: true }, take: 1 },
           category: true,

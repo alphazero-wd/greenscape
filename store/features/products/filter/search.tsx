@@ -13,14 +13,16 @@ export const Search = () => {
 
   useEffect(() => {
     const searchQuery = searchParams.get("q");
-    if (!searchQuery) return;
-    setQ(searchQuery);
+    if (searchQuery) setQ(searchQuery);
   }, [searchParams.get("q")]);
 
   const searchProducts = useDebouncedCallback(() => {
     const currentQuery = qs.parse(searchParams.toString());
-    if (q) currentQuery.q = q;
-    else delete currentQuery.q;
+    if (q) {
+      currentQuery.q = q;
+      currentQuery.offset = "0";
+    } else delete currentQuery.q;
+
     const urlWithSearchQuery = qs.stringifyUrl({
       url: "/products",
       query: currentQuery,

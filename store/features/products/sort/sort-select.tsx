@@ -23,14 +23,15 @@ export const SortSelect = () => {
   useEffect(() => {
     const sortByQuery = searchParams.get("sortBy");
     const orderQuery = searchParams.get("order");
-    if (!sortByQuery || !orderQuery) return;
-    setSortValue({ sortBy: sortByQuery, order: orderQuery });
+    if (sortByQuery && orderQuery)
+      setSortValue({ sortBy: sortByQuery, order: orderQuery });
   }, [searchParams.get("sortBy"), searchParams.get("order")]);
 
   const sortProducts = useDebouncedCallback(() => {
     const currentQuery = qs.parse(searchParams.toString());
-    if (sortValue.sortBy) currentQuery.sortBy = sortValue.sortBy;
-    else delete currentQuery.sortBy;
+    if (sortValue.sortBy) {
+      currentQuery.sortBy = sortValue.sortBy;
+    } else delete currentQuery.sortBy;
 
     if (sortValue.order) currentQuery.order = sortValue.order;
     else delete currentQuery.order;

@@ -8,10 +8,11 @@ import {
   Search,
 } from "@/features/products/filter";
 import { SortSelect } from "@/features/products/sort";
+import { Pagination } from "@/features/products/pagination";
+import { PAGE_SIZE } from "@/constants";
 
 interface ProductsPageProps {
   searchParams: {
-    limit?: string;
     offset?: string;
     sortBy?: string;
     order?: "asc" | "desc";
@@ -24,8 +25,7 @@ interface ProductsPageProps {
 
 export default async function ProductsPage({
   searchParams: {
-    limit = "10",
-    offset = "0",
+    offset,
     sortBy = "id",
     order = "asc",
     q,
@@ -36,9 +36,18 @@ export default async function ProductsPage({
 }: ProductsPageProps) {
   const query = qs.stringifyUrl({
     url: "",
-    query: { limit, offset, sortBy, order, q, price, inStock, categoryIds },
+    query: {
+      limit: PAGE_SIZE.toString(),
+      offset,
+      sortBy,
+      order,
+      q,
+      price,
+      inStock,
+      categoryIds,
+    },
   });
-  const { data: products, categoryGroups } = await getProducts(query);
+  const { data: products, categoryGroups, count } = await getProducts(query);
   const { data: categories } = await getCategories();
 
   return (
@@ -67,7 +76,7 @@ export default async function ProductsPage({
             categories={categories}
             categoryGroups={categoryGroups}
           />
-          <div className="mt-6 space-y-4 lg:pl-12 lg:mt-0">
+          <div className="mt-6 w-full space-y-4 lg:pl-12 lg:mt-0">
             <div className="flex items-center gap-x-4">
               <Search />
               <SortSelect />
@@ -80,10 +89,24 @@ export default async function ProductsPage({
                 </span>
               </div>
             )}
-            <ProductList
-              products={products}
-              className="sm:grid-cols-2 xl:grid-cols-3"
-            />
+            {products.length === 0 ? (
+              <div className="h-1/4 flex flex-col justify-center">
+                <h2 className="text-2xl font-bold tracking-tight mt-4 text-gray-900 sm:text-3xl">
+                  No products found
+                </h2>
+                <p className="text-base leading-7 text-gray-600 mt-2">
+                  We couldn't find any products matching your selection.
+                </p>
+              </div>
+            ) : (
+              <ProductList
+                products={products}
+                className="sm:grid-cols-2 xl:grid-cols-3"
+              />
+            )}
+            <div className="mt-8 flex-1">
+              <Pagination totalCount={count} />
+            </div>
           </div>
         </div>
       </main>

@@ -13,22 +13,30 @@ export const PriceFilter = () => {
 
   useEffect(() => {
     const price = searchParams.get("price");
-    if (!price || isNaN(parseFloat(price))) return;
-    const [min, max] = price.split(",");
-    setMinPrice(min);
-    setMaxPrice(max);
+    if (price && !isNaN(parseFloat(price))) {
+      const [min, max] = price.split(",");
+      setMinPrice(min);
+      setMaxPrice(max);
+    }
   }, [searchParams.get("price")]);
 
   const filterProductsByPriceRange = useDebouncedCallback(() => {
     const currentQuery = qs.parse(searchParams.toString());
-    if (currentQuery.maxPrice === maxPrice && currentQuery.minPrice) return;
-    if (minPrice || maxPrice) currentQuery.price = `${minPrice},${maxPrice}`;
-    else delete currentQuery.price;
-    const urlWithPriceRange = qs.stringifyUrl({
-      url: "/products",
-      query: currentQuery,
-    });
-    router.push(urlWithPriceRange);
+    if (
+      currentQuery.maxPrice !== maxPrice ||
+      currentQuery.minPrice !== minPrice
+    ) {
+      if (minPrice || maxPrice) {
+        currentQuery.price = `${minPrice},${maxPrice}`;
+        currentQuery.offset = "0";
+      } else delete currentQuery.price;
+
+      const urlWithPriceRange = qs.stringifyUrl({
+        url: "/products",
+        query: currentQuery,
+      });
+      router.push(urlWithPriceRange);
+    }
   }, 1000);
 
   useEffect(() => {

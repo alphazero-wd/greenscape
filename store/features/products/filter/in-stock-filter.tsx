@@ -17,12 +17,10 @@ export const InStockFilter = () => {
 
   const filterProductsByAvailability = useDebouncedCallback(() => {
     const currentQuery = qs.parse(searchParams.toString());
-    if (isOutOfStockIncluded) {
-      delete currentQuery.inStock;
-    } else {
-      currentQuery.inStock = "true";
-      currentQuery.offset = "0";
-    }
+    if (isOutOfStockIncluded) delete currentQuery.inStock;
+    else currentQuery.inStock = "true";
+
+    currentQuery.offset = "0";
     const urlWithAvailability = qs.stringifyUrl({
       url: "/products",
       query: currentQuery,
@@ -43,9 +41,7 @@ export const InStockFilter = () => {
           checked={isOutOfStockIncluded}
           onCheckedChange={() => setIsOutOfStockIncluded(!isOutOfStockIncluded)}
         />
-        <Label className="text-gray-600 font-normal">
-          Include out of stock
-        </Label>
+        <Label>Include out of stock</Label>
       </div>
     </div>
   );

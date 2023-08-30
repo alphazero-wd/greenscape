@@ -55,14 +55,8 @@ export default async function ProductsPage({
       inStock,
     },
   });
-  const {
-    count,
-    data,
-    statusGroups,
-    categoryGroups,
-    priceRange,
-    inStockGroups,
-  } = await getProducts(query);
+  const { count, data, statusGroups, categoryGroups, inStockGroups } =
+    await getProducts(query);
   const { data: categories } = await getCategories();
 
   return (
@@ -85,7 +79,6 @@ export default async function ProductsPage({
         </div>
         <div className="mt-6 space-y-3">
           <ProductsTable
-            priceRange={priceRange}
             categoryGroups={categoryGroups}
             categories={categories}
             statusGroups={statusGroups}

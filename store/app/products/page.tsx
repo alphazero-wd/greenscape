@@ -19,9 +19,13 @@ interface ProductsPageProps {
     q?: string;
     categoryIds?: string;
     price?: string;
-    inStock?: string;
+    inStock?: "true";
   };
 }
+
+export const metadata = {
+  title: "Products",
+};
 
 export default async function ProductsPage({
   searchParams: {

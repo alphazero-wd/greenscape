@@ -8,10 +8,9 @@ import { cn } from "@/lib/utils";
 const Slider = React.forwardRef<
   React.ElementRef<typeof SliderPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>
->(({ className, defaultValue, ...props }, ref) => (
+>(({ className, ...props }, ref) => (
   <SliderPrimitive.Root
     ref={ref}
-    defaultValue={defaultValue}
     className={cn(
       "relative flex w-full touch-none select-none items-center",
       className
@@ -21,12 +20,7 @@ const Slider = React.forwardRef<
     <SliderPrimitive.Track className="relative h-2 w-full grow overflow-hidden rounded-full bg-gray-300 dark:bg-gray-800">
       <SliderPrimitive.Range className="absolute h-full bg-blue-500 dark:bg-blue-300" />
     </SliderPrimitive.Track>
-    {defaultValue?.map((val) => (
-      <SliderPrimitive.Thumb
-        key={val}
-        className="block h-5 w-5 rounded-full border-2 shadow border-blue-400 bg-white ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:border-blue-300 dark:bg-blue-300 dark:ring-offset-blue-500 dark:focus-visible:ring-blue-300"
-      />
-    ))}
+    <SliderPrimitive.Thumb className="block h-5 w-5 rounded-full border-2 shadow border-blue-400 bg-white ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:border-blue-300 dark:bg-blue-300 dark:ring-offset-blue-500 dark:focus-visible:ring-blue-300" />
   </SliderPrimitive.Root>
 ));
 Slider.displayName = SliderPrimitive.Root.displayName;

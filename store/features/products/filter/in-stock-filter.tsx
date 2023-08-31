@@ -41,7 +41,7 @@ export const InStockFilter = () => {
           checked={isOutOfStockIncluded}
           onCheckedChange={() => setIsOutOfStockIncluded(!isOutOfStockIncluded)}
         />
-        <Label>Include out of stock</Label>
+        <Label className="font-normal">Include out of stock</Label>
       </div>
     </div>
   );

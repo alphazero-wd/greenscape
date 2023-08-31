@@ -11,15 +11,6 @@ export interface Product {
   images: { id: number }[];
 }
 
-export interface ProductFormDto {
-  name: string;
-  desc: string;
-  price: number;
-  inStock: number;
-  status: "Active" | "Draft";
-  categoryId: number;
-}
-
 export interface StatusGroup {
   _count: { id: number };
   status: "Active" | "Draft";

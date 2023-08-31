@@ -25,7 +25,6 @@ interface ProductsTableProps {
   categories: Category[];
   statusGroups: StatusGroup[];
   categoryGroups: CategoryGroup[];
-  priceRange: [string, string];
   inStockGroups: InStockGroup[];
 }
 
@@ -35,7 +34,6 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({
   categories,
   statusGroups,
   categoryGroups,
-  priceRange,
   inStockGroups,
 }) => {
   const { q, setQ, table } = useTable(columns, products, count);
@@ -71,7 +69,7 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({
               categories={categories}
             />
             <StatusFilter statusGroups={statusGroups} />
-            <PriceFilter priceRange={priceRange} />
+            <PriceFilter />
             <InStockFilter inStockGroups={inStockGroups} />
             {(searchParams.get("price") ||
               searchParams.get("inStock") ||

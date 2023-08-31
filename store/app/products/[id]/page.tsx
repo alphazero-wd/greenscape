@@ -1,14 +1,13 @@
 import { getProduct, getProducts } from "@/features/products/actions";
 import { redirect } from "next/navigation";
-import { Breadcrumb, Button, Label } from "@/features/ui";
-import { HeartIcon, ShoppingBagIcon } from "@heroicons/react/24/outline";
+import { Breadcrumb } from "@/features/ui";
 import {
+  AddToCart,
   CollapsibleDesc,
   ImagesGallery,
-  QtySelect,
 } from "@/features/products/product";
 import { formatPrice } from "@/features/products/utils";
-import { ProductList } from "../../../features/products/product-list";
+import { ProductList } from "@/features/products/product-list";
 
 interface ProductPageProps {
   params: {
@@ -31,7 +30,7 @@ export default async function ProductPage({
   if (!product) redirect("/not-found");
 
   const { data: products } = await getProducts(
-    `?limit=4&categoryIds=${product.category.id}&refId=${product.id}`
+    `?limit=4&categoryIds=${product.category.id}&refIds=${product.id}`
   );
 
   return (
@@ -47,7 +46,7 @@ export default async function ProductPage({
         </div>
       </div>
 
-      <main className="lg:px-8 pt-24 pb-10 sm:px-6 px-4 container max-w-2xl lg:max-w-7xl">
+      <main className="lg:px-8 pt-16 pb-10 sm:px-6 px-4 container max-w-2xl lg:max-w-7xl">
         <section className="grid lg:grid-cols-5 gap-x-8">
           <div className="lg:col-span-2">
             <ImagesGallery product={product} />
@@ -60,20 +59,7 @@ export default async function ProductPage({
               {formatPrice(product.price)}
             </p>
             <CollapsibleDesc desc={product.desc} />
-            <QtySelect product={product} />
-            <div className="mt-6 flex items-center gap-x-6">
-              <Button
-                disabled={product.inStock === 0}
-                size="lg"
-                className="text-base h-10"
-              >
-                <ShoppingBagIcon className="mr-2 h-6 w-6" />
-                Add to cart
-              </Button>
-              <Button size="icon" className="h-10" variant="ghost">
-                <HeartIcon className="h-6 w-6 text-gray-400" />
-              </Button>
-            </div>
+            <AddToCart product={product} />
           </div>
         </section>
 
@@ -82,7 +68,10 @@ export default async function ProductPage({
             <h2 className="tracking-tight font-medium text-gray-900">
               Customers also purchased
             </h2>
-            <ProductList products={products} className="mt-6" />
+            <ProductList
+              products={products}
+              className="mt-6 sm:grid-cols-2 lg:grid-cols-4"
+            />
           </section>
         )}
       </main>

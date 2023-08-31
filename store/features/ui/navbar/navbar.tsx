@@ -1,11 +1,20 @@
+"use client";
 import Link from "next/link";
 import { Logo } from "./logo";
 import { navLinks } from "./utils";
 import { Separator } from "../separator";
 import { ProfileMenu } from "./profile-menu";
 import { ShoppingBagIcon } from "@heroicons/react/24/outline";
+import { useCartStore } from "@/features/cart/contexts";
+import { useEffect, useState } from "react";
 
 export const Navbar = () => {
+  const [mounted, setMounted] = useState(false);
+  const { getTotalQty } = useCartStore();
+
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return null;
+
   return (
     <nav className="bg-white w-full container max-w-7xl px-4 sm:px-6 lg:px-8">
       <div className="flex h-16 justify-between items-center border-b border-gray-300">
@@ -41,8 +50,11 @@ export const Navbar = () => {
           </div>
 
           <ProfileMenu />
-          <Link href="/cart" className="text-gray-500 hover:text-gray-700">
-            <ShoppingBagIcon className="w-6 h-6" />
+          <Link href="/cart" className="flex items-center group">
+            <ShoppingBagIcon className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500" />
+            <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
+              {getTotalQty()}
+            </span>
           </Link>
         </div>
       </div>

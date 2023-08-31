@@ -61,7 +61,7 @@ export class ProductsService {
     price,
     status,
     inStock,
-    refId,
+    refIds,
   }: FindManyProductsDto) {
     try {
       const where: Prisma.ProductWhereInput = {};
@@ -80,7 +80,7 @@ export class ProductsService {
       }
       if (inStock !== undefined)
         where.inStock = inStock ? { gt: 0 } : { equals: 0 };
-      if (refId) where.id = { not: refId };
+      if (refIds) where.id = { not: { in: refIds } };
 
       const products = await this.prisma.product.findMany({
         take: limit,
@@ -96,7 +96,7 @@ export class ProductsService {
           updatedAt: true,
           desc: true,
           status: true,
-          images: { select: { id: true }, take: 1 },
+          images: { select: { id: true }, orderBy: { id: 'asc' }, take: 1 },
           category: true,
         },
       });
@@ -143,7 +143,10 @@ export class ProductsService {
   async findOne(id: number) {
     const product = await this.prisma.product.findUnique({
       where: { id },
-      include: { images: { select: { id: true } }, category: true },
+      include: {
+        images: { select: { id: true }, orderBy: { id: 'asc' } },
+        category: true,
+      },
     });
     if (!product)
       throw new NotFoundException({

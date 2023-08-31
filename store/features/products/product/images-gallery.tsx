@@ -30,13 +30,13 @@ export const ImagesGallery: React.FC<ImagesGalleryProps> = ({ product }) => {
               "cursor-pointer",
               pos === i && "h-fit rounded ring-2 ring-blue-500 ring-offset-2"
             )}
+            key={image.id}
           >
             <Image
               width={200}
               height={200}
-              key={image.id}
               className={cn(
-                "aspect-square cursor-pointer rounded object-cover",
+                "aspect-square rounded object-cover",
                 pos !== i && "opacity-50"
               )}
               src={`${process.env.NEXT_PUBLIC_API_URL}/files/${image.id}`}

@@ -1122,6 +1122,11 @@
   resolved "https://registry.npmjs.org/@types/node/-/node-20.4.4.tgz"
   integrity sha512-CukZhumInROvLq3+b5gLev+vgpsIqC2D0deQr/yS1WnxvmYLlJXZpaQrQiseMY+6xusl79E04UjWoqyr+t1/Ew==
 
+"@types/node@>=8.1.0":
+  version "20.5.7"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.5.7.tgz#4b8ecac87fbefbc92f431d09c30e176fc0a7c377"
+  integrity sha512-dP7f3LdZIysZnmvP3ANJYTSwg+wLLl8p7RqniVlV7j+oXSXAbt9h0WIBFmJy5inWZoX9wZN6eXx+YXd9Rh3RBA==
+
 "@types/parse-json@^4.0.0":
   version "4.0.0"
   resolved "https://registry.npmjs.org/@types/parse-json/-/parse-json-4.0.0.tgz"
@@ -4799,6 +4804,14 @@ strip-json-comments@^3.1.1:
   version "3.1.1"
   resolved "https://registry.npmjs.org/strip-json-comments/-/strip-json-comments-3.1.1.tgz"
   integrity sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==
+
+stripe@^13.4.0:
+  version "13.4.0"
+  resolved "https://registry.yarnpkg.com/stripe/-/stripe-13.4.0.tgz#5ac9cb412c70eb647ebebd7da3b849f2a098a980"
+  integrity sha512-UxvRzu46AJALIueMH3/jn++qJlOoM5s+uoHXagr36xTFOj7Knrh28WFiI73dMDkngBElK68cG3WI+LgRulHw6g==
+  dependencies:
+    "@types/node" ">=8.1.0"
+    qs "^6.11.0"
 
 superagent@^8.0.5:
   version "8.0.9"

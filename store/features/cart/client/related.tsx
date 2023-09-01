@@ -2,10 +2,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Product } from "@/features/products/types";
 import { useCartStore } from "../contexts";
-import axios from "axios";
 import { Skeleton } from "@/features/ui";
 import { ProductList } from "@/features/products/product-list";
-import { getProducts } from "../../products/actions";
+import { getProducts } from "@/features/products/actions";
 
 export const Related = () => {
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
@@ -29,8 +28,10 @@ export const Related = () => {
   }, [cart, cartItemIds, cartCategoryIds]);
 
   useEffect(() => {
-    fetchRelatedProducts();
+    if (cartItemIds.length > 0) fetchRelatedProducts();
   }, [fetchRelatedProducts]);
+
+  if (relatedProducts.length === 0) return null;
 
   return (
     <section className="mt-24">

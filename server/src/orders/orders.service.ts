@@ -52,8 +52,11 @@ export class OrdersService {
     if (countries) where.country = { in: countries };
     where.createdAt = { gte: startDate, lt: endDate };
     where.shippingCost = { equals: shippingCost };
-    if (amountRange && amountRange.length === 2)
-      where.amount = { gte: amountRange[0], lte: amountRange[1] };
+    if (amountRange) {
+      where.amount = {};
+      if (amountRange[0]) where.amount.gte = amountRange[0];
+      if (amountRange[1]) where.amount.lte = amountRange[1];
+    }
     if (status === 'delivered') where.deliveredAt = { not: null };
     if (status === 'pending') where.deliveredAt = null;
 
@@ -69,6 +72,7 @@ export class OrdersService {
     delete whereWithoutStatus.deliveredAt;
     const statusGroups = await this.prisma.order.groupBy({
       by: ['deliveredAt'],
+      _count: { id: true },
       where: whereWithoutStatus,
     });
 
@@ -76,6 +80,7 @@ export class OrdersService {
     delete whereWithoutCountries.country;
     const countryGroups = await this.prisma.order.groupBy({
       by: ['country'],
+      _count: { id: true },
       where: whereWithoutCountries,
     });
 
@@ -83,6 +88,7 @@ export class OrdersService {
     delete whereWithoutShippingOptions.shippingCost;
     const shippingOptionGroups = await this.prisma.order.groupBy({
       by: ['shippingCost'],
+      _count: { id: true },
       where: whereWithoutShippingOptions,
     });
 

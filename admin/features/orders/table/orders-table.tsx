@@ -6,21 +6,25 @@ import {
   Input,
   useTable,
 } from "@/features/ui";
-import { CountryGroup, Order } from "../types";
+import { CountryGroup, Order, StatusGroup } from "../types";
+import { AmountFilter } from "./amount-filter";
 import { columns } from "./columns";
 import { CountriesFilter } from "./countries-filter";
 import { DateRangeFilter } from "./date-range-filter";
+import { StatusFilter } from "./status-filter";
 
 interface OrdersTableProps {
   orders: Order[];
   count: number;
   countryGroups: CountryGroup[];
+  statusGroups: StatusGroup[];
 }
 
 export const OrdersTable: React.FC<OrdersTableProps> = ({
   orders,
   count,
   countryGroups,
+  statusGroups,
 }) => {
   const { q, setQ, table } = useTable(columns, orders, count);
 
@@ -36,6 +40,8 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({
           />
           <CountriesFilter table={table} countryGroups={countryGroups} />
           <DateRangeFilter table={table} />
+          <AmountFilter table={table} />
+          <StatusFilter statusGroups={statusGroups} table={table} />
         </div>
         <DataTableViewOptions table={table} />
       </div>

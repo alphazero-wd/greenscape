@@ -14,37 +14,44 @@ import {
 } from "@/features/ui";
 import { cn } from "@/lib/utils";
 import { DotFilledIcon, PlusCircledIcon } from "@radix-ui/react-icons";
+import { Table } from "@tanstack/react-table";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import qs from "query-string";
 import { useEffect, useState } from "react";
-import { StatusGroup } from "../types";
+import { Order, StatusGroup } from "../types";
 
 interface StatusFilterProps {
+  table: Table<Order>;
   statusGroups: StatusGroup[];
 }
 
-export const StatusFilter: React.FC<StatusFilterProps> = ({ statusGroups }) => {
-  const [status, setStatus] = useState<"Active" | "Draft" | null>(null);
+export const StatusFilter: React.FC<StatusFilterProps> = ({
+  statusGroups,
+  table,
+}) => {
+  const [status, setStatus] = useState<"pending" | "delivered" | null>(null);
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const currentStatus = searchParams.get("status") as "Active" | "Draft";
+    const currentStatus = searchParams.get("status") as "pending" | "delivered";
     if (!currentStatus) return;
     setStatus(currentStatus);
   }, [searchParams.get("status")]);
 
   useEffect(() => {
     const currentQuery = qs.parse(searchParams.toString());
-    if (status) currentQuery.status = status;
-    else delete currentQuery.status;
+    if (status) {
+      currentQuery.status = status;
+    } else delete currentQuery.status;
+    table.resetPageIndex();
     const urlWithStatusQuery = qs.stringifyUrl({
       url: pathname,
       query: currentQuery,
     });
     router.push(urlWithStatusQuery);
-  }, [status, router, searchParams.toString()]);
+  }, [status]);
 
   return (
     <Popover>
@@ -57,7 +64,7 @@ export const StatusFilter: React.FC<StatusFilterProps> = ({ statusGroups }) => {
               <Separator orientation="vertical" className="mx-2 h-4" />
               <Badge
                 variant="secondary"
-                className="rounded-sm px-1 font-normal"
+                className="rounded-sm px-1 font-normal capitalize"
               >
                 {status}
               </Badge>
@@ -69,7 +76,7 @@ export const StatusFilter: React.FC<StatusFilterProps> = ({ statusGroups }) => {
         <Command>
           <CommandList>
             <CommandGroup>
-              {(["Active", "Draft"] as const).map((s) => (
+              {(["pending", "delivered"] as const).map((s) => (
                 <CommandItem key={s} onSelect={() => setStatus(s)}>
                   <div
                     className={cn(
@@ -81,12 +88,20 @@ export const StatusFilter: React.FC<StatusFilterProps> = ({ statusGroups }) => {
                   >
                     <DotFilledIcon className="h-4 w-4" />
                   </div>
-                  <span>{s}</span>
-                  {statusGroups.find((group) => group.status === s)?._count && (
+                  <span className="capitalize">{s}</span>
+                  {statusGroups.find(
+                    (group) =>
+                      (group.deliveredAt === null ? "pending" : "delivered") ===
+                      s,
+                  )?._count && (
                     <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
                       {
-                        statusGroups.find((group) => group.status === s)?._count
-                          .id
+                        statusGroups.find(
+                          (group) =>
+                            (group.deliveredAt === null
+                              ? "pending"
+                              : "delivered") === s,
+                        )?._count.id
                       }
                     </span>
                   )}

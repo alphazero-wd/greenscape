@@ -5,16 +5,22 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
+  PriceInput,
 } from "@/features/ui";
+import { formatPrice } from "@/features/utils";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
+import { Table } from "@tanstack/react-table";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import qs from "query-string";
 import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { PriceInput } from "../components";
-import { formatPrice } from "../utils";
+import { Order } from "../types";
 
-export const PriceFilter = () => {
+interface AmountFilterProps {
+  table: Table<Order>;
+}
+
+export const AmountFilter: React.FC<AmountFilterProps> = ({ table }) => {
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const pathname = usePathname();
@@ -29,10 +35,12 @@ export const PriceFilter = () => {
     setMaxPrice(max);
   }, [searchParams.get("price")]);
 
-  const filterProductsByPriceRange = useDebouncedCallback(() => {
+  const filterOrdersByAmountRange = useDebouncedCallback(() => {
     const currentQuery = qs.parse(searchParams.toString());
-    if (minPrice || maxPrice) currentQuery.price = `${minPrice},${maxPrice}`;
-    else delete currentQuery.price;
+    if (minPrice || maxPrice)
+      currentQuery.amountRange = `${minPrice},${maxPrice}`;
+    else delete currentQuery.amountRange;
+    table.resetPageIndex();
     const urlWithPriceRange = qs.stringifyUrl({
       url: pathname,
       query: currentQuery,
@@ -41,15 +49,15 @@ export const PriceFilter = () => {
   }, 1000);
 
   useEffect(() => {
-    filterProductsByPriceRange();
-  }, [searchParams.toString(), minPrice, maxPrice]);
+    filterOrdersByAmountRange();
+  }, [minPrice, maxPrice]);
 
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="outline" size="sm" className="h-8 border-dashed">
           <PlusCircledIcon className="mr-2 h-4 w-4" />
-          Price
+          Amount
           {(minPrice || maxPrice) && (
             <span>
               : {minPrice ? formatPrice(+minPrice) : "Under "}

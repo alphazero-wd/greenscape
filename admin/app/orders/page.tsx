@@ -54,7 +54,7 @@ export default async function OrdersPage({
     },
   });
 
-  const { data, count, countryGroups } = await getOrders(query);
+  const { data, count, countryGroups, statusGroups } = await getOrders(query);
   return (
     <>
       <div className="container max-w-7xl">
@@ -70,6 +70,7 @@ export default async function OrdersPage({
             count={count}
             countryGroups={countryGroups}
             orders={data}
+            statusGroups={statusGroups}
           />
         </div>
       </div>

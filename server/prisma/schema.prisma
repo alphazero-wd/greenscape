@@ -57,15 +57,20 @@ model Product {
 }
 
 model Order {
-  id             String    @id
-  customer       String
-  email          String
-  phone          String
-  address        String
-  total          Int
-  shippingOption String
-  createdAt      DateTime  @default(now())
-  deliveredAt    DateTime?
+  id           String    @id
+  customer     String
+  email        String
+  phone        String
+  line1        String?
+  line2        String?
+  state        String?
+  city         String?
+  postalCode   String?
+  country      String?
+  amount       Decimal   @default(0) @db.Money
+  shippingCost Decimal   @default(0) @db.Money
+  createdAt    DateTime  @default(now())
+  deliveredAt  DateTime?
 
   products OrdersOnProducts[]
 }

@@ -6,11 +6,11 @@ import {
   FormLabel,
   FormMessage,
   Input,
+  PriceInput,
   Textarea,
 } from "@/features/ui";
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
-import { PriceInput } from "../components";
 import { ProductFormDto } from "../types";
 import { FormSection } from "./form-section";
 

@@ -5,22 +5,16 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-  PriceInput,
 } from "@/features/ui";
-import { formatPrice } from "@/features/utils";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
-import { Table } from "@tanstack/react-table";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import qs from "query-string";
 import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { Product } from "../types";
+import { PriceInput } from "../components";
+import { formatPrice } from "../utils";
 
-interface PriceFilterProps {
-  table: Table<Product>;
-}
-
-export const PriceFilter: React.FC<PriceFilterProps> = ({ table }) => {
+export const PriceFilter = () => {
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const pathname = usePathname();
@@ -37,10 +31,8 @@ export const PriceFilter: React.FC<PriceFilterProps> = ({ table }) => {
 
   const filterProductsByPriceRange = useDebouncedCallback(() => {
     const currentQuery = qs.parse(searchParams.toString());
-    if (minPrice || maxPrice) {
-      currentQuery.price = `${minPrice},${maxPrice}`;
-    } else delete currentQuery.price;
-    table.resetPageIndex();
+    if (minPrice || maxPrice) currentQuery.price = `${minPrice},${maxPrice}`;
+    else delete currentQuery.price;
     const urlWithPriceRange = qs.stringifyUrl({
       url: pathname,
       query: currentQuery,
@@ -50,7 +42,7 @@ export const PriceFilter: React.FC<PriceFilterProps> = ({ table }) => {
 
   useEffect(() => {
     filterProductsByPriceRange();
-  }, [minPrice, maxPrice]);
+  }, [searchParams.toString(), minPrice, maxPrice]);
 
   return (
     <Popover>

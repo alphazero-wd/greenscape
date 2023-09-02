@@ -7,11 +7,11 @@ import {
   DataTableRowActions,
   useDeleteRecordsModal,
 } from "@/features/ui";
+import { formatPrice } from "@/features/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 import { Product } from "../types";
-import { formatPrice } from "../utils";
 import { PreviewButton } from "./preview-button";
 
 export const columns: ColumnDef<Product>[] = [
@@ -123,7 +123,7 @@ export const columns: ColumnDef<Product>[] = [
       const { onOpen: onDeleteOpen } = useDeleteRecordsModal();
       return (
         <div className="flex justify-end">
-          <CopyButton text={row.original.name} />
+          <CopyButton text="Copy product name" content={row.original.name} />
           <PreviewButton id={row.original.id} />
           <DataTableRowActions
             row={row}

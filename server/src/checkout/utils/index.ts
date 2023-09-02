@@ -1,1 +1,1 @@
-export { getShippingOption, shippingOptions } from './shipping-options';
+export { shippingOptions } from './shipping-options';

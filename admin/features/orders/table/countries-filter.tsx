@@ -1,5 +1,4 @@
 "use client";
-import { Category } from "@/features/categories/types";
 import {
   Badge,
   Button,
@@ -22,76 +21,77 @@ import { CheckIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import qs from "query-string";
 import { useEffect, useState } from "react";
-import { CategoryGroup, Product } from "../types";
+import { CountryGroup, Order } from "../types";
+import { getCountryName } from "../utils";
 
-interface CategoriesFilterProps {
-  categoryGroups: CategoryGroup[];
-  categories: Category[];
-  table: Table<Product>;
+interface CountriesFilterProps {
+  countryGroups: CountryGroup[];
+  table: Table<Order>;
 }
 
-export const CategoriesFilter: React.FC<CategoriesFilterProps> = ({
-  categories,
-  categoryGroups,
+const allowedCountries = ["US", "CA", "GB", "AU", "SG", "JP", "VN"];
+
+export const CountriesFilter: React.FC<CountriesFilterProps> = ({
+  countryGroups,
   table,
 }) => {
-  const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([]);
+  const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const categoryIds = searchParams.get("categoryIds");
-    if (!categoryIds) return;
-    setSelectedCategoryIds(categoryIds.split(",").map((id) => +id));
-  }, [searchParams.get("categoryIds")]);
+    const countries = searchParams.get("countries");
+    if (!countries) return;
+    setSelectedCountries(countries.split(","));
+  }, [searchParams.get("countries")]);
 
   useEffect(() => {
     const currentQuery = qs.parse(searchParams.toString());
-    if (selectedCategoryIds.length > 0) {
-      currentQuery.categoryIds = selectedCategoryIds.join(",");
-    } else delete currentQuery.categoryIds;
+    if (selectedCountries.length > 0)
+      currentQuery.countries = selectedCountries.join(",");
+    else delete currentQuery.countries;
     table.resetPageIndex();
-    const urlWithCategoryIdsQuery = qs.stringifyUrl({
+    const urlWithCountriesQuery = qs.stringifyUrl({
       url: pathname,
       query: currentQuery,
     });
-    router.push(urlWithCategoryIdsQuery);
-  }, [selectedCategoryIds, router]);
+    router.push(urlWithCountriesQuery);
+  }, [selectedCountries, router]);
 
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="outline" size="sm" className="h-8 border-dashed">
           <PlusCircledIcon className="mr-2 h-4 w-4" />
-          Categories
-          {selectedCategoryIds.length > 0 && (
+          Countries
+          {selectedCountries.length > 0 && (
             <>
               <Separator orientation="vertical" className="mx-2 h-4" />
               <Badge
                 variant="secondary"
                 className="rounded-sm px-1 font-normal lg:hidden"
               >
-                {selectedCategoryIds.length}
+                {selectedCountries.length}
               </Badge>
               <div className="hidden space-x-1 lg:flex">
-                {selectedCategoryIds.length > 2 ? (
+                {selectedCountries.length > 2 ? (
                   <Badge
                     variant="secondary"
                     className="rounded-sm px-1 font-normal"
                   >
-                    {selectedCategoryIds.length} selected
+                    {selectedCountries.length} selected
                   </Badge>
                 ) : (
-                  categories
-                    .filter((c) => selectedCategoryIds.includes(c.id))
+                  allowedCountries
+                    .filter((c) => selectedCountries.includes(c))
                     .map((c) => (
                       <Badge
                         variant="secondary"
-                        key={c.id}
+                        key={c}
                         className="rounded-sm px-1 font-normal"
                       >
-                        {c.name}
+                        {getCountryName(c)}
                       </Badge>
                     ))
                 )}
@@ -106,18 +106,18 @@ export const CategoriesFilter: React.FC<CategoriesFilterProps> = ({
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup>
-              {categories.map((c) => {
-                const isSelected = selectedCategoryIds.includes(c.id);
+              {allowedCountries.map((c) => {
+                const isSelected = selectedCountries.includes(c);
                 return (
                   <CommandItem
-                    key={c.id}
+                    key={c}
                     onSelect={() => {
                       if (isSelected) {
-                        setSelectedCategoryIds(
-                          selectedCategoryIds.filter((id) => id !== c.id),
+                        setSelectedCountries(
+                          selectedCountries.filter((sc) => sc !== c),
                         );
                       } else {
-                        setSelectedCategoryIds([...selectedCategoryIds, c.id]);
+                        setSelectedCountries([...selectedCountries, c]);
                       }
                     }}
                   >
@@ -131,14 +131,13 @@ export const CategoriesFilter: React.FC<CategoriesFilterProps> = ({
                     >
                       <CheckIcon className={cn("h-4 w-4")} />
                     </div>
-                    <span>{c.name}</span>
-                    {categoryGroups.find((group) => group.categoryId === c.id)
+                    <span>{getCountryName(c)}</span>
+                    {countryGroups.find((group) => group.country === c)
                       ?._count && (
                       <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
                         {
-                          categoryGroups.find(
-                            (group) => group.categoryId === c.id,
-                          )?._count.id
+                          countryGroups.find((group) => group.country === c)
+                            ?._count.id
                         }
                       </span>
                     )}
@@ -146,12 +145,12 @@ export const CategoriesFilter: React.FC<CategoriesFilterProps> = ({
                 );
               })}
             </CommandGroup>
-            {selectedCategoryIds.length > 0 && (
+            {selectedCountries.length > 0 && (
               <>
                 <CommandSeparator />
                 <CommandGroup>
                   <CommandItem
-                    onSelect={() => setSelectedCategoryIds([])}
+                    onSelect={() => setSelectedCountries([])}
                     className="justify-center text-center"
                   >
                     Clear filters

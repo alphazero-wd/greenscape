@@ -14,17 +14,20 @@ import {
 } from "@/features/ui";
 import { cn } from "@/lib/utils";
 import { DotFilledIcon, PlusCircledIcon } from "@radix-ui/react-icons";
+import { Table } from "@tanstack/react-table";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import qs from "query-string";
 import { useEffect, useMemo, useState } from "react";
-import { InStockGroup } from "../types";
+import { InStockGroup, Product } from "../types";
 
 interface InStockFilterProps {
   inStockGroups: InStockGroup[];
+  table: Table<Product>;
 }
 
 export const InStockFilter: React.FC<InStockFilterProps> = ({
   inStockGroups,
+  table,
 }) => {
   const [inStock, setInStock] = useState<boolean | null>(null);
   const router = useRouter();
@@ -39,14 +42,17 @@ export const InStockFilter: React.FC<InStockFilterProps> = ({
 
   useEffect(() => {
     const currentQuery = qs.parse(searchParams.toString());
-    if (inStock !== null) currentQuery.inStock = String(inStock);
-    else delete currentQuery.inStock;
+    if (inStock !== null) {
+      currentQuery.inStock = String(inStock);
+      currentQuery.offset = "0";
+    } else delete currentQuery.inStock;
+    table.resetPageIndex();
     const urlWithInStockQuery = qs.stringifyUrl({
       url: pathname,
       query: currentQuery,
     });
     router.push(urlWithInStockQuery);
-  }, [inStock, router, searchParams.toString()]);
+  }, [inStock]);
 
   const inStockSum = useMemo(
     () =>

@@ -1,12 +1,5 @@
 import Stripe from 'stripe';
 
-export const getShippingOption = (subtotal: number, total: number) => {
-  return shippingOptions.find(
-    (option) =>
-      option.shipping_rate_data.fixed_amount.amount === total - subtotal,
-  ).shipping_rate_data.display_name!;
-};
-
 export const shippingOptions: Stripe.Checkout.SessionCreateParams.ShippingOption[] =
   [
     {

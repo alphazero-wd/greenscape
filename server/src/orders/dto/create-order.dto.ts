@@ -3,9 +3,14 @@ export interface CreateOrderDto {
   customer: string;
   email: string;
   phone: string;
-  address: string;
-  total: number;
-  shippingOption: string;
+  amount: number;
+  shippingCost: number;
+  line1?: string;
+  line2?: string;
+  city?: string;
+  state?: string;
+  postalCode?: string;
+  country?: string;
   cart: {
     productId: number;
     qty: number;

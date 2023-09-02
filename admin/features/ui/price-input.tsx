@@ -1,4 +1,4 @@
-import { Input } from "@/features/ui";
+import { Input } from "./input";
 
 export const PriceInput = (
   props: React.InputHTMLAttributes<HTMLInputElement>,

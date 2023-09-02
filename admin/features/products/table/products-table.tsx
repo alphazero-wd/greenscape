@@ -46,6 +46,7 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({
     delete currentQuery.categoryIds;
     delete currentQuery.status;
     delete currentQuery.q;
+    table.resetPageIndex();
     const resetQuery = qs.stringifyUrl({
       url: "",
       query: currentQuery,
@@ -67,10 +68,11 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({
             <CategoriesFilter
               categoryGroups={categoryGroups}
               categories={categories}
+              table={table}
             />
-            <StatusFilter statusGroups={statusGroups} />
-            <PriceFilter />
-            <InStockFilter inStockGroups={inStockGroups} />
+            <StatusFilter table={table} statusGroups={statusGroups} />
+            <PriceFilter table={table} />
+            <InStockFilter table={table} inStockGroups={inStockGroups} />
             {(searchParams.get("price") ||
               searchParams.get("inStock") ||
               searchParams.get("categoryIds") ||

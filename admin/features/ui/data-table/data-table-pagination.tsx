@@ -18,11 +18,11 @@ import {
 } from "../select";
 import { useDeleteRecordsModal } from "./use-delete-records-modal";
 
-interface DataTablePaginationProps<TData extends { id: number }> {
+interface DataTablePaginationProps<TData extends { id: number | string }> {
   table: Table<TData>;
 }
 
-export function DataTablePagination<TData extends { id: number }>({
+export function DataTablePagination<TData extends { id: number | string }>({
   table,
 }: DataTablePaginationProps<TData>) {
   const selectedRowIds = useMemo(
@@ -55,7 +55,7 @@ export function DataTablePagination<TData extends { id: number }>({
                 />
               </SelectTrigger>
               <SelectContent side="top">
-                {[10, 20, 30, 40, 50].map((pageSize) => (
+                {[1, 2, 3, 4, 5].map((pageSize) => (
                   <SelectItem key={pageSize} value={`${pageSize}`}>
                     {pageSize}
                   </SelectItem>

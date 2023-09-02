@@ -30,11 +30,12 @@ export const CategoriesFilter: React.FC<CategoriesFilterProps> = ({
     if (selectedCategoryIds.length > 0)
       currentQuery.categoryIds = selectedCategoryIds.join(",");
     else delete currentQuery.categoryIds;
-    const urlWithStatusQuery = qs.stringifyUrl({
+    currentQuery.offset = "0";
+    const urlWithCategoryIdsQuery = qs.stringifyUrl({
       url: "/products",
       query: currentQuery,
     });
-    router.push(urlWithStatusQuery);
+    router.push(urlWithCategoryIdsQuery);
   }, [selectedCategoryIds, router, searchParams.toString()]);
 
   return (

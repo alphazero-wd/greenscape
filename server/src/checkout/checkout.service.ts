@@ -9,7 +9,9 @@ import Stripe from 'stripe';
 import { PrismaService } from '../prisma/prisma.service';
 import { CheckoutDto } from './dto';
 import { OrdersService } from '../orders/orders.service';
-import { getShippingOption, shippingOptions } from './utils';
+import { shippingOptions } from './utils';
+import { allowedCountries } from '../common/utils';
+import { ProductsService } from '../products/products.service';
 
 @Injectable()
 export class CheckoutService implements OnModuleInit {
@@ -19,6 +21,7 @@ export class CheckoutService implements OnModuleInit {
     private configService: ConfigService,
     private prisma: PrismaService,
     private ordersService: OrdersService,
+    private productsService: ProductsService,
   ) {}
 
   onModuleInit() {
@@ -46,11 +49,14 @@ export class CheckoutService implements OnModuleInit {
       const { city, country, postal_code, state, line1, line2 } =
         session.customer_details.address;
       await this.ordersService.create({
-        id: session.id,
-        address: [line1, line2, city, state, postal_code, country]
-          .filter((a) => a !== null)
-          .join('\n'),
-        total: session.amount_total,
+        id: session.payment_intent.toString().split('_')[1],
+        line1,
+        line2,
+        state,
+        country,
+        city,
+        postalCode: postal_code,
+        amount: +(session.amount_total / 100).toFixed(2),
         phone: session.customer_details.phone,
         email: session.customer_details.email,
         cart: productIds.map((id, index) => ({
@@ -58,11 +64,14 @@ export class CheckoutService implements OnModuleInit {
           qty: quantities[index],
         })),
         customer: session.customer_details.name,
-        shippingOption: getShippingOption(
-          session.amount_subtotal,
-          session.amount_total,
-        ),
+        shippingCost: +(session.shipping_cost.amount_total / 100).toFixed(2),
       });
+      for (let index in productIds) {
+        const product = await this.productsService.findOne(productIds[index]);
+        await this.productsService.update(product.id, {
+          inStock: product.id - quantities[index],
+        });
+      }
     }
   }
 
@@ -116,7 +125,7 @@ export class CheckoutService implements OnModuleInit {
 
     const session = await this.stripe.checkout.sessions.create({
       shipping_address_collection: {
-        allowed_countries: ['US', 'CA', 'GB', 'AU', 'SG', 'JP', 'VN'],
+        allowed_countries: allowedCountries,
       },
       shipping_options: shippingOptions,
       line_items: lineItems,

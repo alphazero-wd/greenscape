@@ -1,8 +1,8 @@
 import { getProduct } from "@/features/products/actions";
 import { ImagesGallery, QtySelect } from "@/features/products/preview";
-import { formatPrice } from "@/features/products/utils";
 import { Breadcrumb, Button, Label } from "@/features/ui";
 import { getCurrentUser } from "@/features/user/utils";
+import { formatPrice } from "@/features/utils";
 import { HeartIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
 import { redirect } from "next/navigation";
 

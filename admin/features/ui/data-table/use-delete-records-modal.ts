@@ -2,8 +2,8 @@ import { create } from "zustand";
 
 interface DeleteRecordsModalStore {
   isOpen: boolean;
-  ids: number[];
-  onOpen: (ids: number[]) => void;
+  ids: (number | string)[];
+  onOpen: (ids: (number | string)[]) => void;
   onClose: () => void;
 }
 

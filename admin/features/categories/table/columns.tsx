@@ -66,7 +66,7 @@ export const columns: ColumnDef<Category>[] = [
       const { onOpen: onDeleteOpen } = useDeleteRecordsModal();
       return (
         <div className="flex items-center justify-end">
-          <CopyButton text={row.original.name} />
+          <CopyButton text="Copy category name" content={row.original.name} />
           <DataTableRowActions
             row={row}
             onEditAction={onEditOpen}

@@ -23,9 +23,18 @@ export const useTable = <TData>(
   const searchParams = useSearchParams();
   const [q, setQ] = useState(searchParams.get("q") || "");
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
-    pageIndex: parseInt(searchParams.get("offset") || "0"),
-    pageSize: parseInt(searchParams.get("limit") || "10"),
+    pageIndex: 0,
+    pageSize: 1,
   });
+
+  useEffect(() => {
+    const offset = searchParams.get("offset");
+    if (offset && !isNaN(parseInt(offset)))
+      setPagination({ pageSize, pageIndex: +offset });
+    const limit = searchParams.get("limit");
+    if (limit && !isNaN(parseInt(limit)))
+      setPagination({ pageIndex, pageSize: +limit });
+  }, [searchParams.get("offset"), searchParams.get("limit")]);
 
   const pagination = useMemo(
     () => ({
@@ -55,7 +64,7 @@ export const useTable = <TData>(
   });
 
   const updateQueries = useDebouncedCallback(() => {
-    if (q) setPagination({ pageIndex: 0, pageSize });
+    if (q) table.resetPageIndex();
     const currentQuery = qs.parse(searchParams.toString());
     currentQuery.offset = (pageIndex * pageSize).toString();
     currentQuery.limit = pageSize.toString();

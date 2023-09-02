@@ -15,7 +15,7 @@ export class FindManyProductsDto extends FindManyDto {
   @Transform(({ value }: { value: string }) =>
     value.split(',').map((val) => +val),
   )
-  @ArrayMinSize(1)
+  @ArrayMinSize(2)
   @ArrayMaxSize(2)
   @IsNumber(
     { allowInfinity: false, allowNaN: false, maxDecimalPlaces: 2 },

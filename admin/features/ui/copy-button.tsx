@@ -11,9 +11,10 @@ import {
 
 interface CopyButtonProps {
   text: string;
+  content: string;
 }
 
-export const CopyButton: React.FC<CopyButtonProps> = ({ text }) => {
+export const CopyButton: React.FC<CopyButtonProps> = ({ text, content }) => {
   const [isCopied, setIsCopied] = useState(false);
 
   useEffect(() => {
@@ -26,13 +27,13 @@ export const CopyButton: React.FC<CopyButtonProps> = ({ text }) => {
   return (
     <TooltipProvider>
       <Tooltip>
-        <TooltipContent>Copy to clipboard</TooltipContent>
+        <TooltipContent>{text}</TooltipContent>
         <TooltipTrigger asChild>
           <Button
             size="icon"
             variant="ghost"
             onClick={() => {
-              navigator.clipboard.writeText(text);
+              navigator.clipboard.writeText(content);
               setIsCopied(true);
             }}
           >

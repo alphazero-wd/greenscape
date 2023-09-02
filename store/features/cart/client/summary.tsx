@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useCartStore } from "../contexts";
 import { formatPrice } from "@/features/products/utils";
-import { SHIPPING_COST, TAX_RATE } from "@/constants";
 import { Button } from "@/features/ui";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
@@ -28,8 +27,6 @@ export const CartSummary = () => {
     if (cancelled === "1") toast.error("Payment cancelled");
   }, [searchParams.get("success"), searchParams.get("cancelled")]);
 
-  if (!mounted || cart.length === 0) return null;
-
   const onCheckout = async () => {
     try {
       const {
@@ -47,10 +44,7 @@ export const CartSummary = () => {
     }
   };
 
-  const tax = useMemo(
-    () => (getTotalPrice() / 100) * TAX_RATE,
-    [getTotalPrice()]
-  );
+  if (!mounted || cart.length === 0) return null;
 
   return (
     <section className="lg:col-span-5 h-fit lg:sticky mt-16 rounded-lg bg-gray-50 lg:top-6 lg:p-8 lg:mt-0 sm:p-6 py-6 px-4">
@@ -65,19 +59,13 @@ export const CartSummary = () => {
         <div className="flex justify-between pt-4 border-t border-gray-200 items-center">
           <dt className="text-gray-700 text-sm">Shipping estimate</dt>
           <dd className="text-gray-900 font-medium text-sm">
-            {formatPrice(SHIPPING_COST)}
-          </dd>
-        </div>
-        <div className="flex justify-between pt-4 border-t border-gray-200 items-center">
-          <dt className="text-gray-700 text-sm">Tax estimate</dt>
-          <dd className="text-gray-900 font-medium text-sm">
-            {formatPrice(tax)}
+            Calculated at checkout
           </dd>
         </div>
         <div className="flex justify-between pt-4 border-t border-gray-200 items-center">
           <dt className="text-gray-900 font-medium text-base">Order total</dt>
           <dd className="text-gray-900 font-medium text-base">
-            {formatPrice(getTotalPrice() + SHIPPING_COST + tax)}
+            {formatPrice(getTotalPrice())}
           </dd>
         </div>
       </dl>

@@ -52,6 +52,33 @@ model Product {
 
   images   File[]
   category Category @relation(fields: [categoryId], references: [id])
+
+  orders OrdersOnProducts[]
+}
+
+model Order {
+  id             String    @id
+  customer       String
+  email          String
+  phone          String
+  address        String
+  total          Int
+  shippingOption String
+  createdAt      DateTime  @default(now())
+  deliveredAt    DateTime?
+
+  products OrdersOnProducts[]
+}
+
+model OrdersOnProducts {
+  productId Int
+  orderId   String
+  qty       Int
+
+  product Product @relation(fields: [productId], references: [id])
+  order   Order   @relation(fields: [orderId], references: [id])
+
+  @@id([productId, orderId])
 }
 
 enum Role {

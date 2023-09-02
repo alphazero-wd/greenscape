@@ -8,6 +8,8 @@ import { ConfigService } from '@nestjs/config';
 import Stripe from 'stripe';
 import { PrismaService } from '../prisma/prisma.service';
 import { CheckoutDto } from './dto';
+import { OrdersService } from '../orders/orders.service';
+import { getShippingOption, shippingOptions } from './utils';
 
 @Injectable()
 export class CheckoutService implements OnModuleInit {
@@ -16,12 +18,52 @@ export class CheckoutService implements OnModuleInit {
   constructor(
     private configService: ConfigService,
     private prisma: PrismaService,
+    private ordersService: OrdersService,
   ) {}
 
   onModuleInit() {
     this.stripe = new Stripe(this.configService.get('STRIPE_SECRET_KEY'), {
       apiVersion: '2023-08-16',
     });
+  }
+
+  async constructEventFromPayload(signature: string, payload: Buffer) {
+    const webhookSecret = this.configService.get('STRIPE_WEBHOOK_SECRET');
+    const event = this.stripe.webhooks.constructEvent(
+      payload,
+      signature,
+      webhookSecret,
+    );
+    const session = event.data.object as Stripe.Checkout.Session;
+
+    if (event.type === 'checkout.session.completed') {
+      const productIds = session.metadata.cartItemIds
+        .split(',')
+        .map((id) => +id);
+      const quantities = session.metadata.quantities
+        .split(',')
+        .map((id) => +id);
+      const { city, country, postal_code, state, line1, line2 } =
+        session.customer_details.address;
+      await this.ordersService.create({
+        id: session.id,
+        address: [line1, line2, city, state, postal_code, country]
+          .filter((a) => a !== null)
+          .join('\n'),
+        total: session.amount_total,
+        phone: session.customer_details.phone,
+        email: session.customer_details.email,
+        cart: productIds.map((id, index) => ({
+          productId: id,
+          qty: quantities[index],
+        })),
+        customer: session.customer_details.name,
+        shippingOption: getShippingOption(
+          session.amount_subtotal,
+          session.amount_total,
+        ),
+      });
+    }
   }
 
   async checkout({ cart }: CheckoutDto) {
@@ -61,10 +103,8 @@ export class CheckoutService implements OnModuleInit {
         quantity: item.qty,
         price_data: {
           currency: 'USD',
-          tax_behavior: 'exclusive',
           product_data: {
             name: item.name,
-            description: item.desc.slice(0, 201) + '...',
             images: item.images.map(
               (image) => `http://localhost:5000/files/${image.id}`,
             ),
@@ -75,6 +115,10 @@ export class CheckoutService implements OnModuleInit {
     });
 
     const session = await this.stripe.checkout.sessions.create({
+      shipping_address_collection: {
+        allowed_countries: ['US', 'CA', 'GB', 'AU', 'SG', 'JP', 'VN'],
+      },
+      shipping_options: shippingOptions,
       line_items: lineItems,
       mode: 'payment',
       billing_address_collection: 'required',
@@ -85,6 +129,10 @@ export class CheckoutService implements OnModuleInit {
       cancel_url: `${this.configService.get(
         'CORS_ORIGIN_STORE',
       )}/cart?cancelled=1`,
+      metadata: {
+        cartItemIds: cartItemIds.join(','),
+        quantities: cartItemQuantities.join(','),
+      },
     });
 
     return { checkoutUrl: session.url };

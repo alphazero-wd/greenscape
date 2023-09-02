@@ -10,11 +10,16 @@ export const CartList = () => {
   const { cart, clearCart } = useCartStore();
 
   useEffect(() => setMounted(true), []);
-  if (!mounted) return null;
+  if (!mounted)
+    return (
+      <section className="lg:col-span-7 mt-8">
+        <p className="text-gray-500">Loading cart...</p>
+      </section>
+    );
   if (cart.length === 0)
     return (
-      <section className="lg:col-span-7">
-        <p className="mt-8 text-gray-500">Your cart is currently empty</p>
+      <section className="lg:col-span-7 mt-8">
+        <p className="text-gray-500">Your cart is currently empty</p>
         <Button size="lg" className="mt-4">
           <Link href="/products">Continue shopping</Link>
         </Button>

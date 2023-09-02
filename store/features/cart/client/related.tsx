@@ -28,8 +28,12 @@ export const Related = () => {
   }, [cart, cartItemIds, cartCategoryIds]);
 
   useEffect(() => {
-    if (cartItemIds.length > 0) fetchRelatedProducts();
+    if (cart.length > 0 && cartItemIds.length > 0) fetchRelatedProducts();
   }, [fetchRelatedProducts]);
+
+  useEffect(() => {
+    if (!loading && cart.length === 0) setRelatedProducts([]);
+  }, [cart.length, loading]);
 
   if (relatedProducts.length === 0) return null;
 

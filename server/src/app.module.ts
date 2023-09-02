@@ -8,6 +8,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
 import { CheckoutModule } from './checkout/checkout.module';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -25,12 +26,14 @@ import { CheckoutModule } from './checkout/checkout.module';
         REDIS_PORT: Joi.string().required(),
         STRIPE_CHECKOUT_URL: Joi.string().required(),
         STRIPE_SECRET_KEY: Joi.string().required(),
+        STRIPE_WEBHOOK_SECRET: Joi.string().required(),
       }),
     }),
     CategoriesModule,
     FilesModule,
     ProductsModule,
     CheckoutModule,
+    OrdersModule,
   ],
 })
 export class AppModule {}

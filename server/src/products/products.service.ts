@@ -82,10 +82,15 @@ export class ProductsService {
         where.inStock = inStock ? { gt: 0 } : { equals: 0 };
       if (refIds) where.id = { not: { in: refIds } };
 
+      let orderBy: Prisma.ProductOrderByWithRelationAndSearchRelevanceInput =
+        {};
+      if (sortBy === 'orders') orderBy = { orders: { _count: order } };
+      else orderBy = { [sortBy]: order };
+
       const products = await this.prisma.product.findMany({
         take: limit,
         skip: offset,
-        orderBy: { [sortBy]: order },
+        orderBy,
         where,
         select: {
           id: true,
@@ -98,6 +103,7 @@ export class ProductsService {
           status: true,
           images: { select: { id: true }, orderBy: { id: 'asc' }, take: 1 },
           category: true,
+          _count: { select: { orders: true } },
         },
       });
 

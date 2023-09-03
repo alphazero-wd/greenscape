@@ -40,9 +40,7 @@ export const columns: ColumnDef<Product>[] = [
   {
     id: "name",
     accessorKey: "name",
-    header: ({ column }) => {
-      return <DataTableColumnHeader column={column} title="Product" />;
-    },
+    header: "Product",
     cell: ({ row }) => (
       <div className="flex items-center gap-x-4">
         <Image
@@ -81,6 +79,32 @@ export const columns: ColumnDef<Product>[] = [
     cell: ({ row }) => row.original.category.name,
   },
   {
+    id: "inStock",
+    accessorKey: "inStock",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="In Stock"
+        className="justify-end"
+      />
+    ),
+    cell: ({ row }) => <div className="text-right">{row.original.inStock}</div>,
+  },
+  {
+    id: "orders",
+    accessorKey: "orders",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="Orders"
+        className="justify-end"
+      />
+    ),
+    cell: ({ row }) => (
+      <div className="text-right">{row.original._count.orders}</div>
+    ),
+  },
+  {
     id: "status",
     accessorKey: "status",
     header: "Status",
@@ -112,18 +136,6 @@ export const columns: ColumnDef<Product>[] = [
     cell: ({ row }) => (
       <div>{format(new Date(row.original.updatedAt), "Pp")}</div>
     ),
-  },
-  {
-    id: "inStock",
-    accessorKey: "inStock",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title="In Stock"
-        className="justify-end"
-      />
-    ),
-    cell: ({ row }) => <div className="text-right">{row.original.inStock}</div>,
   },
   {
     id: "actions",

@@ -58,6 +58,7 @@ export const SortSelect = () => {
         {!sortValue.sortBy || !sortValue.order ? "Sort" : <SelectValue />}
       </SelectTrigger>
       <SelectContent>
+        <SelectItem value="orders:desc">Most popular</SelectItem>
         <SelectItem value="createdAt:desc">Newest</SelectItem>
         <SelectItem value="price:asc">Price: Low to High</SelectItem>
         <SelectItem value="price:desc">Price: High to Low</SelectItem>

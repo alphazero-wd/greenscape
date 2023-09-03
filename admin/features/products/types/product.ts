@@ -11,6 +11,7 @@ export interface Product {
   createdAt: Date;
   updatedAt: Date;
   images: { id: number }[];
+  _count: { orders: number };
 }
 
 export interface ProductFormDto {

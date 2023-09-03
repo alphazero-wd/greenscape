@@ -3,7 +3,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Button } from "@/features/ui";
 import { useCartStore } from "@/features/cart/contexts";
 import { Product } from "../types";
-import { toast } from "react-hot-toast";
 
 export const AddToCart = ({ product }: { product: Product }) => {
   const { addToCart, updateQty, findCartItem, removeCartItem } = useCartStore();

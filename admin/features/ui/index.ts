@@ -122,6 +122,7 @@ export {
 export { Calendar } from "./calendar";
 export { CopyButton } from "./copy-button";
 export { Dropzone } from "./dropzone";
+export { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
 export { PriceInput } from "./price-input";
 export { Switch } from "./switch";
 export { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs";

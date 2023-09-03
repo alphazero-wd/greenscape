@@ -1,6 +1,16 @@
-import { DataTableColumnHeader } from "@/features/ui";
+import {
+  Badge,
+  Button,
+  CopyButton,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/features/ui";
 import { formatPrice } from "@/features/utils";
+import { ViewfinderCircleIcon } from "@heroicons/react/24/outline";
 import { ColumnDef } from "@tanstack/react-table";
+import { useRouter } from "next/navigation";
 import { Order } from "../types/order";
 import { getCountryName, getPostalAddress, getShippingOption } from "../utils";
 
@@ -14,12 +24,6 @@ export const columns: ColumnDef<Order>[] = [
         {row.original.id}
       </div>
     ),
-  },
-  {
-    id: "customer",
-    accessorKey: "customer",
-    header: "Customer",
-    cell: ({ row }) => <div>{row.original.customer}</div>,
   },
   {
     id: "amount",
@@ -43,11 +47,19 @@ export const columns: ColumnDef<Order>[] = [
     header: "Address",
     cell: ({
       row: {
-        original: { line1, line2, city, postalCode, country, state },
+        original: { line1, line2, city, postalCode, country, state, customer },
       },
     }) => (
       <div className="whitespace-pre-wrap">
-        {getPostalAddress({ line1, line2, city, postalCode, country, state })}
+        {getPostalAddress({
+          line1,
+          line2,
+          city,
+          postalCode,
+          country,
+          state,
+          customer,
+        })}
       </div>
     ),
   },
@@ -60,9 +72,7 @@ export const columns: ColumnDef<Order>[] = [
   {
     id: "shippingCost",
     accessorKey: "shippingCost",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Shipping option" />
-    ),
+    header: "Shipping option",
     cell: ({ row }) => (
       <div className="text-sm text-gray-500">
         {getShippingOption(+row.original.shippingCost)}
@@ -70,11 +80,45 @@ export const columns: ColumnDef<Order>[] = [
     ),
   },
   {
+    id: "status",
+    accessorKey: "deliveredAt",
+    header: "Delivery status",
+    cell: ({ row }) => (
+      <Badge variant={row.original.deliveredAt ? "default" : "secondary"}>
+        {row.original.deliveredAt ? "Delivered" : "Pending"}
+      </Badge>
+    ),
+  },
+  {
     id: "email",
     accessorKey: "email",
-    header: ({ column }) => {
-      return <DataTableColumnHeader column={column} title="Email" />;
-    },
+    header: "Email",
     cell: ({ row }) => <div>{row.original.email}</div>,
+  },
+  {
+    id: "actions",
+    header: () => <div className="text-right">Actions</div>,
+    cell: ({ row }) => {
+      const router = useRouter();
+      return (
+        <div className="flex justify-end">
+          <CopyButton text="Copy payment ID" content={row.original.id} />
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  size="icon"
+                  onClick={() => router.push(`/orders/${row.original.id}`)}
+                  variant="ghost"
+                >
+                  <ViewfinderCircleIcon className="h-5 w-5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>See order</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      );
+    },
   },
 ];

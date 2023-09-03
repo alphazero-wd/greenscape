@@ -5,10 +5,6 @@ import { Breadcrumb } from "@/features/ui";
 import { getCurrentUser } from "@/features/user/utils";
 import { redirect } from "next/navigation";
 
-export const metadata = {
-  title: "Create new product",
-};
-
 interface ProductSettingsPageProps {
   params: {
     id: string;

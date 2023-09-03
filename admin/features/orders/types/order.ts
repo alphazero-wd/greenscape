@@ -1,5 +1,3 @@
-import { Product } from "@/features/products/types";
-
 export interface Order {
   id: string;
   customer: string;
@@ -11,11 +9,23 @@ export interface Order {
   postalCode?: string;
   country?: string;
   phone: string;
-  products: (Product & { qty: number })[];
+  products: OrdersOnProducts[];
   shippingCost: number;
   amount: number;
   createdAt: Date;
   deliveredAt?: Date;
+}
+
+interface OrdersOnProducts {
+  productId: number;
+  orderId: string;
+  qty: number;
+  product: {
+    name: string;
+    price: number;
+    category: { name: string };
+    images: { id: number }[];
+  };
 }
 
 export interface StatusGroup {

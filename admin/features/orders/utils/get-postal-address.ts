@@ -7,6 +7,7 @@ interface Address {
   state?: string;
   postalCode?: string;
   country?: string;
+  customer?: string;
 }
 
 export const getPostalAddress = ({
@@ -16,8 +17,10 @@ export const getPostalAddress = ({
   state,
   postalCode,
   country,
+  customer,
 }: Address) =>
   formatAddress({
+    name: customer,
     postalCountry: country,
     postalCode,
     administrativeArea: state,

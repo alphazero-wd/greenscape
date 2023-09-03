@@ -22,7 +22,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Toaster />
-        <div className="px-4 py-12 sm:px-6 lg:px-8">{children}</div>
+        <div className="h-full px-4 py-12 sm:px-6 lg:px-8">{children}</div>
       </body>
     </html>
   );

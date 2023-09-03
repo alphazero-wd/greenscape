@@ -104,7 +104,20 @@ export class OrdersService {
   findOne(id: string) {
     return this.prisma.order.findUnique({
       where: { id },
-      include: { products: true },
+      include: {
+        products: {
+          include: {
+            product: {
+              select: {
+                name: true,
+                price: true,
+                category: { select: { name: true } },
+                images: { select: { id: true }, orderBy: { id: 'asc' } },
+              },
+            },
+          },
+        },
+      },
     });
   }
 

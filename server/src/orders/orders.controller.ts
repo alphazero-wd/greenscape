@@ -1,8 +1,19 @@
-import { Controller, Get, Body, Patch, Param, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Body,
+  Patch,
+  Param,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { FindManyOrdersDto, UpdateOrderDto } from './dto';
+import { RolesGuard } from '../auth/guards';
+import { Role } from '@prisma/client';
 
 @Controller('orders')
+@UseGuards(RolesGuard(Role.Admin))
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
   @Get()

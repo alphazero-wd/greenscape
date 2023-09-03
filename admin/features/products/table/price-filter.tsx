@@ -29,10 +29,14 @@ export const PriceFilter: React.FC<PriceFilterProps> = ({ table }) => {
 
   useEffect(() => {
     const price = searchParams.get("price");
-    if (!price || isNaN(parseFloat(price))) return;
-    const [min, max] = price.split(",");
-    setMinPrice(min);
-    setMaxPrice(max);
+    if (!price || isNaN(parseFloat(price))) {
+      setMinPrice("");
+      setMaxPrice("");
+    } else {
+      const [min, max] = price.split(",");
+      setMinPrice(min);
+      setMaxPrice(max);
+    }
   }, [searchParams.get("price")]);
 
   const filterProductsByPriceRange = useDebouncedCallback(() => {

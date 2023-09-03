@@ -21,36 +21,40 @@ interface AmountFilterProps {
 }
 
 export const AmountFilter: React.FC<AmountFilterProps> = ({ table }) => {
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
+  const [minAmount, setMinAmount] = useState("");
+  const [maxAmount, setMaxAmount] = useState("");
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const price = searchParams.get("price");
-    if (!price || isNaN(parseFloat(price))) return;
-    const [min, max] = price.split(",");
-    setMinPrice(min);
-    setMaxPrice(max);
-  }, [searchParams.get("price")]);
+    const amountRange = searchParams.get("amountRange");
+    if (!amountRange || isNaN(parseFloat(amountRange))) {
+      setMinAmount("");
+      setMaxAmount("");
+    } else {
+      const [min, max] = amountRange.split(",");
+      setMinAmount(min);
+      setMaxAmount(max);
+    }
+  }, [searchParams.get("amountRange")]);
 
   const filterOrdersByAmountRange = useDebouncedCallback(() => {
     const currentQuery = qs.parse(searchParams.toString());
-    if (minPrice || maxPrice)
-      currentQuery.amountRange = `${minPrice},${maxPrice}`;
+    if (minAmount || maxAmount)
+      currentQuery.amountRange = `${minAmount},${maxAmount}`;
     else delete currentQuery.amountRange;
     table.resetPageIndex();
-    const urlWithPriceRange = qs.stringifyUrl({
+    const urlWithAmountRange = qs.stringifyUrl({
       url: pathname,
       query: currentQuery,
     });
-    router.push(urlWithPriceRange);
+    router.push(urlWithAmountRange);
   }, 1000);
 
   useEffect(() => {
     filterOrdersByAmountRange();
-  }, [minPrice, maxPrice]);
+  }, [minAmount, maxAmount]);
 
   return (
     <Popover>
@@ -58,11 +62,11 @@ export const AmountFilter: React.FC<AmountFilterProps> = ({ table }) => {
         <Button variant="outline" size="sm" className="h-8 border-dashed">
           <PlusCircledIcon className="mr-2 h-4 w-4" />
           Amount
-          {(minPrice || maxPrice) && (
+          {(minAmount || maxAmount) && (
             <span>
-              : {minPrice ? formatPrice(+minPrice) : "Under "}
-              {maxPrice
-                ? (minPrice ? " - " : "") + formatPrice(+maxPrice)
+              : {minAmount ? formatPrice(+minAmount) : "Under "}
+              {maxAmount
+                ? (minAmount ? " - " : "") + formatPrice(+maxAmount)
                 : "+"}
             </span>
           )}
@@ -73,22 +77,22 @@ export const AmountFilter: React.FC<AmountFilterProps> = ({ table }) => {
           <div className="flex-1 space-y-2">
             <Label>Min</Label>
             <PriceInput
-              value={minPrice}
-              onChange={(e) => setMinPrice(e.target.value)}
+              value={minAmount}
+              onChange={(e) => setMinAmount(e.target.value)}
             />
           </div>
           <div className="flex-1 space-y-2">
             <Label>Max</Label>
             <PriceInput
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(e.target.value)}
+              value={maxAmount}
+              onChange={(e) => setMaxAmount(e.target.value)}
             />
           </div>
         </div>
         <Button
           onClick={() => {
-            setMinPrice("");
-            setMaxPrice("");
+            setMinAmount("");
+            setMaxAmount("");
           }}
           className="mt-3 w-full"
         >

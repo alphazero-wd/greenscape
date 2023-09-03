@@ -21,7 +21,7 @@ export const useTable = <TData>(
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [q, setQ] = useState(searchParams.get("q") || "");
+  const [q, setQ] = useState("");
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -35,6 +35,10 @@ export const useTable = <TData>(
     if (limit && !isNaN(parseInt(limit)))
       setPagination({ pageIndex, pageSize: +limit });
   }, [searchParams.get("offset"), searchParams.get("limit")]);
+
+  useEffect(() => {
+    setQ(searchParams.get("q") || "");
+  }, [searchParams.get("q")]);
 
   const pagination = useMemo(
     () => ({

@@ -42,8 +42,8 @@ export const CountriesFilter: React.FC<CountriesFilterProps> = ({
 
   useEffect(() => {
     const countries = searchParams.get("countries");
-    if (!countries) return;
-    setSelectedCountries(countries.split(","));
+    if (!countries) setSelectedCountries([]);
+    else setSelectedCountries(countries.split(","));
   }, [searchParams.get("countries")]);
 
   useEffect(() => {

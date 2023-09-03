@@ -36,8 +36,8 @@ export const StatusFilter: React.FC<StatusFilterProps> = ({
 
   useEffect(() => {
     const currentStatus = searchParams.get("status") as "pending" | "delivered";
-    if (!currentStatus) return;
-    setStatus(currentStatus);
+    if (!currentStatus) setStatus(null);
+    else setStatus(currentStatus);
   }, [searchParams.get("status")]);
 
   useEffect(() => {

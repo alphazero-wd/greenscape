@@ -17,107 +17,102 @@ import { DotFilledIcon, PlusCircledIcon } from "@radix-ui/react-icons";
 import { Table } from "@tanstack/react-table";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import qs from "query-string";
-import { useEffect, useMemo, useState } from "react";
-import { InStockGroup, Product } from "../types";
+import { useEffect, useState } from "react";
+import { Order, ShippingOptionGroup } from "../types";
+import { getShippingOption } from "../utils";
 
-interface InStockFilterProps {
-  inStockGroups: InStockGroup[];
-  table: Table<Product>;
+interface ShippingOptionFilterProps {
+  table: Table<Order>;
+  shippingOptionGroups: ShippingOptionGroup[];
 }
 
-export const InStockFilter: React.FC<InStockFilterProps> = ({
-  inStockGroups,
+export const ShippingOptionFilter: React.FC<ShippingOptionFilterProps> = ({
+  shippingOptionGroups,
   table,
 }) => {
-  const [inStock, setInStock] = useState<boolean | null>(null);
+  const [shippingOption, setShippingOption] = useState<number | null>(null);
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const currentStatus = searchParams.get("inStock");
-    if (!currentStatus) setInStock(null);
-    else setInStock(Boolean(inStock));
-  }, [searchParams.get("inStock")]);
+    const shippingCost = searchParams.get("shippingCost");
+    if (!shippingCost || isNaN(+shippingCost)) setShippingOption(null);
+    else setShippingOption(+shippingCost);
+  }, [searchParams.get("shippingCost")]);
 
   useEffect(() => {
     const currentQuery = qs.parse(searchParams.toString());
-    if (inStock !== null) currentQuery.inStock = String(inStock);
-    else delete currentQuery.inStock;
+    if (shippingOption !== null) {
+      currentQuery.shippingCost = shippingOption.toString();
+    } else delete currentQuery.shippingCost;
     table.resetPageIndex();
-    const urlWithInStockQuery = qs.stringifyUrl({
+    const urlWithShippingOptionQuery = qs.stringifyUrl({
       url: pathname,
       query: currentQuery,
     });
-    router.push(urlWithInStockQuery);
-  }, [inStock]);
-
-  const inStockSum = useMemo(
-    () =>
-      inStockGroups.reduce(
-        (acc, group) => {
-          if (group.inStock === 0) acc[1] += group._count.id;
-          else acc[0] += group._count.id;
-          return acc;
-        },
-        [0, 0],
-      ),
-    [inStockGroups],
-  );
+    router.push(urlWithShippingOptionQuery);
+  }, [shippingOption]);
 
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="outline" size="sm" className="h-8 border-dashed">
           <PlusCircledIcon className="mr-2 h-4 w-4" />
-          Availability
-          {inStock !== null && (
+          Shipping option
+          {shippingOption !== null && (
             <>
               <Separator orientation="vertical" className="mx-2 h-4" />
               <Badge
                 variant="secondary"
-                className="rounded-sm px-1 font-normal"
+                className="rounded-sm px-1 font-normal capitalize"
               >
-                {inStock ? "In stock" : "Out of stock"}
+                {getShippingOption(shippingOption)}
               </Badge>
             </>
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0" align="start">
+      <PopoverContent className="w-[300px] p-0" align="start">
         <Command>
           <CommandList>
             <CommandGroup>
-              {(["In stock", "Out of stock"] as const).map((s, i) => (
+              {([0, 15] as const).map((option) => (
                 <CommandItem
-                  key={s}
-                  onSelect={() => setInStock(s === "In stock")}
+                  key={option}
+                  onSelect={() => setShippingOption(option)}
                 >
                   <div
                     className={cn(
                       "mr-2 h-4 w-4",
-                      !Boolean(i) === inStock
+                      shippingOption === option
                         ? "bg-primary text-primary-foreground"
                         : "opacity-50 [&_svg]:invisible",
                     )}
                   >
                     <DotFilledIcon className="h-4 w-4" />
                   </div>
-                  <span>{s}</span>
-                  {inStockSum[i] > 0 && (
+                  <span>{getShippingOption(option)}</span>
+                  {shippingOptionGroups.find(
+                    (group) => +group.shippingCost === option,
+                  )?._count !== null && (
                     <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
-                      {inStockSum[i]}
+                      {
+                        shippingOptionGroups.find(
+                          (group) => +group.shippingCost === option,
+                        )?._count.id
+                      }
                     </span>
                   )}
                 </CommandItem>
               ))}
             </CommandGroup>
-            {inStock !== null && (
+            {shippingOption !== null && (
               <>
                 <CommandSeparator />
                 <CommandGroup>
                   <CommandItem
-                    onSelect={() => setInStock(null)}
+                    onSelect={() => setShippingOption(null)}
                     className="justify-center text-center"
                   >
                     Clear filters

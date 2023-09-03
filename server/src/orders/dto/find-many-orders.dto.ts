@@ -8,7 +8,7 @@ import {
   IsOptional,
 } from 'class-validator';
 import { FindManyDto } from '../../common/dto';
-import { Transform } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { allowedCountries } from '../../common/utils';
 
 export class FindManyOrdersDto extends OmitType(FindManyDto, [
@@ -40,6 +40,7 @@ export class FindManyOrdersDto extends OmitType(FindManyDto, [
   @IsOptional({ each: true })
   amountRange?: [number, number];
 
+  @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 2, allowInfinity: false, allowNaN: false })
   @IsOptional()
   shippingCost?: number;

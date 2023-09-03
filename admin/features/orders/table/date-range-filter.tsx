@@ -32,14 +32,15 @@ export function DateRangeFilter({ table }: DateRangeFilterProps) {
     if (
       startDate &&
       endDate &&
-      isValid(startDate) &&
-      isValid(endDate) &&
+      isValid(new Date(startDate)) &&
+      isValid(new Date(endDate)) &&
       differenceInCalendarDays(new Date(endDate), new Date(startDate)) > 0
     )
       setDate({
         from: new Date(startDate),
         to: new Date(endDate),
       });
+    else setDate(undefined);
   }, [searchParams.get("startDate"), searchParams.get("endDate")]);
 
   const filterOrdersWithinDateRange = useDebouncedCallback(() => {

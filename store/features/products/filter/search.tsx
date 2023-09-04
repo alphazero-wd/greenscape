@@ -20,8 +20,8 @@ export const Search = () => {
     const currentQuery = qs.parse(searchParams.toString());
     if (q) {
       currentQuery.q = q;
-      currentQuery.offset = "0";
     } else delete currentQuery.q;
+    currentQuery.offset = "0";
 
     const urlWithSearchQuery = qs.stringifyUrl({
       url: "/products",

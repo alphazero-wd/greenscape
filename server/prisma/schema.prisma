@@ -43,7 +43,7 @@ model Product {
   id         Int      @id @default(autoincrement())
   name       String   @unique @db.VarChar(120)
   desc       String
-  price      Decimal  @db.Money
+  price      Float
   inStock    Int
   categoryId Int
   createdAt  DateTime @default(now())
@@ -67,8 +67,8 @@ model Order {
   city         String?
   postalCode   String?
   country      String?
-  amount       Decimal   @default(0) @db.Money
-  shippingCost Decimal   @default(0) @db.Money
+  total        Int
+  shippingCost Int
   createdAt    DateTime  @default(now())
   deliveredAt  DateTime?
 

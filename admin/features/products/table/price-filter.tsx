@@ -29,13 +29,13 @@ export const PriceFilter: React.FC<PriceFilterProps> = ({ table }) => {
 
   useEffect(() => {
     const price = searchParams.get("price");
-    if (!price || isNaN(parseFloat(price))) {
+    if (price) {
+      const [min, max] = price.split(",");
+      setMinPrice(!isNaN(+min) ? min : "");
+      setMaxPrice(!isNaN(+max) ? max : "");
+    } else {
       setMinPrice("");
       setMaxPrice("");
-    } else {
-      const [min, max] = price.split(",");
-      setMinPrice(min);
-      setMaxPrice(max);
     }
   }, [searchParams.get("price")]);
 

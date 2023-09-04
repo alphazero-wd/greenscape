@@ -56,7 +56,7 @@ export class CheckoutService implements OnModuleInit {
         country,
         city,
         postalCode: postal_code,
-        amount: +(session.amount_total / 100).toFixed(2),
+        total: +(session.amount_total / 100).toFixed(2),
         phone: session.customer_details.phone,
         email: session.customer_details.email,
         cart: productIds.map((id, index) => ({
@@ -69,7 +69,7 @@ export class CheckoutService implements OnModuleInit {
       for (let index in productIds) {
         const product = await this.productsService.findOne(productIds[index]);
         await this.productsService.update(product.id, {
-          inStock: product.id - quantities[index],
+          inStock: product.inStock - quantities[index],
         });
       }
     }

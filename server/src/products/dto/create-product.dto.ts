@@ -16,8 +16,8 @@ export class CreateProductDto {
   @IsString()
   desc: string;
 
-  @IsNumber({ maxDecimalPlaces: 2 })
-  @Min(0)
+  @IsNumber({ allowInfinity: false, allowNaN: false, maxDecimalPlaces: 2 })
+  @Min(0.01)
   price: number;
 
   @IsInt()

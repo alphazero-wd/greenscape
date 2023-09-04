@@ -3,7 +3,7 @@ export interface CreateOrderDto {
   customer: string;
   email: string;
   phone: string;
-  amount: number;
+  total: number;
   shippingCost: number;
   line1?: string;
   line2?: string;

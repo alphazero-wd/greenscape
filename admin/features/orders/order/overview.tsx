@@ -28,7 +28,7 @@ export const OrderOverview: React.FC<OrderOverviewProps> = ({ order }) => {
       <div>
         <Label className="mb-2 block font-normal text-gray-500">Customer</Label>
         <HoverCard>
-          <HoverCardTrigger className="cursor-pointer text-sm font-medium text-blue-500 hover:text-gray-900">
+          <HoverCardTrigger className="cursor-pointer text-sm font-medium text-green-500 hover:text-gray-900">
             {order.customer}
           </HoverCardTrigger>
           <HoverCardContent>

@@ -28,7 +28,7 @@ export const ImagesGallery: React.FC<ImagesGalleryProps> = ({ product }) => {
             onClick={() => setPos(i)}
             className={cn(
               "cursor-pointer",
-              pos === i && "h-fit rounded ring-2 ring-blue-500 ring-offset-2",
+              pos === i && "h-fit rounded ring-2 ring-green-500 ring-offset-2",
             )}
             key={image.id}
           >

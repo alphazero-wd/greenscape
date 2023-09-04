@@ -34,7 +34,7 @@ export const AddToCart = ({ product }: { product: Product }) => {
   }, [existingQty]);
 
   if (product.inStock === 0)
-    return <div className="mt-6 text-sm">Out of stock</div>;
+    return <div className="mt-6 text-red-600 font-semibold">Out of stock</div>;
   if (existingQty === 0)
     return (
       <Button
@@ -48,9 +48,9 @@ export const AddToCart = ({ product }: { product: Product }) => {
 
   return (
     <div className="mt-6">
-      <div className="flex justify-between w-1/2 items-center rounded-full p-1 bg-blue-500">
+      <div className="flex justify-between w-1/2 items-center rounded-full p-1 bg-green-500">
         <Button
-          className="bg-transparent font-normal hover:bg-blue-800 rounded-full text-2xl"
+          className="bg-transparent font-normal hover:bg-green-800 rounded-full text-2xl"
           size="icon"
           onClick={() => {
             if (qty === 1) removeCartItem(product.id);
@@ -64,7 +64,7 @@ export const AddToCart = ({ product }: { product: Product }) => {
         </span>
         <Button
           disabled={rem === 0}
-          className="bg-transparent font-normal hover:bg-blue-800 rounded-full text-2xl"
+          className="bg-transparent font-normal hover:bg-green-800 rounded-full text-2xl"
           size="icon"
           onClick={() => updateQty(product.id, qty + 1)}
         >

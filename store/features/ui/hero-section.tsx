@@ -12,12 +12,12 @@ export const HeroSection = () => {
           <div className="mb-8 lg:mb-0 md:max-w-none max-w-2xl">
             <div className="pr-16">
               <h1 className="text-4xl md:text-5xl text-gray-900 tracking-tight font-bold">
-                Let's shop, let's play, let's smile all day!
+                Add Life to Your Home with our Plants
               </h1>
               <p className="text-md text-gray-500 mt-4">
-                Our e-commerce store is all about happy shopping! We've got
-                playful and trendy products that will put a smile on your face.
-                Join us and let's shop for some happiness!
+                Discover our curated selection of indoor and outdoor plants in
+                various sizes, colors, and shapes. Easy to care for, our
+                high-quality plants add vibrant energy to any living space.
               </p>
               <div className="mt-6">
                 <Button className="text-base px-12" size="lg" asChild>
@@ -28,7 +28,7 @@ export const HeroSection = () => {
           </div>
 
           <Image
-            src="/hero-image.jpg"
+            src="/hero-image.png"
             alt="Hero image"
             width={1024}
             height={1024}

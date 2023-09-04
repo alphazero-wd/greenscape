@@ -4,8 +4,10 @@ import {
   ArrayMinSize,
   IsDateString,
   IsIn,
+  IsInt,
   IsNumber,
   IsOptional,
+  Min,
 } from 'class-validator';
 import { FindManyDto } from '../../common/dto';
 import { Transform, Type } from 'class-transformer';
@@ -37,8 +39,7 @@ export class FindManyOrdersDto extends OmitType(FindManyDto, [
     { allowInfinity: false, allowNaN: false, maxDecimalPlaces: 2 },
     { each: true },
   )
-  @IsOptional({ each: true })
-  amountRange?: [number, number];
+  totalRange?: [number, number];
 
   @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 2, allowInfinity: false, allowNaN: false })

@@ -8,11 +8,11 @@ export const AddToCart = ({ product }: { product: Product }) => {
   const rem = useMemo(() => product.inStock - qty, [product.inStock, qty]);
 
   if (product.inStock === 0)
-    return <div className="mt-6 text-sm">Out of stock</div>;
+    return <div className="mt-6 font-semibold text-red-600">Out of stock</div>;
   if (qty === 0)
     return (
       <Button
-        className="mt-6 w-1/2 rounded-full bg-blue-500 hover:bg-blue-400"
+        className="mt-6 w-1/2 rounded-full bg-green-500 hover:bg-green-400"
         size="lg"
         onClick={() => setQty(1)}
       >
@@ -22,9 +22,9 @@ export const AddToCart = ({ product }: { product: Product }) => {
 
   return (
     <div className="mt-6">
-      <div className="flex w-1/2 items-center justify-between rounded-full bg-blue-500 p-1">
+      <div className="flex w-1/2 items-center justify-between rounded-full bg-green-500 p-1">
         <Button
-          className="rounded-full bg-transparent text-2xl font-normal hover:bg-blue-800"
+          className="rounded-full bg-transparent text-2xl font-normal hover:bg-green-800"
           size="icon"
           onClick={() => setQty(qty - 1)}
         >
@@ -35,7 +35,7 @@ export const AddToCart = ({ product }: { product: Product }) => {
         </span>
         <Button
           disabled={rem === 0}
-          className="rounded-full bg-transparent text-2xl font-normal hover:bg-blue-800"
+          className="rounded-full bg-transparent text-2xl font-normal hover:bg-green-800"
           size="icon"
           onClick={() => setQty(qty + 1)}
         >

@@ -24,7 +24,7 @@ export const useTable = <TData>(
   const [q, setQ] = useState("");
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 10,
+    pageSize: 1,
   });
 
   useEffect(() => {

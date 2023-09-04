@@ -1,17 +1,17 @@
 const testimonials = [
   {
     comment:
-      "I couldn't be happier with my experience shopping at this e-commerce website! The process was seamless and easy, and the products arrived quickly and in perfect condition.",
+      "I couldn't be happier with my experience ordering from Greenify. The website is user-friendly and made it easy for me to find the perfect plants for my home. The plants arrived in excellent condition and have truly brightened up my space.",
     author: "Sarah Peters, New Orleans",
   },
   {
     comment:
-      "I was a little hesitant to try shopping online, but I'm so glad I did! The customer service was fantastic and I was able to find exactly what I was looking for. I highly recommend this site to anyone.",
+      "Greenify has transformed my living space into a lush oasis. Their collection of rare and exotic plants is unmatched, and their knowledgeable team is always available to answer any questions I have. Thank you, Greenify, for bringing life and beauty into my home.",
     author: "Kelly McPherson, Chicago",
   },
   {
     comment:
-      "This e-commerce website has become my go-to for all my shopping needs. The prices are great and the quality of the products is outstanding. I highly recommend it to anyone who wants a hassle-free shopping experience.",
+      "I was hesitant to order plants online, but Greenify exceeded my expectations. The selection is impressive, and the customer service is top-notch. I even received a personalized care guide for each plant I ordered, which was incredibly helpful.",
     author: "Chris Paul, Phoenix",
   },
 ];

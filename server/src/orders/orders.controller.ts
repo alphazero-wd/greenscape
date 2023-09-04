@@ -36,4 +36,10 @@ export class OrdersController {
     const deliveredOrder = await this.ordersService.update(id, { deliveredAt });
     return { data: deliveredOrder, success: true };
   }
+
+  @Get('stats/key')
+  async getMonthKeyStats() {
+    const stats = await this.ordersService.generateMonthKeyStats();
+    return { data: stats, success: true };
+  }
 }

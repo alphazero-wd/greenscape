@@ -21,7 +21,7 @@ interface ProductsPageProps {
     q?: string;
     status?: "Active" | "Draft";
     categoryIds?: string;
-    price?: string;
+    price?: number;
     inStock?: string;
   };
 }

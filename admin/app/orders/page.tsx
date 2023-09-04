@@ -14,7 +14,7 @@ interface OrdersPageProps {
     limit?: string;
     offset?: string;
     q?: string;
-    amountRange?: string;
+    totalRange?: string;
     startDate?: string;
     endDate?: string;
     countries?: string;
@@ -28,7 +28,7 @@ export default async function OrdersPage({
     limit = "10",
     offset = "0",
     q,
-    amountRange,
+    totalRange,
     startDate,
     endDate,
     countries,
@@ -45,7 +45,7 @@ export default async function OrdersPage({
       limit,
       offset,
       q,
-      amountRange,
+      totalRange,
       startDate,
       endDate,
       countries,

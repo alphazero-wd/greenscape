@@ -42,7 +42,7 @@ export default async function OrderPage({ params: { id } }: OrderPageProps) {
         <div className="mt-8">
           <div className="space-y-1">
             <h2 className="text-2xl font-bold leading-none tracking-tight">
-              {formatPrice(order.amount)}
+              {formatPrice(order.total)}
             </h2>
             <p className="text-sm text-gray-500">
               Payment ID: <span className="font-mono">{order.id}</span>

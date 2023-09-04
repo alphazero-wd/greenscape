@@ -17,10 +17,7 @@ export class FindManyProductsDto extends FindManyDto {
   )
   @ArrayMinSize(2)
   @ArrayMaxSize(2)
-  @IsNumber(
-    { allowInfinity: false, allowNaN: false, maxDecimalPlaces: 2 },
-    { each: true },
-  )
+  @IsNumber({ allowInfinity: false, allowNaN: false }, { each: true })
   @IsOptional({ each: true })
   price?: [number, number];
 

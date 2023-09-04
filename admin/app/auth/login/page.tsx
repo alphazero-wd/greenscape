@@ -14,10 +14,10 @@ export default async function LoginPage() {
   return (
     <div className="flex h-full items-center justify-center">
       <Card className="w-[500px]">
+        <CardHeader>
+          <CardTitle>Log in to admin dashboard</CardTitle>
+        </CardHeader>
         <CardContent>
-          <CardHeader>
-            <CardTitle>Log in to admin dashboard</CardTitle>
-          </CardHeader>
           <LoginForm />
         </CardContent>
       </Card>

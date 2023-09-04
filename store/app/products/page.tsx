@@ -69,7 +69,7 @@ export default async function ProductsPage({
             Products
           </h1>
           <p className="text-gray-500">
-            Check out the latest release of iPhone 14 Pro Max, a new powerhouse!
+            Unleash the Jungle in Your Home with Monstera Deliciosa!
           </p>
         </div>
         <div className="pt-12 lg:flex relative pb-24">

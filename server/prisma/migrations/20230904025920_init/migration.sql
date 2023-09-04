@@ -42,10 +42,43 @@ CREATE TABLE "Product" (
     "id" SERIAL NOT NULL,
     "name" VARCHAR(120) NOT NULL,
     "desc" TEXT NOT NULL,
+    "price" INTEGER NOT NULL,
+    "inStock" INTEGER NOT NULL,
     "categoryId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
     "status" "Status" NOT NULL DEFAULT 'Active',
 
     CONSTRAINT "Product_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Order" (
+    "id" TEXT NOT NULL,
+    "customer" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "phone" TEXT NOT NULL,
+    "line1" TEXT,
+    "line2" TEXT,
+    "state" TEXT,
+    "city" TEXT,
+    "postalCode" TEXT,
+    "country" TEXT,
+    "total" INTEGER NOT NULL,
+    "shippingCost" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "deliveredAt" TIMESTAMP(3),
+
+    CONSTRAINT "Order_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "OrdersOnProducts" (
+    "productId" INTEGER NOT NULL,
+    "orderId" TEXT NOT NULL,
+    "qty" INTEGER NOT NULL,
+
+    CONSTRAINT "OrdersOnProducts_pkey" PRIMARY KEY ("productId","orderId")
 );
 
 -- CreateIndex
@@ -59,3 +92,9 @@ ALTER TABLE "File" ADD CONSTRAINT "File_productId_fkey" FOREIGN KEY ("productId"
 
 -- AddForeignKey
 ALTER TABLE "Product" ADD CONSTRAINT "Product_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "OrdersOnProducts" ADD CONSTRAINT "OrdersOnProducts_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "OrdersOnProducts" ADD CONSTRAINT "OrdersOnProducts_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

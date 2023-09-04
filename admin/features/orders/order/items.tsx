@@ -70,7 +70,7 @@ export const OrderItems = ({ order }: { order: Order }) => {
                 {formatPrice(order.shippingCost)}
               </li>
               <li className="font-medium text-gray-900">
-                {formatPrice(order.amount)}
+                {formatPrice(order.total)}
               </li>
             </ul>
           </TableCell>

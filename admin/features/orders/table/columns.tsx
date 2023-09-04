@@ -26,12 +26,12 @@ export const columns: ColumnDef<Order>[] = [
     ),
   },
   {
-    id: "amount",
-    accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
+    id: "total",
+    accessorKey: "total",
+    header: () => <div className="text-right">Total</div>,
     cell: ({ row }) => (
       <div className="text-right font-medium">
-        {formatPrice(row.original.amount)}
+        {formatPrice(row.original.total)}
       </div>
     ),
   },

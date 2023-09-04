@@ -16,57 +16,57 @@ import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { Order } from "../types";
 
-interface AmountFilterProps {
+interface TotalFilterProps {
   table: Table<Order>;
 }
 
-export const AmountFilter: React.FC<AmountFilterProps> = ({ table }) => {
-  const [minAmount, setMinAmount] = useState("");
-  const [maxAmount, setMaxAmount] = useState("");
+export const TotalFilter: React.FC<TotalFilterProps> = ({ table }) => {
+  const [minTotal, setMinTotal] = useState("");
+  const [maxTotal, setMaxTotal] = useState("");
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const amountRange = searchParams.get("amountRange");
-    if (!amountRange || isNaN(parseFloat(amountRange))) {
-      setMinAmount("");
-      setMaxAmount("");
+    const totalRange = searchParams.get("totalRange");
+    if (!totalRange) {
+      setMinTotal("");
+      setMaxTotal("");
     } else {
-      const [min, max] = amountRange.split(",");
-      setMinAmount(min);
-      setMaxAmount(max);
+      const [min, max] = totalRange.split(",");
+      setMinTotal(!isNaN(+min) ? min : "");
+      setMaxTotal(!isNaN(+max) ? max : "");
     }
-  }, [searchParams.get("amountRange")]);
+  }, [searchParams.get("totalRange")]);
 
-  const filterOrdersByAmountRange = useDebouncedCallback(() => {
+  const filterOrdersByTotalRange = useDebouncedCallback(() => {
     const currentQuery = qs.parse(searchParams.toString());
-    if (minAmount || maxAmount)
-      currentQuery.amountRange = `${minAmount},${maxAmount}`;
-    else delete currentQuery.amountRange;
+    if (minTotal || maxTotal)
+      currentQuery.totalRange = `${minTotal},${maxTotal}`;
+    else delete currentQuery.totalRange;
     table.resetPageIndex();
-    const urlWithAmountRange = qs.stringifyUrl({
+    const urlWithTotalRange = qs.stringifyUrl({
       url: pathname,
       query: currentQuery,
     });
-    router.push(urlWithAmountRange);
+    router.push(urlWithTotalRange);
   }, 1000);
 
   useEffect(() => {
-    filterOrdersByAmountRange();
-  }, [minAmount, maxAmount]);
+    filterOrdersByTotalRange();
+  }, [minTotal, maxTotal]);
 
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="outline" size="sm" className="h-8 border-dashed">
           <PlusCircledIcon className="mr-2 h-4 w-4" />
-          Amount
-          {(minAmount || maxAmount) && (
+          Total
+          {(minTotal || maxTotal) && (
             <span>
-              : {minAmount ? formatPrice(+minAmount) : "Under "}
-              {maxAmount
-                ? (minAmount ? " - " : "") + formatPrice(+maxAmount)
+              : {minTotal ? formatPrice(+minTotal) : "Under "}
+              {maxTotal
+                ? (minTotal ? " - " : "") + formatPrice(+maxTotal)
                 : "+"}
             </span>
           )}
@@ -77,22 +77,22 @@ export const AmountFilter: React.FC<AmountFilterProps> = ({ table }) => {
           <div className="flex-1 space-y-2">
             <Label>Min</Label>
             <PriceInput
-              value={minAmount}
-              onChange={(e) => setMinAmount(e.target.value)}
+              value={minTotal}
+              onChange={(e) => setMinTotal(e.target.value)}
             />
           </div>
           <div className="flex-1 space-y-2">
             <Label>Max</Label>
             <PriceInput
-              value={maxAmount}
-              onChange={(e) => setMaxAmount(e.target.value)}
+              value={maxTotal}
+              onChange={(e) => setMaxTotal(e.target.value)}
             />
           </div>
         </div>
         <Button
           onClick={() => {
-            setMinAmount("");
-            setMaxAmount("");
+            setMinTotal("");
+            setMaxTotal("");
           }}
           className="mt-3 w-full"
         >

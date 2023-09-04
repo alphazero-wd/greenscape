@@ -16,12 +16,12 @@ import {
   ShippingOptionGroup,
   StatusGroup,
 } from "../types";
-import { AmountFilter } from "./amount-filter";
 import { columns } from "./columns";
 import { CountriesFilter } from "./countries-filter";
 import { DateRangeFilter } from "./date-range-filter";
 import { ShippingOptionFilter } from "./shipping-options-filter";
 import { StatusFilter } from "./status-filter";
+import { TotalFilter } from "./total-filter";
 
 interface OrdersTableProps {
   orders: Order[];
@@ -46,7 +46,7 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({
     delete currentQuery.shippingCost;
     delete currentQuery.startDate;
     delete currentQuery.endDate;
-    delete currentQuery.amountRange;
+    delete currentQuery.totalRange;
     delete currentQuery.status;
     delete currentQuery.countries;
     delete currentQuery.q;
@@ -71,7 +71,7 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({
           <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
             <CountriesFilter table={table} countryGroups={countryGroups} />
             <DateRangeFilter table={table} />
-            <AmountFilter table={table} />
+            <TotalFilter table={table} />
             <StatusFilter statusGroups={statusGroups} table={table} />
             <ShippingOptionFilter
               shippingOptionGroups={shippingOptionGroups}
@@ -80,7 +80,7 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({
             {(searchParams.get("countries") ||
               searchParams.get("startDate") ||
               searchParams.get("endDate") ||
-              searchParams.get("amountRange") ||
+              searchParams.get("totalRange") ||
               searchParams.get("status") ||
               searchParams.get("q") ||
               searchParams.get("shippingCost")) && (

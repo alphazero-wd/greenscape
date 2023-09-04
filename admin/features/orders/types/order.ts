@@ -11,7 +11,7 @@ export interface Order {
   phone: string;
   products: OrdersOnProducts[];
   shippingCost: number;
-  amount: number;
+  total: number;
   createdAt: Date;
   deliveredAt?: Date;
 }

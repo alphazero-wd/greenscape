@@ -1,6 +1,8 @@
+import { getKeyStats } from "@/features/dashboard/actions";
+import { KeyStats } from "@/features/dashboard/key-stats";
+import { getCurrentUser } from "@/features/user/utils";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { getCurrentUser } from "../features/user/utils";
 
 export const metadata: Metadata = {
   title: "Admin | Dashboard",
@@ -10,6 +12,11 @@ export const metadata: Metadata = {
 export default async function DashboardPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/auth/login");
+  const keyStats = await getKeyStats();
 
-  return <h1>Dashboard</h1>;
+  return (
+    <div className="container max-w-7xl">
+      <KeyStats keyStats={keyStats} />
+    </div>
+  );
 }

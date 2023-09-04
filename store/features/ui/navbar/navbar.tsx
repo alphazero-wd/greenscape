@@ -24,7 +24,7 @@ export const Navbar = () => {
             {navLinks.map((link) => (
               <Link
                 href={link.href}
-                className="font-semibold block h-16 pt-5 text-sm hover:border-b-2 hover:border-blue-500 text-gray-900"
+                className="font-semibold block h-16 pt-5 text-sm hover:border-b-2 hover:border-green-500 text-gray-900"
                 key={link.name}
               >
                 {link.name}
@@ -36,14 +36,14 @@ export const Navbar = () => {
           {/* <div className="lg:flex hidden h-5 space-x-6">
             <Link
               href="/auth/signin"
-              className="font-semibold h-[2.625rem] block text-sm hover:border-b-2 hover:border-b-blue-500"
+              className="font-semibold h-[2.625rem] block text-sm hover:border-b-2 hover:border-b-green-500"
             >
               Sign in
             </Link>
             <Separator orientation="vertical" />
             <Link
               href="auth/create-account"
-              className="font-semibold h-[2.625rem] block text-sm hover:border-b-2 hover:border-b-blue-500"
+              className="font-semibold h-[2.625rem] block text-sm hover:border-b-2 hover:border-b-green-500"
             >
               Create account
             </Link>

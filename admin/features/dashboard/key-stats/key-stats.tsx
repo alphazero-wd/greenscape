@@ -1,5 +1,12 @@
-import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  BanknotesIcon,
+  CreditCardIcon,
+  CurrencyDollarIcon,
+} from "@heroicons/react/24/outline";
 import { useMemo } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "../../ui";
 import { formatPrice } from "../../utils";
 import { KeyStats as IKeyStats } from "../types";
 import { getGrowthRate } from "../utils";
@@ -36,18 +43,21 @@ export const KeyStats = ({
         curMonth: formatPrice(curMonthRevenue),
         prevMonth: formatPrice(prevMonthRevenue),
         rate: revenueGrowthRate,
+        icon: CurrencyDollarIcon,
       },
       {
         term: "Total Sales",
         curMonth: curMonthProductSales,
         prevMonth: prevMonthProductSales,
         rate: salesGrowthRate,
+        icon: CreditCardIcon,
       },
       {
         term: "Avg. Order Price",
         curMonth: formatPrice(curMonthAvgOrder),
         prevMonth: formatPrice(prevMonthAvgOrder),
         rate: avgOrderGrowthRate,
+        icon: BanknotesIcon,
       },
     ],
     [
@@ -65,40 +75,47 @@ export const KeyStats = ({
       <h3 className="text-base font-semibold leading-6 text-gray-900">
         This month
       </h3>
-      <dl className="mt-5 grid divide-gray-200 overflow-hidden rounded-lg shadow md:grid-cols-3 md:divide-x md:divide-y">
+      <dl className="mt-5 grid md:grid-cols-3 md:gap-x-4">
         {stats.map((stat) => (
-          <div key={stat.term} className="px-4 py-5 sm:p-6">
-            <dt className="text-base font-normal text-gray-900">{stat.term}</dt>
-            <dd className="mt-1 flex items-baseline justify-between md:block lg:flex">
-              <div className="flex items-baseline">
+          <Card key={stat.term}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-base font-medium">
+                {stat.term}
+              </CardTitle>
+              <stat.icon className="h-5 w-5 text-gray-500" />
+            </CardHeader>
+            <CardContent className="mt-1">
+              <div className="flex items-center justify-between">
                 <span className="text-2xl font-semibold text-gray-900">
                   {stat.curMonth}
                 </span>
-                <span className="ml-2 text-sm font-medium text-gray-500">
-                  from {stat.prevMonth}
-                </span>
-              </div>
-              {isFinite(stat.rate) && (
-                <>
-                  {+stat.rate > 0 && (
-                    <div className="inline-flex items-baseline rounded-full bg-green-100 px-2.5 py-0.5 text-sm font-medium text-green-800 md:mt-2 lg:mt-0">
-                      <ArrowUpIcon className="-ml-1 mr-0.5 h-4 w-4 flex-shrink-0 self-center text-green-500" />
-                      <span className="sr-only">Increased by</span>
-                      {Math.abs(stat.rate).toFixed(2)}%
-                    </div>
-                  )}
+                <div className="ml-2">
+                  {isFinite(stat.rate) && (
+                    <>
+                      {+stat.rate > 0 && (
+                        <div className="inline-flex items-baseline rounded-full bg-green-100 px-2.5 py-0.5 text-sm font-medium text-green-800 md:mt-2 lg:mt-0">
+                          <ArrowUpIcon className="-ml-1 mr-0.5 h-4 w-4 flex-shrink-0 self-center text-green-500" />
+                          <span className="sr-only">Increased by</span>
+                          {Math.abs(stat.rate).toFixed(2)}%
+                        </div>
+                      )}
 
-                  {+stat.rate < 0 && (
-                    <div className="inline-flex items-baseline rounded-full bg-red-100 px-2.5 py-0.5 text-sm font-medium text-red-800 md:mt-2 lg:mt-0">
-                      <ArrowDownIcon className="-ml-1 mr-0.5 h-4 w-4 flex-shrink-0 self-center text-red-500" />
-                      <span className="sr-only">Decreased by</span>
-                      {Math.abs(stat.rate).toFixed(2)}%
-                    </div>
+                      {+stat.rate < 0 && (
+                        <div className="inline-flex items-baseline rounded-full bg-red-100 px-2.5 py-0.5 text-sm font-medium text-red-800 md:mt-2 lg:mt-0">
+                          <ArrowDownIcon className="-ml-1 mr-0.5 h-4 w-4 flex-shrink-0 self-center text-red-500" />
+                          <span className="sr-only">Decreased by</span>
+                          {Math.abs(stat.rate).toFixed(2)}%
+                        </div>
+                      )}
+                    </>
                   )}
-                </>
-              )}
-            </dd>
-          </div>
+                </div>
+              </div>
+              <div className="mt-1 text-sm font-medium text-gray-500">
+                from {stat.prevMonth}
+              </div>
+            </CardContent>
+          </Card>
         ))}
       </dl>
     </div>

@@ -6,11 +6,13 @@ import {
   Param,
   Query,
   UseGuards,
+  BadRequestException,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { FindManyOrdersDto, UpdateOrderDto } from './dto';
 import { RolesGuard } from '../auth/guards';
 import { Role } from '@prisma/client';
+import { isValid } from 'date-fns';
 
 @Controller('orders')
 @UseGuards(RolesGuard(Role.Admin))
@@ -35,11 +37,5 @@ export class OrdersController {
   ) {
     const deliveredOrder = await this.ordersService.update(id, { deliveredAt });
     return { data: deliveredOrder, success: true };
-  }
-
-  @Get('stats/key')
-  async getMonthKeyStats() {
-    const stats = await this.ordersService.generateMonthKeyStats();
-    return { data: stats, success: true };
   }
 }

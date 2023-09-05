@@ -18,8 +18,8 @@ const testimonials = [
 
 export const Testimonials = () => {
   return (
-    <section className="sm:pt-32 sm:px-6 pt-24 px-4 max-w-7xl container">
-      <div className="max-w-2xl lg:max-w-none mx-auto">
+    <section className="sm:pt-32 pt-24">
+      <div className="max-w-2xl sm:px-6 px-4 lg:px-8 lg:max-w-7xl container">
         <h2 className="text-gray-900 tracking-tight font-bold text-2xl">
           What are people saying?
         </h2>

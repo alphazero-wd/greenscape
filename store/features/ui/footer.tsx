@@ -30,7 +30,7 @@ export const Footer = () => {
 
         <div className="md:order-1 mt-8 md:mt-0">
           <p className="text-gray-500 leading-5 text-xs text-center">
-            &copy; {new Date().getFullYear()} Salesmile, Inc. All rights
+            &copy; {new Date().getFullYear()} Greenify, Inc. All rights
             reserved.
           </p>
         </div>

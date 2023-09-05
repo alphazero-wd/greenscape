@@ -1,12 +1,12 @@
 "use client";
 import Link from "next/link";
-import { Logo } from "./logo";
-import { navLinks } from "./utils";
-import { Separator } from "../separator";
-import { ProfileMenu } from "./profile-menu";
+import { navLinks } from "./links-data";
 import { ShoppingBagIcon } from "@heroicons/react/24/outline";
 import { useCartStore } from "@/features/cart/contexts";
 import { useEffect, useState } from "react";
+import { MobileNavMenu } from "./mobile-nav-menu";
+import { DesktopLogo, MobileLogo } from "../logo";
+import { Links } from "./links";
 
 export const Navbar = () => {
   const [mounted, setMounted] = useState(false);
@@ -16,23 +16,22 @@ export const Navbar = () => {
   if (!mounted) return null;
 
   return (
-    <nav className="bg-white w-full container max-w-7xl px-4 sm:px-6 lg:px-8">
+    <nav className="bg-white relative w-full container max-w-7xl px-4 sm:px-6 lg:px-8">
       <div className="flex h-16 justify-between items-center border-b border-gray-300">
         <div className="flex items-center gap-x-8">
-          <Logo />
+          <Link href="/" className="-ml-2">
+            <div className="lg:hidden">
+              <MobileLogo />
+            </div>
+            <div className="lg:block hidden">
+              <DesktopLogo />
+            </div>
+          </Link>
           <div className="items-center h-16 gap-x-8 hidden sm:flex">
-            {navLinks.map((link) => (
-              <Link
-                href={link.href}
-                className="font-semibold block h-16 pt-5 text-sm hover:border-b-2 hover:border-green-500 text-gray-900"
-                key={link.name}
-              >
-                {link.name}
-              </Link>
-            ))}
+            <Links />
           </div>
         </div>
-        <div className="flex items-center gap-x-8">
+        <div className="flex items-center gap-x-6">
           {/* <div className="lg:flex hidden h-5 space-x-6">
             <Link
               href="/auth/signin"
@@ -56,6 +55,7 @@ export const Navbar = () => {
               {getTotalQty()}
             </span>
           </Link>
+          <MobileNavMenu />
         </div>
       </div>
     </nav>

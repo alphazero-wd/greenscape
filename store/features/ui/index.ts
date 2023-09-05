@@ -52,3 +52,4 @@ export {
 } from "./select";
 export { Toaster } from "./toaster";
 export { Skeleton } from "./skeleton";
+export { MobileLogo, DesktopLogo } from "./logo";

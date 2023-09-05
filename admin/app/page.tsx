@@ -34,6 +34,8 @@ export default async function DashboardPage({
 
   return (
     <div className="container max-w-7xl">
+
+      <h2 className="text-2xl font-bold tracking-tight sm:text-3xl mb-4">Dashboard</h2>
       <KeyStats keyStats={keyStats} />
       <div className="mt-4 grid gap-4 md:grid-cols-3">
         <RevenuesChart

@@ -45,7 +45,7 @@ export const RevenuesChart = ({
   return (
     <Card className="col-span-2">
       <CardHeader>
-        <CardTitle className="flex items-center justify-between">
+        <CardTitle className="flex items-center justify-between text-base">
           Overview
           <YearsSelect startYear={startYear} endYear={endYear} />
         </CardTitle>

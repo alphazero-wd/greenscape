@@ -57,7 +57,7 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({
   return (
     <div className="space-y-4">
       <div className="flex justify-between">
-        <div className="flex flex-col items-center gap-x-2 gap-y-4 lg:flex-1 lg:flex-row">
+        <div className="flex flex-col gap-x-2 gap-y-4 lg:flex-1 lg:flex-row">
           <Input
             value={q}
             onChange={(e) => setQ(e.target.value)}

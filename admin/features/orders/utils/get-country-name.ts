@@ -7,6 +7,7 @@ export const getCountryName = (code: string) => {
       name: "United Kingdom",
     },
     { code: "US", name: "United States" },
+    { code: "VN", name: "Vietnam" },
   ]);
 
   return getName(code);

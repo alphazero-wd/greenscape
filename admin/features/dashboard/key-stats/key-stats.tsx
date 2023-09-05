@@ -75,7 +75,7 @@ export const KeyStats = ({
       <h3 className="text-base font-semibold leading-6 text-gray-900">
         This month
       </h3>
-      <dl className="mt-5 grid md:grid-cols-3 md:gap-x-4">
+      <dl className="mt-5 grid gap-4 md:grid-cols-3">
         {stats.map((stat) => (
           <Card key={stat.term}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

@@ -9,7 +9,7 @@ export const FavoritesSection = async () => {
   );
 
   return (
-    <section className="sm:pt-32 sm:px-6 pt-24 px-4 max-w-7xl container">
+    <section className="sm:pt-32 lg:px-8 sm:px-6 pt-24 px-4 max-w-2xl lg:max-w-7xl container">
       <div className="sm:flex sm:justify-between sm:items-baseline">
         <h2 className="text-gray-900 tracking-tight font-bold text-2xl">
           Our Favorites
@@ -24,7 +24,10 @@ export const FavoritesSection = async () => {
         </Link>
       </div>
 
-      <ProductList products={favoriteProducts} className="mt-6" />
+      <ProductList
+        products={favoriteProducts}
+        className="mt-6 lg:grid-cols-4 md:grid-cols-2"
+      />
       <Link
         className="mt-6 block text-green-500 font-semibold text-sm sm:hidden hover:text-green-400"
         href="/products"

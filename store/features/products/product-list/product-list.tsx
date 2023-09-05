@@ -13,7 +13,12 @@ export const ProductList: React.FC<ProductListProps> = ({
   className,
 }) => {
   return (
-    <div className={cn("grid sm:grid-cols-3 gap-y-10 gap-x-6", className)}>
+    <div
+      className={cn(
+        "grid md:grid-cols-2 lg:grid-cols-4 gap-y-10 gap-x-6",
+        className
+      )}
+    >
       {products.map((product) => (
         <ProductItem key={product.id} product={product} />
       ))}

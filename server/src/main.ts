@@ -17,7 +17,6 @@ async function bootstrap() {
     origin: [
       configService.get('CORS_ORIGIN_ADMIN'),
       configService.get('CORS_ORIGIN_STORE'),
-      configService.get('STRIPE_CHECKOUT_URL'),
     ],
     credentials: true,
   });

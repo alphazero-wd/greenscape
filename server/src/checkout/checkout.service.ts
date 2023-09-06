@@ -115,7 +115,8 @@ export class CheckoutService implements OnModuleInit {
           product_data: {
             name: item.name,
             images: item.images.map(
-              (image) => `http://localhost:5000/files/${image.id}`,
+              (image) =>
+                `${this.configService.get('SERVER_URL')}/files/${image.id}`,
             ),
           },
           unit_amount: +(+item.price.toFixed(2) * 100).toFixed(2),

@@ -25,7 +25,7 @@ import { StatsModule } from './stats/stats.module';
         CORS_ORIGIN_STORE: Joi.string().required(),
         REDIS_HOST: Joi.string().required(),
         REDIS_PORT: Joi.string().required(),
-        STRIPE_CHECKOUT_URL: Joi.string().required(),
+        SERVER_URL: Joi.string().required(),
         STRIPE_SECRET_KEY: Joi.string().required(),
         STRIPE_WEBHOOK_SECRET: Joi.string().required(),
       }),

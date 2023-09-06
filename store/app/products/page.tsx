@@ -106,7 +106,7 @@ export default async function ProductsPage({
             ) : (
               <ProductList
                 products={products}
-                className="sm:grid-cols-2 xl:grid-cols-3"
+                className="sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3"
               />
             )}
             <div className="mt-8 flex-1">

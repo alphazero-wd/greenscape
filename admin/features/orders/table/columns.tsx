@@ -10,6 +10,7 @@ import {
 import { formatPrice } from "@/features/utils";
 import { ViewfinderCircleIcon } from "@heroicons/react/24/outline";
 import { ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 import { Order } from "../types/order";
 import { getCountryName, getPostalAddress, getShippingOption } from "../utils";
@@ -77,6 +78,14 @@ export const columns: ColumnDef<Order>[] = [
       <div className="text-sm text-gray-500">
         {getShippingOption(+row.original.shippingCost)}
       </div>
+    ),
+  },
+  {
+    id: "status",
+    accessorKey: "createdAt",
+    header: "Paid at",
+    cell: ({ row }) => (
+      <div>{format(new Date(row.original.createdAt), "MMM d y, h:mm a")}</div>
     ),
   },
   {

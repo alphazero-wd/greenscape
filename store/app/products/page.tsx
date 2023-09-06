@@ -100,7 +100,7 @@ export default async function ProductsPage({
                   No products found
                 </h2>
                 <p className="text-base leading-7 text-gray-600 mt-2">
-                  We couldn't find any products matching your selection.
+                  We couldn&apos;t find any products matching your selection.
                 </p>
               </div>
             ) : (

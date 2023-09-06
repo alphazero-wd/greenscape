@@ -21,7 +21,7 @@ export const OrderOverview: React.FC<OrderOverviewProps> = ({ order }) => {
       <div className="space-y-2">
         <Label className="block font-normal text-gray-500">Paid at</Label>
         <p className="text-sm text-gray-900">
-          {format(new Date(order.createdAt), "MMM d, h:mm a")}
+          {format(new Date(order.createdAt), "MMM d y, h:mm a")}
         </p>
       </div>
       <Separator orientation="vertical" />

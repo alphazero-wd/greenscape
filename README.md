@@ -1,26 +1,26 @@
-# Greenify 🌱 - an e-commerce website that sells plants
+# Greenify - an e-commerce website that sells plants
 
 ## Table of Content 📑
 
-- [Overview](https://github.com/alphazero-wd/greenify#overview)
-  - [About the project](https://github.com/alphazero-wd/greenify#about-the-project-)
-  - [Project Structure](https://github.com/alphazero-wd/greenify#project-structure)
-  - [Tech stack](https://github.com/alphazero-wd/greenify#tech-stack-%EF%B8%8F--%EF%B8%8F)
-  - [Challenges](https://github.com/alphazero-wd/greenify#challenges)
-  - [Features to be added](https://github.com/alphazero-wd/greenify#features-to-be-added)
-- [Getting started](https://github.com/alphazero-wd/greenify#getting-started-)
-  - [Setup the server](https://github.com/alphazero-wd/greenify#setup-the-server)
-  - [Setup the admin](https://github.com/alphazero-wd/greenify#setup-the-admin)
-  - [Setup the store](https://github.com/alphazero-wd/greenify#setup-the-store)
-- [Screenshot](https://github.com/alphazero-wd/greenify#screenshots-)
-  - [Store](https://github.com/alphazero-wd/greenify#store)
-  - [Admin](https://github.com/alphazero-wd/greenify#admin)
-- [Approaches](https://github.com/alphazero-wd/greenify#approaches-)
-- [License](https://github.com/alphazero-wd/greenify#license-%EF%B8%8F)
+- [Overview](#overview)
+  - [About the project](#about-the-project)
+  - [Project Structure](#project-structure)
+  - [Tech stack](#tech-stack)
+  - [Challenges](#challenges)
+  - [Features to be added](#features-to-be-added)
+- [Getting started](#getting-started)
+  - [Setup the server](#setup-the-server)
+  - [Setup the admin](#setup-the-admin)
+  - [Setup the store](#setup-the-store)
+- [Screenshot](#screenshots)
+  - [Store](#store)
+  - [Admin](#admin)
+- [Approaches](#approaches)
+- [License](#license)
 
 ## Overview
 
-### About the project 📚
+### About the project
 
 Greenify is an e-commerce application that is built to sell plants, but it can also be converted to selling other things.
 
@@ -32,7 +32,7 @@ The application consists of three main components:
 - [`/store`](https://github.com/alphazero-wd/greenify/tree/master/store): the store is built to display products to customers for them to buy
 - [`/server`](https://github.com/alphazero-wd/greenify/tree/master/server): the backend API
 
-### Tech stack ☕️ 🐍 ⚛️
+### Tech stack
 
 #### Frontend
 
@@ -62,7 +62,7 @@ The application consists of three main components:
 - Product variants so that the customers can choose which variant matches their preferences.
 - PayPal will be added as an alternative payment method to cards.
 
-## Getting started 💻
+## Getting started
 
 You need to have these tools installed on your machine:
 
@@ -117,7 +117,7 @@ SERVER_URL=http://localhost:5000 # current server URL
 Run PostgreSQL and Redis databases stipulated in the `docker.compose.yml` file
 
 ```bash
-docker-compose up
+docker-compose up -d
 ```
 
 Apply migrations to the database
@@ -174,21 +174,18 @@ Simply start the development server on http://localhost:3001
 yarn dev
 ```
 
-## Screenshots 📷
+## Screenshots
 
 ### Store
 
 ![Store](https://github.com/alphazero-wd/greenify/assets/83436069/055d0188-cceb-438a-bca9-f64756f7cdf7)
 
 ### Admin
-
 ![Admin](https://github.com/alphazero-wd/greenify/assets/83436069/1bcf393f-9393-4eed-bcbb-8f0df774c3b9)
 
-## Approaches 🚶
-
+## Approaches
 - For the backend, NestJS already adopts Dependency Injection out of the box, which loosens the dependence between different parts of the codebase.
 - For the frontend, I adopts [Facade Design Pattern](https://wanago.io/2019/12/09/javascript-design-patterns-facade-react-hooks/) by extracting hooks into dedicated files to separate the logic from the UI.
 
-## License ©️
-
+## License
 MIT license [@alphazero-wd](https://github.com/alphazero-wd)

@@ -47,7 +47,7 @@ export function DataTableColumnHeader<TData, TValue>({
       url: pathname,
       query: currentQuery,
     });
-    router.push(url);
+    router.push(url, { scroll: false });
   }, 500);
 
   useEffect(() => {

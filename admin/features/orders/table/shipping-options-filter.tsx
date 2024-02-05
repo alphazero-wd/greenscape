@@ -51,7 +51,7 @@ export const ShippingOptionFilter: React.FC<ShippingOptionFilterProps> = ({
       url: pathname,
       query: currentQuery,
     });
-    router.push(urlWithShippingOptionQuery);
+    router.push(urlWithShippingOptionQuery, { scroll: false });
   }, [shippingOption]);
 
   return (

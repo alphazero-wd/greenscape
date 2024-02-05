@@ -34,7 +34,7 @@ export const useLogin = () => {
       toast.success("Login successfully");
       form.reset();
       router.refresh();
-      setTimeout(() => router.push("/"), 1000);
+      setTimeout(() => router.replace("/"), 1000);
     } catch (error: any) {
       toast.error(error.response.data.message);
     } finally {

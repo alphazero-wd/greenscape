@@ -26,7 +26,7 @@ export const InStockFilter = () => {
       query: currentQuery,
     });
 
-    router.push(urlWithAvailability);
+    router.push(urlWithAvailability, { scroll: false });
   }, 1000);
 
   useEffect(() => {

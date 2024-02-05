@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Controller,
   Get,
+  ParseIntPipe,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -22,15 +23,9 @@ export class StatsController {
   }
 
   @Get('yr-revenues')
-  async getMonthlyRevenues(@Query('year') year?: string) {
-    if (year && !isValid(new Date(year)))
-      throw new BadRequestException({
-        success: false,
-        message: 'Invalid date provided',
-      });
-
+  async getMonthlyRevenues(@Query('year', ParseIntPipe) year?: number) {
     const stats = await this.statsService.getMonthlyRevenues(
-      year ? new Date(year) : new Date(),
+      year || new Date().getFullYear(),
     );
     return { data: stats, success: true };
   }

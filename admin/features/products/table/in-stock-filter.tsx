@@ -49,7 +49,7 @@ export const InStockFilter: React.FC<InStockFilterProps> = ({
       url: pathname,
       query: currentQuery,
     });
-    router.push(urlWithInStockQuery);
+    router.push(urlWithInStockQuery, { scroll: false });
   }, [inStock]);
 
   const inStockSum = useMemo(

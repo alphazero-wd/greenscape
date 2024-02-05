@@ -50,7 +50,7 @@ export const StatusFilter: React.FC<StatusFilterProps> = ({
       url: pathname,
       query: currentQuery,
     });
-    router.push(urlWithStatusQuery);
+    router.push(urlWithStatusQuery, { scroll: false });
   }, [status]);
 
   return (

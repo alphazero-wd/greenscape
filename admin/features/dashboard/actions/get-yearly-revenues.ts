@@ -13,8 +13,8 @@ export const getMonthlyRevenues = async (year: string) => {
   );
 
   return data as {
-    startYear: Date;
-    endYear: Date;
+    startYear: number;
+    endYear: number;
     monthlyRevenues: MonthlyRevenue[];
   };
 };

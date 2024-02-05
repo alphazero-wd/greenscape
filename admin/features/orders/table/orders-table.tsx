@@ -55,7 +55,7 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({
       url: "/orders",
       query: currentQuery,
     });
-    router.push(resetQuery);
+    router.push(resetQuery, { scroll: false });
   };
 
   return (

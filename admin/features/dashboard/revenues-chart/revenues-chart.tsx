@@ -15,8 +15,8 @@ import { groupRevenuesByMonths } from "../utils";
 import { YearsSelect } from "./years-select";
 
 interface RevenuesChartProps {
-  startYear: Date;
-  endYear: Date;
+  startYear: number;
+  endYear: number;
   monthlyRevenues: MonthlyRevenue[];
 }
 
@@ -51,7 +51,7 @@ export const RevenuesChart = ({
         </CardTitle>
       </CardHeader>
       <CardContent className="max-w-[100vw] pl-2">
-        <ResponsiveContainer width="100%" height={500}>
+        <ResponsiveContainer width="100%" height={300}>
           <BarChart data={data}>
             <XAxis
               dataKey="name"

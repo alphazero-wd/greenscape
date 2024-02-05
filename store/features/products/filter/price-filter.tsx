@@ -38,7 +38,7 @@ export const PriceFilter = () => {
         url: "/products",
         query: currentQuery,
       });
-      router.push(urlWithPriceRange);
+      router.push(urlWithPriceRange, { scroll: false });
     }
   }, 1000);
 

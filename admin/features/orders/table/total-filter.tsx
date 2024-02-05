@@ -49,7 +49,7 @@ export const TotalFilter: React.FC<TotalFilterProps> = ({ table }) => {
       url: pathname,
       query: currentQuery,
     });
-    router.push(urlWithTotalRange);
+    router.push(urlWithTotalRange, { scroll: false });
   }, 1000);
 
   useEffect(() => {

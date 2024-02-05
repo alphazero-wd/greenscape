@@ -49,7 +49,7 @@ export const EditProduct: React.FC<EditProductProps> = ({
 
   const onCancel = () => {
     if (confirm("Do you want to discard the changes?"))
-      router.push("/products");
+      router.replace("/products");
   };
 
   return (

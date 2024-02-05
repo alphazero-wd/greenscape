@@ -77,7 +77,7 @@ export const useTable = <TData>(
       url: pathname,
       query: currentQuery,
     });
-    router.push(url);
+    router.push(url, { scroll: false });
   }, 500);
 
   useEffect(() => {

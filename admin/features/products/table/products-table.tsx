@@ -51,7 +51,7 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({
       url: "/products",
       query: currentQuery,
     });
-    router.push(resetQuery);
+    router.push(resetQuery, { scroll: false });
   };
 
   return (

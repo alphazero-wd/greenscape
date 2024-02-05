@@ -49,7 +49,7 @@ export const PriceFilter: React.FC<PriceFilterProps> = ({ table }) => {
       url: pathname,
       query: currentQuery,
     });
-    router.push(urlWithPriceRange);
+    router.push(urlWithPriceRange, { scroll: false });
   }, 1000);
 
   useEffect(() => {

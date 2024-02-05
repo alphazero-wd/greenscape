@@ -27,7 +27,7 @@ export const Search = () => {
       url: "/products",
       query: currentQuery,
     });
-    router.push(urlWithSearchQuery);
+    router.push(urlWithSearchQuery, { scroll: false });
   }, 1000);
 
   useEffect(() => {

@@ -54,7 +54,7 @@ export function DateRangeFilter({ table }: DateRangeFilterProps) {
     }
     table.resetPageIndex();
     const urlWithDateRange = qs.stringifyUrl({ url: "", query: currentQuery });
-    router.push(urlWithDateRange);
+    router.push(urlWithDateRange, { scroll: false });
   }, 500);
 
   useEffect(() => {

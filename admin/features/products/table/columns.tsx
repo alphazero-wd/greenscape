@@ -10,7 +10,6 @@ import {
 import { formatPrice } from "@/features/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Product } from "../types";
 import { PreviewButton } from "./preview-button";
@@ -42,17 +41,8 @@ export const columns: ColumnDef<Product>[] = [
     accessorKey: "name",
     header: "Product",
     cell: ({ row }) => (
-      <div className="flex items-center gap-x-4">
-        <Image
-          src={`${process.env.NEXT_PUBLIC_API_URL}/files/${row.original.images[0].id}`}
-          alt={row.getValue("name")}
-          width={64}
-          height={64}
-          className="aspect-square object-contain"
-        />
-        <span className="line-clamp-2 max-w-xs font-medium">
-          {row.getValue("name")}
-        </span>
+      <div className="line-clamp-2 max-w-xs font-medium">
+        {row.getValue("name")}
       </div>
     ),
   },

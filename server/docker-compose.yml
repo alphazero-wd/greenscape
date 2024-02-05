@@ -7,8 +7,10 @@ services:
       - '5432:5432'
     volumes:
       - /data/postgres:/data/postgres
-    env_file:
-      - docker.env
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=greenify
 
   redis:
     image: 'redis:alpine'

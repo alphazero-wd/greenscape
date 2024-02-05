@@ -31,7 +31,7 @@ export const Pagination: React.FC<PaginationProps> = ({ totalCount }) => {
       url: "/products",
       query: currentQuery,
     });
-    router.push(urlWithOffset);
+    router.push(urlWithOffset, { scroll: false });
   }, [searchParams.toString(), currentPage]);
 
   // If there are less than 2 times in pagination range we shall not render the component

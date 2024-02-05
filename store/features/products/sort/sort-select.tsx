@@ -39,7 +39,7 @@ export const SortSelect = () => {
       url: "/products",
       query: currentQuery,
     });
-    router.push(urlWithSortQuery);
+    router.push(urlWithSortQuery, { scroll: false });
   }, 1000);
 
   useEffect(() => {

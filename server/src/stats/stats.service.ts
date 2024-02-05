@@ -1,12 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import {
-  endOfDay,
-  endOfYear,
-  startOfMonth,
-  startOfYear,
-  subMonths,
-} from 'date-fns';
+import { endOfDay, startOfMonth, subMonths } from 'date-fns';
 
 @Injectable()
 export class StatsService {
@@ -64,10 +58,10 @@ export class StatsService {
     };
   }
 
-  async getMonthlyRevenues(year) {
+  async getMonthlyRevenues(year: number) {
     const {
-      _min: { createdAt: startYear },
-      _max: { createdAt: endYear },
+      _min: { createdAt: firstOrderAt },
+      _max: { createdAt: lastOrderAt },
     } = await this.prisma.order.aggregate({
       _min: { createdAt: true },
       _max: { createdAt: true },
@@ -76,8 +70,20 @@ export class StatsService {
     const monthlyRevenues = await this.prisma.order.groupBy({
       by: ['createdAt'],
       _sum: { total: true },
-      where: { createdAt: { gte: startOfYear(year), lte: endOfYear(year) } },
+      where: {
+        createdAt: {
+          gte: new Date(`1-1-${year}`),
+          lt: new Date(`1-1-${year + 1}`),
+        },
+      },
     });
+
+    const startYear = new Date(firstOrderAt).getTime()
+      ? new Date(firstOrderAt).getFullYear()
+      : new Date().getFullYear();
+    const endYear = new Date(lastOrderAt).getTime()
+      ? new Date(lastOrderAt).getFullYear()
+      : new Date().getFullYear();
 
     return {
       startYear,

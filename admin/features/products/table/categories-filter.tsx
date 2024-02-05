@@ -56,7 +56,7 @@ export const CategoriesFilter: React.FC<CategoriesFilterProps> = ({
       url: pathname,
       query: currentQuery,
     });
-    router.push(urlWithCategoryIdsQuery);
+    router.push(urlWithCategoryIdsQuery, { scroll: false });
   }, [selectedCategoryIds, router]);
 
   return (

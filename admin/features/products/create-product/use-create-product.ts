@@ -77,7 +77,7 @@ export const useCreateProduct = () => {
       setFiles([]);
       toast.success("Product created");
       router.refresh();
-      router.push("/products");
+      router.replace("/products");
     } catch (error: any) {
       toast.error(error.response.data.message);
     } finally {

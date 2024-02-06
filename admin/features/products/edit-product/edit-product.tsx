@@ -31,8 +31,8 @@ export const EditProduct: React.FC<EditProductProps> = ({
     handleSubmit,
     files,
     dropzoneState,
-    tempImageIds,
-    setTempImageIds,
+    tempImages,
+    setTempImages,
   } = useEditProduct(product);
   const router = useRouter();
 
@@ -42,9 +42,9 @@ export const EditProduct: React.FC<EditProductProps> = ({
       files.forEach((file) => URL.revokeObjectURL(file?.preview || ""));
   }, []);
 
-  const onDeleteImage = (imageId: number) => {
+  const onDeleteImage = (imageId: string) => {
     if (confirm("Do you want to delete this image?"))
-      setTempImageIds(tempImageIds.filter((id) => id !== imageId));
+      setTempImages(tempImages.filter((image) => image.id !== imageId));
   };
 
   const onCancel = () => {
@@ -63,13 +63,13 @@ export const EditProduct: React.FC<EditProductProps> = ({
         >
           <ImagesUpload files={files} dropzoneState={dropzoneState} />
           <div className="relative col-span-full grid grid-cols-2 gap-4 lg:grid-cols-4">
-            {tempImageIds.map((imageId) => (
+            {tempImages.map((image) => (
               <div className="relative">
                 <Image
                   width={132}
                   height={132}
                   alt={product.name}
-                  src={`${process.env.NEXT_PUBLIC_API_URL}/files/${imageId}`}
+                  src={image.url}
                   className="aspect-square h-auto w-full rounded object-cover"
                 />
                 <Button
@@ -77,7 +77,7 @@ export const EditProduct: React.FC<EditProductProps> = ({
                   className="absolute right-3 top-3 h-8 w-8"
                   variant="destructive"
                   size="icon"
-                  onClick={() => onDeleteImage(imageId)}
+                  onClick={() => onDeleteImage(image.id)}
                 >
                   <TrashIcon className="h-4 w-4" />
                 </Button>

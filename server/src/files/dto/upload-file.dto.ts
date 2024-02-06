@@ -1,12 +1,4 @@
-import { IsMimeType, IsString } from 'class-validator';
-
-export class UploadFileDto {
-  @IsString()
+export interface UploadFileDto {
+  buffer: Buffer;
   filename: string;
-
-  @IsString()
-  path: string;
-
-  @IsMimeType()
-  mimetype: string;
 }

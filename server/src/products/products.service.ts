@@ -12,12 +12,14 @@ import { PrismaError } from '../prisma/prisma-error';
 import { UploadFileDto } from '../files/dto';
 import { FilesService } from '../files/files.service';
 import { removeWhiteSpaces } from '../common/utils';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ProductsService {
   constructor(
     private prisma: PrismaService,
     private filesService: FilesService,
+    private configService: ConfigService,
   ) {}
 
   async create(createProductDto: CreateProductDto) {
@@ -101,43 +103,17 @@ export class ProductsService {
           updatedAt: true,
           desc: true,
           status: true,
-          images: { select: { id: true }, orderBy: { id: 'asc' }, take: 1 },
+          images: {
+            select: { id: true, url: true },
+            orderBy: { id: 'asc' },
+            take: 1,
+          },
           category: true,
           _count: { select: { orders: true } },
         },
       });
-
-      const whereStatusGroups = { ...where };
-      delete whereStatusGroups.status;
-      const statusGroups = await this.prisma.product.groupBy({
-        by: ['status'],
-        _count: { id: true },
-        where: whereStatusGroups,
-      });
-
-      const whereCategoryGroups = { ...where };
-      delete whereCategoryGroups.categoryId;
-      const categoryGroups = await this.prisma.product.groupBy({
-        by: ['categoryId'],
-        _count: { id: true },
-        where: whereCategoryGroups,
-      });
-
-      const whereInStockGroups = { ...where };
-      delete whereInStockGroups.inStock;
-      const inStockGroups = await this.prisma.product.groupBy({
-        by: ['inStock'],
-        _count: { id: true },
-        where: whereInStockGroups,
-      });
-      const count = await this.prisma.product.count({ where });
-      return {
-        count,
-        products,
-        statusGroups,
-        inStockGroups,
-        categoryGroups,
-      };
+      const aggregateResult = await this.aggregateProducts(where);
+      return { products, ...aggregateResult };
     } catch (error) {
       throw new InternalServerErrorException({
         success: false,
@@ -146,11 +122,39 @@ export class ProductsService {
     }
   }
 
+  private async aggregateProducts(where: Prisma.ProductWhereInput) {
+    const whereStatusGroups = { ...where };
+    delete whereStatusGroups.status;
+    const whereCategoryGroups = { ...where };
+    delete whereCategoryGroups.categoryId;
+    const whereInStockGroups = { ...where };
+    delete whereInStockGroups.inStock;
+    const statusGroups = await this.groupBy('status', whereStatusGroups);
+    const categoryGroups = await this.groupBy(
+      'categoryId',
+      whereCategoryGroups,
+    );
+    const inStockGroups = await this.groupBy('inStock', whereInStockGroups);
+    const count = await this.prisma.product.count({ where });
+    return { statusGroups, categoryGroups, inStockGroups, count };
+  }
+
+  private async groupBy(
+    field: 'status' | 'categoryId' | 'inStock',
+    where: Prisma.ProductWhereInput,
+  ) {
+    return this.prisma.product.groupBy({
+      by: field,
+      _count: { id: true },
+      where,
+    });
+  }
+
   async findOne(id: number) {
     const product = await this.prisma.product.findUnique({
       where: { id },
       include: {
-        images: { select: { id: true }, orderBy: { id: 'asc' } },
+        images: { select: { id: true, url: true }, orderBy: { id: 'asc' } },
         category: true,
       },
     });
@@ -190,7 +194,7 @@ export class ProductsService {
     }
   }
 
-  async removeImages(productId: number, imageIds: number[]) {
+  async removeImages(productId: number, imageIds: string[]) {
     const product = await this.findOne(productId);
     const productImageIds = product.images.map((img) => img.id);
     if (imageIds.some((id) => !productImageIds.includes(id)))
@@ -203,27 +207,30 @@ export class ProductsService {
         success: false,
         message: 'Cannot delete all images of the product',
       });
+    console.log({ imageIds });
     await this.filesService.remove(imageIds);
   }
 
   async remove(ids: number[]) {
     return this.prisma.$transaction(async (transactionClient) => {
       try {
-        const images = await transactionClient.product.findMany({
-          where: { id: { in: ids } },
-          select: { images: { select: { id: true } } },
-        });
-        if (images.length !== ids.length)
+        const productsWithImagesOnly = await transactionClient.product.findMany(
+          {
+            where: { id: { in: ids } },
+            select: { images: { select: { id: true } } },
+          },
+        );
+        if (productsWithImagesOnly.length !== ids.length)
           throw new NotFoundException({
             success: false,
             message: `${
-              ids.length - images.length
+              ids.length - productsWithImagesOnly.length
             } products were not deleted because they were not found`,
           });
-        const imageIds = images.flatMap((img) =>
+        const imageKeys = productsWithImagesOnly.flatMap((img) =>
           img.images.flatMap(({ id }) => id),
         );
-        await this.filesService.remove(imageIds);
+        await this.filesService.remove(imageKeys);
         await transactionClient.product.deleteMany({
           where: { id: { in: ids } },
         });

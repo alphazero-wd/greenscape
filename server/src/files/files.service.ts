@@ -1,29 +1,55 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UploadFileDto } from './dto';
-import { rm } from 'fs/promises';
-import { join } from 'path';
+import { ConfigService } from '@nestjs/config';
+import {
+  S3Client,
+  DeleteObjectCommand,
+  CompleteMultipartUploadCommandOutput,
+} from '@aws-sdk/client-s3';
+import { Upload } from '@aws-sdk/lib-storage';
+import { v4 } from 'uuid';
 
 @Injectable()
 export class FilesService {
-  constructor(private prisma: PrismaService) {}
-
-  async createMany(uploadFilesDto: UploadFileDto[], productId?: number) {
-    return this.prisma.$transaction([
-      this.prisma.file.createMany({
-        data: uploadFilesDto.map((uploadFileDto) => ({
-          ...uploadFileDto,
-          productId,
-        })),
-      }),
-    ])[0];
+  s3Client: S3Client;
+  constructor(
+    private prisma: PrismaService,
+    private configService: ConfigService,
+  ) {
+    this.s3Client = new S3Client({});
   }
 
-  async findOne(id: number) {
+  async createMany(uploadFilesDto: UploadFileDto[], productId?: number) {
+    const uploadResults = await this.uploadToS3(uploadFilesDto);
+    return this.prisma.file.createMany({
+      data: uploadResults.map(({ Key, Location }) => ({
+        id: Key,
+        url: Location,
+        productId,
+      })),
+    });
+  }
+
+  private async uploadToS3(uploadFilesDto: UploadFileDto[]) {
+    const uploadResults: CompleteMultipartUploadCommandOutput[] = [];
+    for (const { filename, buffer } of uploadFilesDto) {
+      const key = `${v4()}-${filename}`;
+      const multipartUpload = new Upload({
+        client: this.s3Client,
+        params: {
+          Bucket: this.configService.get('AWS_BUCKET_NAME'),
+          Key: this.configService.get('AWS_OBJECT_DEST') + key,
+          Body: buffer,
+        },
+      });
+      const result = await multipartUpload.done();
+      uploadResults.push(result);
+    }
+    return uploadResults;
+  }
+
+  async findOne(id: string) {
     const file = await this.prisma.file.findUnique({
       where: { id },
     });
@@ -35,26 +61,16 @@ export class FilesService {
     return file;
   }
 
-  async remove(ids: number[]) {
-    return this.prisma.$transaction(async (transactionClient) => {
-      const files = await transactionClient.file.findMany({
-        where: {
-          id: { in: ids },
-        },
+  async remove(keys: string[]) {
+    for (const key of keys) {
+      const command = new DeleteObjectCommand({
+        Bucket: this.configService.get('AWS_BUCKET_NAME'),
+        Key: this.configService.get('AWS_OBJECT_DEST') + key,
+        ExpectedBucketOwner: this.configService.get('AWS_ACCOUNT_ID'),
       });
-      files.forEach(async (file) => await rm(join(process.cwd(), file.path)));
-
-      const { count } = await transactionClient.file.deleteMany({
-        where: { id: { in: ids } },
-      });
-
-      if (count !== ids.length)
-        throw new NotFoundException({
-          success: false,
-          message: `${
-            ids.length - count
-          } files were not deleted because they were not found`,
-        });
-    });
+      const result = await this.s3Client.send(command);
+      console.log({ result });
+    }
+    await this.prisma.file.deleteMany({ where: { id: { in: keys } } });
   }
 }

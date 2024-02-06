@@ -104,14 +104,13 @@ Similarly, create a `.env` at the root of the `server/` directory and add the fo
 
 ```bash
 DATABASE_URL=postgres://postgres:postgres@localhost:5432/greenify?schema=public
-SESSION_SECRET=s3cret # set to anything you like
+SESSION_SECRET=s3cr3t # set to anything you like
 CORS_ORIGIN_ADMIN=http://localhost:3000
 CORS_ORIGIN_STORE=http://localhost:3001
 REDIS_HOST=localhost
 REDIS_PORT=6379
 STRIPE_SECRET_KEY=sk_test_... # from the Stripe dashboard
 STRIPE_WEBHOOK_SECRET=whsec_... # from the Stripe CLI
-SERVER_URL=http://localhost:5000 # current server URL
 ```
 
 Run PostgreSQL and Redis databases stipulated in the `docker.compose.yml` file
@@ -181,11 +180,14 @@ yarn dev
 ![Store](https://github.com/alphazero-wd/greenify/assets/83436069/055d0188-cceb-438a-bca9-f64756f7cdf7)
 
 ### Admin
+
 ![Admin](https://github.com/alphazero-wd/greenify/assets/83436069/1bcf393f-9393-4eed-bcbb-8f0df774c3b9)
 
 ## Approaches
+
 - For the backend, NestJS already adopts Dependency Injection out of the box, which loosens the dependence between different parts of the codebase.
 - For the frontend, I adopts [Facade Design Pattern](https://wanago.io/2019/12/09/javascript-design-patterns-facade-react-hooks/) by extracting hooks into dedicated files to separate the logic from the UI.
 
 ## License
+
 MIT license [@alphazero-wd](https://github.com/alphazero-wd)

@@ -1,3 +1,3 @@
 export { ImagesGallery } from "./images-gallery";
-export { CollapsibleDesc } from "./collapsible-desc";
+export { ProductDescription } from "./product-description";
 export { AddToCart } from "./add-to-cart";

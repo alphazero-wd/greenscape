@@ -16,7 +16,7 @@ export const CartItem: React.FC<CartItemProps> = ({ item }) => {
   return (
     <li className="flex items-center py-6">
       <Image
-        src={`${process.env.NEXT_PUBLIC_API_URL}/files/${item.imageId}`}
+        src={item.imageUrl}
         alt={item.name}
         width={128}
         height={128}

@@ -1,7 +1,7 @@
 "use client";
 import { Label } from "@/features/ui";
 
-export const CollapsibleDesc = ({ desc }: { desc: string }) => {
+export const ProductDescription = ({ desc }: { desc: string }) => {
   return (
     <div className="mt-6">
       <Label>About this product</Label>

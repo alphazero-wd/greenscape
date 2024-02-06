@@ -1,3 +1,5 @@
+import { ProductImage } from "@/features/products/types";
+
 export interface Order {
   id: string;
   customer: string;
@@ -24,7 +26,7 @@ interface OrdersOnProducts {
     name: string;
     price: number;
     category: { name: string };
-    images: { id: number }[];
+    images: ProductImage[];
   };
 }
 

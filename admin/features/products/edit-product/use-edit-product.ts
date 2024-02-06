@@ -54,11 +54,11 @@ export const useEditProduct = (product: Product) => {
       );
     },
   });
-  const [tempImageIds, setTempImageIds] = useState<number[]>([]);
+  const [tempImages, setTempImages] = useState<Product["images"]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setTempImageIds(product.images.map((img) => img.id));
+    setTempImages(product.images);
   }, [product.images]);
 
   useEffect(() => {
@@ -73,7 +73,7 @@ export const useEditProduct = (product: Product) => {
   }, [product]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    if (tempImageIds.length + files.length === 0) {
+    if (tempImages.length + files.length === 0) {
       toast.error("Please upload at least 1 image");
       return;
     }
@@ -96,7 +96,9 @@ export const useEditProduct = (product: Product) => {
         );
       const deletedImages = product.images
         .map((image) => image.id)
-        .filter((imageId) => !tempImageIds.includes(imageId));
+        .filter(
+          (imageId) => !tempImages.map((img) => img.id).includes(imageId),
+        );
       if (deletedImages.length > 0)
         await axios.delete(
           `${API_URL}/products/${
@@ -120,7 +122,7 @@ export const useEditProduct = (product: Product) => {
     handleSubmit: form.handleSubmit(onSubmit),
     dropzoneState,
     files,
-    tempImageIds,
-    setTempImageIds,
+    tempImages,
+    setTempImages,
   };
 };

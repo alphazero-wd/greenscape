@@ -70,27 +70,18 @@ export class OrdersService {
 
     const whereWithoutStatus = { ...where };
     delete whereWithoutStatus.deliveredAt;
-    const statusGroups = await this.prisma.order.groupBy({
-      by: ['deliveredAt'],
-      _count: { id: true },
-      where: whereWithoutStatus,
-    });
+    const statusGroups = await this.groupBy('deliveredAt', whereWithoutStatus);
 
     const whereWithoutCountries = { ...where };
     delete whereWithoutCountries.country;
-    const countryGroups = await this.prisma.order.groupBy({
-      by: ['country'],
-      _count: { id: true },
-      where: whereWithoutCountries,
-    });
+    const countryGroups = await this.groupBy('country', whereWithoutCountries);
 
     const whereWithoutShippingOptions = { ...where };
     delete whereWithoutShippingOptions.shippingCost;
-    const shippingOptionGroups = await this.prisma.order.groupBy({
-      by: ['shippingCost'],
-      _count: { id: true },
-      where: whereWithoutShippingOptions,
-    });
+    const shippingOptionGroups = await this.groupBy(
+      'shippingCost',
+      whereWithoutShippingOptions,
+    );
 
     return {
       data: orders,
@@ -99,6 +90,17 @@ export class OrdersService {
       countryGroups,
       shippingOptionGroups,
     };
+  }
+
+  private async groupBy(
+    field: 'deliveredAt' | 'country' | 'shippingCost',
+    where: Prisma.OrderWhereInput,
+  ) {
+    return this.prisma.order.groupBy({
+      by: field,
+      _count: { id: true },
+      where,
+    });
   }
 
   findOne(id: string) {

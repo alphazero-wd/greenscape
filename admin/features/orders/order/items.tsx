@@ -35,11 +35,11 @@ export const OrderItems = ({ order }: { order: Order }) => {
           >
             <TableCell className="flex items-center gap-x-3">
               <Image
-                src={`${process.env.NEXT_PUBLIC_API_URL}/files/${product.images[0].id}`}
+                src={product.images[0].url}
                 alt={product.name}
                 width={64}
                 height={64}
-                className="aspect-square rounded-md object-contain"
+                className="aspect-square rounded-md object-cover"
               />
               <span className="line-clamp-2 text-sm font-medium">
                 {product.name}

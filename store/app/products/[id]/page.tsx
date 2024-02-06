@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { Breadcrumb } from "@/features/ui";
 import {
   AddToCart,
-  CollapsibleDesc,
+  ProductDescription,
   ImagesGallery,
 } from "@/features/products/product";
 import { formatPrice } from "@/features/products/utils";
@@ -58,7 +58,7 @@ export default async function ProductPage({
             <p className="mt-3 text-4xl tracking-tight text-gray-900">
               {formatPrice(product.price)}
             </p>
-            <CollapsibleDesc desc={product.desc} />
+            <ProductDescription desc={product.desc} />
             <AddToCart product={product} />
           </div>
         </section>

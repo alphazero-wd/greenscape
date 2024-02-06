@@ -16,7 +16,7 @@ export const AddToCart = ({ product }: { product: Product }) => {
     const toBeAddedProduct = {
       id: product.id,
       name: product.name,
-      imageId: product.images[0].id,
+      imageUrl: product.images[0].url,
       price: product.price,
       inStock: product.inStock,
       category: product.category,

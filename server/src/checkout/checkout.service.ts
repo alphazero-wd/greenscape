@@ -81,7 +81,7 @@ export class CheckoutService implements OnModuleInit {
     const products = await this.prisma.product.findMany({
       where: { id: { in: cartItemIds } },
       include: {
-        images: { take: 1, orderBy: { id: 'asc' }, select: { id: true } },
+        images: { take: 1, orderBy: { id: 'asc' }, select: { url: true } },
       },
     });
     if (products.length !== cartItemIds.length)
@@ -114,10 +114,7 @@ export class CheckoutService implements OnModuleInit {
           currency: 'USD',
           product_data: {
             name: item.name,
-            images: item.images.map(
-              (image) =>
-                `${this.configService.get('SERVER_URL')}/files/${image.id}`,
-            ),
+            images: item.images.map((image) => image.url),
           },
           unit_amount: +(+item.price.toFixed(2) * 100).toFixed(2),
         },

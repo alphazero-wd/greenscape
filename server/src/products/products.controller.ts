@@ -14,12 +14,16 @@ import {
   ParseFilePipe,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { CreateProductDto, FindManyProductsDto, UpdateProductDto } from './dto';
+import {
+  CreateProductDto,
+  DeleteImagesDto,
+  FindManyProductsDto,
+  UpdateProductDto,
+} from './dto';
 import { DeleteManyDto } from '../common/dto';
 import { Role } from '@prisma/client';
 import { RolesGuard } from '../auth/guards';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
 import { imageValidators } from '../files/validators';
 
 @Controller('products')
@@ -55,11 +59,7 @@ export class ProductsController {
 
   @Patch(':id/upload-images')
   @UseGuards(RolesGuard(Role.Admin))
-  @UseInterceptors(
-    FilesInterceptor('images', Infinity, {
-      storage: diskStorage({ destination: './uploads/products' }),
-    }),
-  )
+  @UseInterceptors(FilesInterceptor('images', 4))
   async uploadImages(
     @Param('id', ParseIntPipe) id: number,
     @UploadedFiles(
@@ -72,9 +72,8 @@ export class ProductsController {
     await this.productsService.uploadImages(
       id,
       files.map((file) => ({
+        buffer: file.buffer,
         filename: file.originalname,
-        path: file.path,
-        mimetype: file.mimetype,
       })),
     );
     return { success: true };
@@ -84,7 +83,7 @@ export class ProductsController {
   @UseGuards(RolesGuard(Role.Admin))
   async removeImage(
     @Param('productId', ParseIntPipe) productId: number,
-    @Query() { ids: imageIds }: DeleteManyDto,
+    @Query() { ids: imageIds }: DeleteImagesDto,
   ) {
     await this.productsService.removeImages(productId, imageIds);
     return { success: true };

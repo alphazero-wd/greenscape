@@ -26,8 +26,8 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
           alt={product.name}
           width={640}
           height={640}
-          className="object-contain rounded-tl-lg rounded-tr-lg aspect-square"
-          src={`${process.env.NEXT_PUBLIC_API_URL}/files/${product.images[0].id}`}
+          className="object-cover rounded-tl-lg rounded-tr-lg aspect-square"
+          src={product.images[0].url}
         />
         <CardContent className="pt-4 space-y-2 border-t border-gray-200">
           <CardTitle className="font-semibold text-base line-clamp-1">

@@ -10,10 +10,13 @@ export interface Product {
   category: Category;
   createdAt: Date;
   updatedAt: Date;
-  images: { id: number }[];
+  images: ProductImage[];
   _count: { orders: number };
 }
-
+export interface ProductImage {
+  id: string;
+  url: string;
+}
 export interface ProductFormDto {
   name: string;
   desc: string;

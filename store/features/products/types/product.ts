@@ -8,7 +8,7 @@ export interface Product {
   category: Category;
   createdAt: Date;
   updatedAt: Date;
-  images: { id: number }[];
+  images: { id: string; url: string }[];
 }
 
 export interface StatusGroup {

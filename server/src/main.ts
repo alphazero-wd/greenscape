@@ -4,7 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import * as session from 'express-session';
 import * as passport from 'passport';
 import { createClient } from 'redis';
-import * as createRedisStore from 'connect-redis';
+import RedisStore from 'connect-redis';
 import { ConfigService } from '@nestjs/config';
 import { rawBodyMiddleware } from './common/middlewares';
 
@@ -21,11 +21,10 @@ async function bootstrap() {
     credentials: true,
   });
 
-  const RedisStore = createRedisStore(session);
   const redisClient = createClient({
-    host: configService.get('REDIS_HOST'),
-    port: configService.get('REDIS_PORT'),
+    url: configService.get('REDIS_URL'),
   });
+  await redisClient.connect();
 
   app.use(
     session({

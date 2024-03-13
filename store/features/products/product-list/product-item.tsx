@@ -24,8 +24,8 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
       <Card className="p-0 h-full group-hover:opacity-75">
         <Image
           alt={product.name}
-          width={640}
-          height={640}
+          width={1024}
+          height={1024}
           className="object-cover rounded-tl-lg rounded-tr-lg aspect-square"
           src={product.images[0].url}
         />

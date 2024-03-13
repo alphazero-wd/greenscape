@@ -17,8 +17,8 @@ export const ImagesGallery: React.FC<ImagesGalleryProps> = ({ product }) => {
         <Image
           src={product.images[pos].url}
           alt="Cover image"
-          width={640}
-          height={640}
+          width={1024}
+          height={1024}
           className="aspect-square h-full w-full object-cover"
         />
       </div>

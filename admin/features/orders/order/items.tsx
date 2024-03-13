@@ -37,9 +37,9 @@ export const OrderItems = ({ order }: { order: Order }) => {
               <Image
                 src={product.images[0].url}
                 alt={product.name}
-                width={64}
-                height={64}
-                className="aspect-square rounded-md object-cover"
+                width={128}
+                height={128}
+                className="aspect-square h-16 w-16 rounded-md object-cover"
               />
               <span className="line-clamp-2 text-sm font-medium">
                 {product.name}

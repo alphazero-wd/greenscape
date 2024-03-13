@@ -114,7 +114,11 @@ export class OrdersService {
                 name: true,
                 price: true,
                 category: { select: { name: true } },
-                images: { select: { id: true }, orderBy: { id: 'asc' } },
+                images: {
+                  select: { url: true },
+                  take: 1,
+                  orderBy: { id: 'asc' },
+                },
               },
             },
           },

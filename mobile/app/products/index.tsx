@@ -13,15 +13,21 @@ import { Products } from "@/components/products";
 import { useEffect, useState } from "react";
 import { Product } from "@/types/product";
 import { getProducts } from "@/api/products";
+import { Categories } from "@/components/categories";
+import { Category } from "@/types/category";
+import { getCategories } from "@/api/categories";
 
 export default function ProductsPage() {
   const insets = useSafeAreaInsets();
   const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
-    getProducts("?limit=5&status=Active&inStock=true").then((data) =>
-      setProducts(data)
+    getProducts("?limit=4&status=Active&sortBy=orders&inStock=true").then(
+      (data) => setProducts(data)
     );
+
+    getCategories("?limit=4").then((data) => setCategories(data));
   }, []);
 
   return (
@@ -32,18 +38,24 @@ export default function ProductsPage() {
           <Ionicons name="bag-handle-outline" size={28} color={Gray.GRAY_700} />
         </TouchableOpacity>
       </View>
-      <ImageBackground
-        source={require("../../assets/images/banner.png")}
-        style={styles.banner}
-      >
-        <View style={styles.overlay} />
-        <Text style={styles.title}>Unleash the Jungle in Your Home</Text>
-        <Text style={styles.title}>with Monstera Deliciosa!</Text>
-      </ImageBackground>
-      <View style={styles.favoritesContainer}>
-        <Text style={styles.favoritesHeading}>Our Favorites</Text>
-        <Products products={products} />
-      </View>
+      <Products
+        ListHeaderComponent={
+          <>
+            <ImageBackground
+              source={require("../../assets/images/banner.png")}
+              style={styles.banner}
+            >
+              <View style={styles.overlay} />
+              <Text style={styles.title}>Unleash the Jungle</Text>
+              <Text style={styles.title}>in your home!</Text>
+            </ImageBackground>
+            <Categories categories={categories} />
+            <Text style={styles.favoritesHeading}>Our Favorites</Text>
+          </>
+        }
+        products={products}
+        ListFooterComponent={<View style={{ height: 60 }} />}
+      />
     </View>
   );
 }
@@ -55,8 +67,8 @@ const styles = StyleSheet.create({
     borderRadius: 999,
   },
   appBar: {
-    paddingHorizontal: 8,
-    paddingRight: 16,
+    paddingLeft: 8,
+    paddingRight: 20,
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
@@ -74,6 +86,7 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
   },
   banner: {
+    marginHorizontal: -12,
     marginVertical: 16,
     height: 200,
     justifyContent: "center",
@@ -84,13 +97,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "white",
   },
-  favoritesContainer: {
-    marginVertical: 16,
-    paddingHorizontal: 16,
-  },
   favoritesHeading: {
+    marginVertical: 16,
+    textAlign: "center",
+    marginLeft: 8,
     fontFamily: Font.Bold,
     fontSize: 24,
-    marginBottom: 8,
   },
 });

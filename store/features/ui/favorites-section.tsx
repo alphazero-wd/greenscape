@@ -5,7 +5,7 @@ import { ProductList } from "@/features/products/product-list";
 
 export const FavoritesSection = async () => {
   const { data: favoriteProducts } = await getProducts(
-    "?limit=4&status=Active&inStock=true"
+    "?limit=4&status=Active&sortBy=orders&inStock=true"
   );
 
   return (

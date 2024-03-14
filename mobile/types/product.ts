@@ -5,8 +5,13 @@ export interface Product {
   price: number;
   status: "Active" | "Draft";
   inStock: number;
-  category: Category;
+  category: ProductCategory;
   images: { id: string; url: string }[];
+}
+
+interface ProductCategory {
+  id: number;
+  name: string;
 }
 
 export interface StatusGroup {
@@ -21,9 +26,4 @@ export interface InStockGroup {
 export interface CategoryGroup {
   _count: { id: number };
   categoryId: number;
-}
-
-export interface Category {
-  id: number;
-  name: string;
 }

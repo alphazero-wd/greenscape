@@ -1,8 +1,8 @@
-import { Link } from "expo-router";
 import { Product } from "@/types/product";
-import { View, Image, Text, StyleSheet } from "react-native";
+import { View, Image, Text, StyleSheet, Dimensions } from "react-native";
 import { formatPrice } from "@/utils/format-price";
 import { Font, Gray } from "@/types/theme";
+import { Link } from "expo-router";
 
 interface ProductItemProps {
   product: Product;
@@ -10,18 +10,17 @@ interface ProductItemProps {
 
 export const ProductItem = ({ product }: ProductItemProps) => {
   return (
-    <Link href={`/products/${product.id}`} className="relative group h-full">
+    <Link href={`/products/${product.id}`} asChild>
       <View style={styles.card}>
         <Image
           alt={product.name}
-          width={640}
-          height={640}
           style={styles.image}
           source={{ uri: product.images[0].url }}
         />
         <View style={styles.cardBody}>
-          <Text style={styles.cardTitle}>{product.name}</Text>
-          <Text>{product.desc}</Text>
+          <Text numberOfLines={1} style={styles.cardTitle}>
+            {product.name}
+          </Text>
           <View style={styles.cardFooter}>
             <Text style={styles.category}>{product.category.name}</Text>
             <Text style={styles.price}>{formatPrice(product.price)}</Text>
@@ -38,37 +37,36 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     borderWidth: 1,
     borderColor: Gray.GRAY_200,
+    width: Dimensions.get("window").width / 2,
+    flex: 1,
   },
   image: {
     objectFit: "cover",
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
     aspectRatio: 1,
+    width: "100%",
   },
   cardBody: {
-    paddingTop: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 8,
     rowGap: 4,
     borderTopWidth: 1,
     borderStyle: "solid",
     borderTopColor: Gray.GRAY_200,
   },
   cardTitle: {
-    fontSize: 18,
-    fontFamily: Font.SemiBold,
-  },
-  cardDescription: {
-    color: Gray.GRAY_500,
+    fontFamily: Font.Medium,
   },
   cardFooter: {
-    justifyContent: "flex-end",
     flex: 1,
   },
   category: {
     color: Gray.GRAY_500,
-    fontFamily: Font.RegularItalic,
+    fontFamily: Font.Regular,
   },
   price: {
-    fontFamily: Font.Medium,
+    fontFamily: Font.SemiBold,
     fontSize: 18,
     color: Gray.GRAY_900,
   },

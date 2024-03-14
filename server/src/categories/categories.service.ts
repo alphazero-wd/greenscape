@@ -60,7 +60,13 @@ export class CategoriesService {
         orderBy,
         skip: offset,
         where,
-        include: { _count: { select: { products: true } } },
+        include: {
+          products: {
+            take: 1,
+            select: { images: { take: 1, select: { id: true, url: true } } },
+          },
+          _count: { select: { products: true } },
+        },
       });
 
       const count = await this.prisma.category.count({

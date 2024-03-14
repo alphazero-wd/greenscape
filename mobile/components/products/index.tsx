@@ -1,17 +1,22 @@
 import { Product } from "@/types/product";
-import { FlatList, ScrollView, StyleSheet } from "react-native";
+import { FlatList, FlatListProps } from "react-native";
 import { ProductItem } from "./product-item";
 
-interface ProductsProps {
+interface ProductsProps
+  extends Omit<FlatListProps<any>, "data" | "renderItem"> {
   products: Product[];
 }
 
-export const Products = ({ products }: ProductsProps) => {
+export const Products = ({ products, ...props }: ProductsProps) => {
   return (
-    <ScrollView style={{ rowGap: 4 }}>
-      {products.map((product) => (
-        <ProductItem product={product} />
-      ))}
-    </ScrollView>
+    <FlatList
+      style={{ padding: 12 }}
+      numColumns={2} // children need to specify width
+      contentContainerStyle={{ gap: 12 }}
+      columnWrapperStyle={{ gap: 8 }}
+      {...props}
+      data={products}
+      renderItem={({ item }) => <ProductItem product={item} key={item.id} />}
+    />
   );
 };

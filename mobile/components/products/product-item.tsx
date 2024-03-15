@@ -1,5 +1,12 @@
 import { Product } from "@/types/product";
-import { View, Image, Text, StyleSheet, Dimensions } from "react-native";
+import {
+  View,
+  Image,
+  Text,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 import { formatPrice } from "@/utils/format-price";
 import { Font, Gray } from "@/types/theme";
 import { Link } from "expo-router";
@@ -10,8 +17,14 @@ interface ProductItemProps {
 
 export const ProductItem = ({ product }: ProductItemProps) => {
   return (
-    <Link href={`/products/${product.id}`} asChild>
-      <View style={styles.card}>
+    <Link
+      href={{
+        pathname: "/product/[id]",
+        params: { id: product.id.toString() },
+      }}
+      asChild
+    >
+      <TouchableOpacity style={styles.card}>
         <Image
           alt={product.name}
           style={styles.image}
@@ -26,7 +39,7 @@ export const ProductItem = ({ product }: ProductItemProps) => {
             <Text style={styles.price}>{formatPrice(product.price)}</Text>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     </Link>
   );
 };

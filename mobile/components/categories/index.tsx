@@ -15,8 +15,8 @@ export const Categories = ({ categories }: CategoriesProps) => {
       contentContainerStyle={{ gap: 8 }}
       data={categories}
       renderItem={({ item }) => <CategoryItem category={item} key={item.id} />}
-      ListFooterComponent={<View style={{ width: 16 }}></View>}
-      ListHeaderComponent={<View style={{ width: 16 }}></View>}
+      ListFooterComponent={<View style={{ width: 8 }}></View>}
+      ListHeaderComponent={<View style={{ width: 8 }}></View>}
     />
   );
 };

@@ -12,3 +12,14 @@ export const getProducts = async (query?: string): Promise<Product[]> => {
     return [];
   }
 };
+
+export const getProduct = async (id: string): Promise<Product | null> => {
+  try {
+    const res = await fetch(API_URL + "/" + id);
+    const { data } = await res.json();
+    return data;
+  } catch (error) {
+    console.error(error.message);
+    return null;
+  }
+};

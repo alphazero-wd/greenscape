@@ -1,21 +1,14 @@
-import {
-  ImageBackground,
-  TouchableOpacity,
-  Text,
-  View,
-  StyleSheet,
-} from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Ionicons } from "@expo/vector-icons";
-import { Font, Gray } from "@/types/theme";
-import { Logo } from "@/components/common/logo";
-import { Products } from "@/components/products";
-import { useEffect, useState } from "react";
-import { Product } from "@/types/product";
+import { getCategories } from "@/api/categories";
 import { getProducts } from "@/api/products";
 import { Categories } from "@/components/categories";
+import { Products } from "@/components/products";
 import { Category } from "@/types/category";
-import { getCategories } from "@/api/categories";
+import { Product } from "@/types/product";
+import { Font } from "@/types/theme";
+import { useEffect, useState } from "react";
+import { ImageBackground, StyleSheet, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { AppBar } from "@/components/layout/appbar";
 
 export default function ProductsPage() {
   const insets = useSafeAreaInsets();
@@ -32,12 +25,7 @@ export default function ProductsPage() {
 
   return (
     <View style={{ paddingTop: 8 + insets.top }}>
-      <View style={styles.appBar}>
-        <Logo />
-        <TouchableOpacity activeOpacity={0.6}>
-          <Ionicons name="bag-handle-outline" size={28} color={Gray.GRAY_700} />
-        </TouchableOpacity>
-      </View>
+      <AppBar />
       <Products
         ListHeaderComponent={
           <>
@@ -66,15 +54,6 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 999,
   },
-  appBar: {
-    paddingLeft: 8,
-    paddingRight: 20,
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    flexDirection: "row",
-    width: "100%",
-  },
   overlay: {
     height: "100%",
     width: "100%",
@@ -87,7 +66,7 @@ const styles = StyleSheet.create({
   },
   banner: {
     marginHorizontal: -12,
-    marginVertical: 16,
+    marginBottom: 16,
     height: 200,
     justifyContent: "center",
   },

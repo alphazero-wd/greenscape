@@ -6,7 +6,7 @@ import {
   Poppins_700Bold,
 } from "@expo-google-fonts/poppins";
 import { useFonts } from "expo-font";
-import { Slot } from "expo-router";
+import { Stack } from "expo-router";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function RootLayout() {
@@ -23,7 +23,11 @@ export default function RootLayout() {
   }
   return (
     <SafeAreaProvider>
-      <Slot />
+      <Stack>
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="product/[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      </Stack>
     </SafeAreaProvider>
   );
 }

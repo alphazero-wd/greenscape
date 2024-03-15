@@ -29,7 +29,7 @@ const App = () => {
             </Text>
           </View>
           <TouchableOpacity activeOpacity={0.8} style={styles.cta}>
-            <Link href="/products" style={styles.ctaText}>
+            <Link replace href="/products" style={styles.ctaText}>
               Start planting
             </Link>
           </TouchableOpacity>

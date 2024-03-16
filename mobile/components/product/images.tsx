@@ -1,14 +1,5 @@
 import { Product } from "@/types/product";
-import { useState } from "react";
-import {
-  FlatList,
-  View,
-  StyleSheet,
-  Image,
-  Pressable,
-  Dimensions,
-} from "react-native";
-import { Color } from "../../types/theme";
+import { StyleSheet, Image, Dimensions, ScrollView, View } from "react-native";
 
 interface ProductImagesProps {
   images: Product["images"];
@@ -16,32 +7,29 @@ interface ProductImagesProps {
 
 export const ProductImages = ({ images }: ProductImagesProps) => {
   return (
-    <FlatList
+    <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={{ gap: 16 }}
-      data={images}
-      style={{ paddingVertical: 16 }}
-      ListHeaderComponent={<View style={{ width: 8 }} />}
-      renderItem={({ item }) => (
-        <Image style={styles.currentImage} source={{ uri: item.url }} />
-      )}
-      ListFooterComponent={<View style={{ width: 8 }} />}
-    />
+      style={{ height: "100%" }}
+    >
+      <View style={{ width: 4 }} />
+      {images.map((image) => (
+        <Image
+          key={image.id}
+          style={styles.currentImage}
+          source={{ uri: image.url }}
+        />
+      ))}
+      <View style={{ width: 4 }} />
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  images: {
-    borderRadius: 8,
-    height: 64,
-    aspectRatio: 1,
-    flex: 1,
-  },
   currentImage: {
     borderRadius: 16,
-    paddingLeft: 16,
-    width: Dimensions.get("window").width - 64,
+    width: Dimensions.get("window").width - 72,
     aspectRatio: 1,
   },
 });

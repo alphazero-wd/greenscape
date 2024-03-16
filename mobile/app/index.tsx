@@ -28,11 +28,11 @@ const App = () => {
               Transforming spaces, nurturing souls, one leaf at a time.
             </Text>
           </View>
-          <TouchableOpacity activeOpacity={0.8} style={styles.cta}>
-            <Link replace href="/products" style={styles.ctaText}>
-              Start planting
-            </Link>
-          </TouchableOpacity>
+          <Link asChild replace href="/products">
+            <TouchableOpacity activeOpacity={0.8} style={styles.cta}>
+              <Text style={styles.ctaText}>Start planting</Text>
+            </TouchableOpacity>
+          </Link>
         </ImageBackground>
       </View>
     </>

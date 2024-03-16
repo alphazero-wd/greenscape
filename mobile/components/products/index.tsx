@@ -10,8 +10,8 @@ interface ProductsProps
 export const Products = ({ products, ...props }: ProductsProps) => {
   return (
     <FlatList
-      style={{ padding: 12 }}
       numColumns={2} // children need to specify width
+      style={{ paddingHorizontal: 12 }}
       contentContainerStyle={{ gap: 12 }}
       columnWrapperStyle={{ gap: 8 }}
       {...props}

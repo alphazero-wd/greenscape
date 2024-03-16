@@ -20,12 +20,12 @@ export const SearchInput = () => {
 const styles = StyleSheet.create({
   searchContainer: {
     position: "relative",
-    paddingHorizontal: 16,
+    paddingHorizontal: 8,
     justifyContent: "center",
   },
   searchIcon: {
     position: "absolute",
-    marginLeft: 32,
+    marginLeft: 24,
   },
   searchBar: {
     borderRadius: 999,

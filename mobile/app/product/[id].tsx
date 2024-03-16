@@ -15,7 +15,7 @@ import { ProductImages } from "@/components/product/images";
 import { Color, Font, Gray } from "@/types/theme";
 import { formatPrice } from "@/utils/format-price";
 import { Ionicons } from "@expo/vector-icons";
-import { Products } from "../../components/products";
+import { Products } from "@/components/products";
 
 export default function ProductPage() {
   const insets = useSafeAreaInsets();

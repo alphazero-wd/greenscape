@@ -29,11 +29,11 @@ export default function ProductPage() {
       if (data) {
         setProduct(data);
 
-        getProducts(`?limit=4&categoryIds=${data.id}&refIds=${data.id}`).then(
-          (data2) => {
-            setRefProducts(data2);
-          }
-        );
+        getProducts(
+          `?limit=4&categoryIds=${data.category.id}&refIds=${data.id}`
+        ).then((data2) => {
+          setRefProducts(data2);
+        });
       } else router.push("/404");
     });
   }, [productId]);

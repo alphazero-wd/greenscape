@@ -1,5 +1,6 @@
 export enum Color {
   Primary = "#22c55e",
+  Secondary = "#161616",
 }
 
 export enum Gray {

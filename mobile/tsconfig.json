@@ -5,6 +5,6 @@
       "@/*": ["*"]
     }
   },
-  "include": ["**/**/**/*.tsx", "**/**/**/*.ts"],
+  "include": ["**/**/*.tsx", "**/**/*.ts"],
   "extends": "expo/tsconfig.base"
 }

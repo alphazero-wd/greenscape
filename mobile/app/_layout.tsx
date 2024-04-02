@@ -1,3 +1,4 @@
+import "expo-dev-client";
 import {
   Poppins_400Regular,
   Poppins_400Regular_Italic,

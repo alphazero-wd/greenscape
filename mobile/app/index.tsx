@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Color, Font } from "../types/theme";
+import { Green, Font } from "../types/theme";
 import { Link } from "expo-router";
 
 const App = () => {
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     fontFamily: Font.Regular,
   },
   cta: {
-    backgroundColor: Color.Primary,
+    backgroundColor: Green.GREEN_500,
     paddingHorizontal: 12,
     paddingVertical: 20,
     marginHorizontal: 40,

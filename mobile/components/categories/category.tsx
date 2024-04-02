@@ -1,7 +1,7 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Category } from "@/types/category";
 import { Font, Gray } from "@/types/theme";
 import { Link } from "expo-router";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface CategoryItemProps {
   category: Category;
@@ -9,7 +9,7 @@ interface CategoryItemProps {
 
 export const CategoryItem = ({ category }: CategoryItemProps) => {
   return (
-    <Link asChild href={"/search?category=" + category}>
+    <Link asChild href={"/search?categoryIds=" + category.id}>
       <TouchableOpacity style={styles.card}>
         <Image
           style={styles.image}

@@ -9,14 +9,14 @@ interface CategoriesProps {
 export const Categories = ({ categories }: CategoriesProps) => {
   return (
     <FlatList
-      style={{ paddingBottom: 16, marginHorizontal: -16 }}
+      style={{ paddingBottom: 16 }}
       horizontal
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={{ gap: 8 }}
       data={categories}
       renderItem={({ item }) => <CategoryItem category={item} key={item.id} />}
-      ListFooterComponent={<View style={{ width: 8 }}></View>}
       ListHeaderComponent={<View style={{ width: 8 }}></View>}
+      ListFooterComponent={<View style={{ width: 8 }}></View>}
     />
   );
 };

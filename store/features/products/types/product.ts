@@ -11,11 +11,6 @@ export interface Product {
   images: { id: string; url: string }[];
 }
 
-export interface StatusGroup {
-  _count: { id: number };
-  status: "Active" | "Draft";
-}
-
 export interface InStockGroup {
   _count: { id: number };
   inStock: number;

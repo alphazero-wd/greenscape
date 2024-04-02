@@ -16,7 +16,8 @@ export const AppBar = () => {
 
 const styles = StyleSheet.create({
   appBar: {
-    paddingRight: 8,
+    paddingRight: 16,
+    paddingLeft: 8,
     paddingBottom: 8,
     display: "flex",
     justifyContent: "space-between",

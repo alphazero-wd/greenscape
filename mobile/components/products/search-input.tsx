@@ -1,18 +1,33 @@
-import { Ionicons } from "@expo/vector-icons";
-import { StyleSheet, TextInput, View } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
+import { Pressable, StyleSheet, TextInput, View } from "react-native";
 import { Font, Gray } from "@/types/theme";
 import React from "react";
 
-export const SearchInput = () => {
+interface SearchInputProps {
+  q: string;
+  setQ: (text: string) => void;
+}
+
+export const SearchInput = ({ q, setQ }: SearchInputProps) => {
   return (
     <View style={styles.searchContainer}>
-      <Ionicons
+      <AntDesign
         style={styles.searchIcon}
-        name="search"
+        name="search1"
         size={24}
         color={Gray.GRAY_400}
       />
-      <TextInput placeholder="Search" style={styles.searchBar} />
+      <TextInput
+        value={q}
+        onChangeText={(text) => setQ(text)}
+        placeholder="Search"
+        style={styles.searchBar}
+      />
+      {q && (
+        <Pressable style={styles.clearSearchButton} onPress={() => setQ("")}>
+          <AntDesign name="close" size={20} color={Gray.GRAY_400} />
+        </Pressable>
+      )}
     </View>
   );
 };
@@ -20,12 +35,12 @@ export const SearchInput = () => {
 const styles = StyleSheet.create({
   searchContainer: {
     position: "relative",
-    paddingHorizontal: 8,
+    paddingHorizontal: 16,
     justifyContent: "center",
   },
   searchIcon: {
     position: "absolute",
-    marginLeft: 24,
+    marginLeft: 32,
   },
   searchBar: {
     borderRadius: 999,
@@ -37,5 +52,10 @@ const styles = StyleSheet.create({
     paddingRight: 28,
     paddingVertical: 12,
     width: "100%",
+  },
+  clearSearchButton: {
+    position: "absolute",
+    marginRight: 32,
+    right: 0,
   },
 });

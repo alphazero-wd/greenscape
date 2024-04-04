@@ -1,4 +1,5 @@
 import { Gray, Green } from "@/types/theme";
+import { useMemo } from "react";
 import { LayoutChangeEvent, StyleSheet, View } from "react-native";
 import {
   Gesture,
@@ -9,7 +10,6 @@ import Animated, {
   interpolate,
   runOnJS,
   useAnimatedStyle,
-  useDerivedValue,
   useSharedValue,
 } from "react-native-reanimated";
 
@@ -18,6 +18,7 @@ interface RangeSliderProps {
   minMaxRange: [number, number];
   onChange: (range: [number, number]) => void;
   step?: number;
+  thumbSize?: number;
 }
 
 export const RangeSlider = ({
@@ -25,30 +26,31 @@ export const RangeSlider = ({
   minMaxRange: [min, max],
   onChange,
   step = 1,
+  thumbSize = 32,
 }: RangeSliderProps) => {
   const sliderWidth = useSharedValue(0);
-  const startPosition = useSharedValue(
-    interpolate(start, [min, max], [0, sliderWidth.value])
-  );
-  const endPosition = useSharedValue(
-    interpolate(end, [min, max], [0, sliderWidth.value])
-  );
+  const startPosition = useSharedValue(0);
+  const endPosition = useSharedValue(0);
 
   const onLayout = (event: LayoutChangeEvent) => {
-    sliderWidth.value = event.nativeEvent.layout.width;
+    const width = event.nativeEvent.layout.width;
+    sliderWidth.value = width;
+    startPosition.value = interpolate(start, [min, max], [0, width]);
+    endPosition.value = interpolate(end, [min, max], [0, width]);
   };
 
   const onDragStart = Gesture.Pan()
     .onChange((event) => {
-      const newStartPosition = startPosition.value + event.changeX;
-      if (newStartPosition >= 0 && newStartPosition <= endPosition.value) {
-        startPosition.value = newStartPosition;
-      }
+      const newStartPosition = Math.min(
+        Math.max(startPosition.value + event.changeX, 0),
+        endPosition.value
+      );
+      startPosition.value = newStartPosition;
     })
     .onEnd(() => {
       runOnJS(onChange)([
         min +
-          Math.floor(
+          Math.round(
             startPosition.value / (sliderWidth.value / ((max - min) / step))
           ) *
             step,
@@ -58,16 +60,18 @@ export const RangeSlider = ({
 
   const onDragEnd = Gesture.Pan()
     .onChange((event) => {
-      const newEndPosition = endPosition.value + event.changeX;
-      if (newEndPosition >= 0 && newEndPosition >= startPosition.value) {
-        endPosition.value = newEndPosition;
-      }
+      const newEndPosition = Math.min(
+        Math.max(endPosition.value + event.changeX, startPosition.value),
+        sliderWidth.value
+      );
+
+      endPosition.value = newEndPosition;
     })
     .onEnd(() => {
       runOnJS(onChange)([
         start,
         min +
-          Math.floor(
+          Math.round(
             endPosition.value / (sliderWidth.value / ((max - min) / step))
           ) *
             step,
@@ -87,15 +91,28 @@ export const RangeSlider = ({
     width: endPosition.value - startPosition.value,
   }));
 
+  const thumbSizeStyles = useMemo(
+    () =>
+      ({
+        width: thumbSize,
+        height: thumbSize,
+      } as const),
+    [thumbSize]
+  );
+
   return (
     <GestureHandlerRootView>
       <View onLayout={onLayout} style={styles.slider}>
         <GestureDetector gesture={onDragStart}>
-          <Animated.View style={[styles.thumb, startThumbStyle]} />
+          <Animated.View
+            style={[styles.thumb, thumbSizeStyles, startThumbStyle]}
+          />
         </GestureDetector>
         <Animated.View style={[styles.selectedRange, sliderStyle]} />
         <GestureDetector gesture={onDragEnd}>
-          <Animated.View style={[styles.thumb, endThumbStyle]} />
+          <Animated.View
+            style={[styles.thumb, thumbSizeStyles, endThumbStyle]}
+          />
         </GestureDetector>
       </View>
     </GestureHandlerRootView>
@@ -119,12 +136,9 @@ const styles = StyleSheet.create({
   },
   thumb: {
     position: "absolute",
-    height: 32,
-    width: 32,
     borderRadius: 9999,
     backgroundColor: "#fff",
     zIndex: 2,
-    shadowColor: Gray.GRAY_400,
-    shadowOffset: { width: 2, height: 2 },
+    elevation: 4,
   },
 });

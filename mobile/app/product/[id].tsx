@@ -14,7 +14,6 @@ import { getProduct, getProducts } from "@/api/products";
 import { ProductImages } from "@/components/product/images";
 import { Green, Font, Gray } from "@/types/theme";
 import { formatPrice } from "@/utils/format-price";
-import { Ionicons } from "@expo/vector-icons";
 import { Products } from "@/components/products";
 
 export default function ProductPage() {
@@ -31,7 +30,7 @@ export default function ProductPage() {
 
         getProducts(
           `?limit=4&categoryIds=${data.category.id}&refIds=${data.id}`
-        ).then((data2) => {
+        ).then(({ data: data2 }) => {
           setRefProducts(data2);
         });
       } else router.push("/404");
@@ -52,12 +51,26 @@ export default function ProductPage() {
                   {formatPrice(product.price)}
                 </Text>
                 <Text style={styles.productDescription}>{product.desc}</Text>
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  style={styles.addToBagButton}
+                <Text
+                  style={[
+                    styles.inStockText,
+                    {
+                      color: product.inStock > 0 ? Green.GREEN_600 : "#dc2626",
+                    },
+                  ]}
                 >
-                  <Text style={styles.addToBagText}>Add to bag</Text>
-                </TouchableOpacity>
+                  {product.inStock > 0
+                    ? product.inStock + " in stock"
+                    : "Out of stock"}
+                </Text>
+                {product.inStock > 0 && (
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    style={styles.addToBagButton}
+                  >
+                    <Text style={styles.addToBagText}>Add to bag</Text>
+                  </TouchableOpacity>
+                )}
               </View>
             </ScrollView>
             {refProducts.length > 0 && (
@@ -87,12 +100,17 @@ const styles = StyleSheet.create({
     fontFamily: Font.Regular,
     color: Gray.GRAY_500,
   },
+  inStockText: {
+    marginTop: 12,
+    fontFamily: Font.Medium,
+    fontSize: 18,
+  },
   addToBagButton: {
     marginVertical: 12,
     backgroundColor: Green.GREEN_500,
     paddingHorizontal: 12,
     paddingVertical: 20,
-    borderRadius: 10,
+    borderRadius: 9999,
     alignItems: "center",
     width: "100%",
   },

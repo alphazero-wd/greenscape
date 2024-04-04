@@ -16,7 +16,7 @@ export const PriceFilter = ({
   onChange,
 }: PriceFilterProps) => {
   return (
-    <>
+    <View style={{ width: "90%" }}>
       <Text style={styles.priceRangeText}>
         Price: {formatPrice(startPrice)} - {formatPrice(endPrice)}
       </Text>
@@ -25,7 +25,7 @@ export const PriceFilter = ({
         currentRange={[startPrice, endPrice]}
         onChange={onChange}
       />
-    </>
+    </View>
   );
 };
 

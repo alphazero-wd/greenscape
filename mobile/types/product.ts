@@ -8,6 +8,10 @@ export interface Product {
   category: ProductCategory;
   images: { id: string; url: string }[];
 }
+export interface ProductsResponse {
+  data: Product[];
+  count: number;
+}
 
 interface ProductCategory {
   id: number;

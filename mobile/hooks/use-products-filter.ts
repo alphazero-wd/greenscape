@@ -6,6 +6,8 @@ import { getProducts } from "@/api/products";
 import { SearchQueries } from "@/types/search";
 import { useLocalSearchParams } from "expo-router";
 import { Range } from "@/types/base";
+import { PAGE_LIMIT } from "../constants";
+import { usePagination } from "./use-pagination";
 
 export const useProductsFilter = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -15,12 +17,14 @@ export const useProductsFilter = () => {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null
   );
-  const [currentPriceRange, setCurrentPriceRange] = useState<Range>([1, 100]);
+  const [totalCount, setTotalCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPriceRange, setCurrentPriceRange] = useState<Range>([1, 500]);
   // @ts-ignore
   const searchParams = useLocalSearchParams<SearchQueries>();
 
   const maxPrice = useMemo(() => {
-    return products.reduce((max, product) => Math.max(max, product.price), 1);
+    return products.reduce((max, product) => Math.max(max, product.price), 500);
   }, [products]);
 
   useEffect(() => {
@@ -32,14 +36,26 @@ export const useProductsFilter = () => {
     if (searchQuery) queryString += "&q=" + searchQuery;
     if (selectedCategory) queryString += "&categoryIds=" + selectedCategory.id;
     if (!isOutOfStockIncluded) queryString += "&inStock=true";
+    queryString +=
+      "&price=" + currentPriceRange[0] + "," + currentPriceRange[1];
+    queryString += "&offset=" + (currentPage - 1) * PAGE_LIMIT;
     setTimeout(
       () =>
-        getProducts("?limit=12" + queryString).then((data) =>
-          setProducts(data)
+        getProducts("?limit=" + PAGE_LIMIT + queryString).then(
+          ({ data, count }) => {
+            setTotalCount(count);
+            setProducts(data);
+          }
         ),
       500
     );
-  }, [searchQuery, isOutOfStockIncluded, selectedCategory?.id]);
+  }, [
+    searchQuery,
+    isOutOfStockIncluded,
+    selectedCategory?.id,
+    currentPriceRange,
+    currentPage,
+  ]);
 
   useEffect(() => {
     if (searchParams.q?.length > 3) setSearchQuery(searchParams.q);
@@ -53,6 +69,17 @@ export const useProductsFilter = () => {
         .map((id: string) => +id);
       const category = categories.find((c) => categoryIds.includes(c.id));
       if (category) setSelectedCategory(category);
+    }
+    if (searchParams.offset)
+      setCurrentPage((+searchParams.offset || currentPage) / PAGE_LIMIT);
+    if (searchParams.price) {
+      const price = searchParams.price
+        .split(",")
+        .map((priceRange: string) => +priceRange);
+      setCurrentPriceRange([
+        price[0] || currentPriceRange[0],
+        price[1] || currentPriceRange[1],
+      ]);
     }
   }, [categories, searchParams.categoryIds]);
 
@@ -68,5 +95,8 @@ export const useProductsFilter = () => {
     maxPrice,
     currentPriceRange,
     setCurrentPriceRange,
+    currentPage,
+    setCurrentPage,
+    totalCount,
   };
 };

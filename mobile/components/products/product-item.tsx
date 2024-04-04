@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Gray.GRAY_200,
     width: Dimensions.get("window").width / 2,
+    elevation: 4,
     flex: 1,
   },
   image: {

@@ -3,4 +3,5 @@ export interface SearchQueries {
   categoryIds?: string;
   price?: string;
   inStock?: string;
+  offset?: string;
 }

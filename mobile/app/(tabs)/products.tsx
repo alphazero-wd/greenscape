@@ -17,7 +17,7 @@ export default function ProductsPage() {
 
   useEffect(() => {
     getProducts("?limit=4&status=Active&sortBy=orders&inStock=true").then(
-      (data) => setProducts(data)
+      ({ data }) => setProducts(data)
     );
 
     getCategories("?limit=4").then((data) => setCategories(data));
@@ -37,12 +37,14 @@ export default function ProductsPage() {
               <Text style={styles.title}>Unleash the Jungle</Text>
               <Text style={styles.title}>in your home!</Text>
             </ImageBackground>
-            <Categories categories={categories} />
+            <View style={{ marginHorizontal: -12 }}>
+              <Categories categories={categories} />
+            </View>
             <Text style={styles.favoritesHeading}>Our Favorites</Text>
           </>
         }
         products={products}
-        ListFooterComponent={<View style={{ height: 60 }} />}
+        ListFooterComponent={<View style={{ height: 50 }} />}
       />
     </View>
   );

@@ -51,8 +51,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Gray.GRAY_200,
     width: Dimensions.get("window").width / 2,
-    elevation: 4,
     flex: 1,
+    zIndex: 2,
   },
   image: {
     objectFit: "cover",
@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 8,
     aspectRatio: 1,
     width: "100%",
+    zIndex: 3,
   },
   cardBody: {
     paddingVertical: 16,

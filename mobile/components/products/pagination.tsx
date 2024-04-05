@@ -25,14 +25,20 @@ export const ProductsPagination = ({
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        disabled={currentPage === 0}
-        style={[styles.button, styles.prevButton]}
+        disabled={currentPage === 1}
+        style={[
+          styles.button,
+          styles.prevButton,
+          { opacity: currentPage === 1 ? 0.7 : 1 },
+        ]}
+        onPress={() => setPage(currentPage - 1)}
       >
-        <AntDesign name="left" color={Gray.GRAY_500} />
+        <AntDesign name="left" size={16} color={Gray.GRAY_400} />
       </TouchableOpacity>
-      {pages.map((page) =>
+      {pages.map((page, index) =>
         typeof page === "number" ? (
           <TouchableOpacity
+            key={index}
             onPress={() => setPage(page)}
             style={[
               styles.button,
@@ -43,6 +49,7 @@ export const ProductsPagination = ({
             ]}
           >
             <Text
+              key={index}
               style={[
                 styles.pageText,
                 { color: currentPage === page ? "white" : Gray.GRAY_900 },
@@ -59,9 +66,16 @@ export const ProductsPagination = ({
       )}
       <TouchableOpacity
         disabled={currentPage === Math.ceil(totalCount / pageSize)}
-        style={[styles.button, styles.nextButton]}
+        style={[
+          styles.button,
+          styles.nextButton,
+          {
+            opacity: currentPage === Math.ceil(totalCount / pageSize) ? 0.7 : 1,
+          },
+        ]}
+        onPress={() => setPage(currentPage + 1)}
       >
-        <AntDesign name="right" color={Gray.GRAY_500} />
+        <AntDesign name="right" size={16} color={Gray.GRAY_400} />
       </TouchableOpacity>
     </View>
   );

@@ -10,13 +10,15 @@ import { AntDesign } from "@expo/vector-icons";
 import { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useProductsFilter } from "@/hooks/use-products-filter";
+import { useProductsFilterSort } from "@/hooks/use-products-filter-sort";
 import { ProductsPagination } from "@/components/products/pagination";
-import { PAGE_LIMIT } from "../../constants";
+import { PAGE_LIMIT } from "@/constants";
+import { SortSelect } from "@/components/products/sort-select";
 
 export default function SearchPage() {
   const insets = useSafeAreaInsets();
   const [isFilterEnabled, setIsFilterEnabled] = useState(false);
+
   const {
     searchQuery,
     setSearchQuery,
@@ -32,7 +34,11 @@ export default function SearchPage() {
     currentPage,
     setCurrentPage,
     totalCount,
-  } = useProductsFilter();
+    sortBy,
+    setSortBy,
+    order,
+    setOrder,
+  } = useProductsFilterSort();
 
   return (
     <View style={{ paddingTop: 8 + insets.top }}>
@@ -40,14 +46,14 @@ export default function SearchPage() {
         <AppBar />
         <SearchInput q={searchQuery} setQ={setSearchQuery} />
       </View>
-
       <Products
+        ListHeaderComponentStyle={{ zIndex: 10 }}
         ListHeaderComponent={
-          <View style={{ marginHorizontal: -16 }}>
+          <View style={{ marginHorizontal: -16, zIndex: 5 }}>
             <View>
               <Categories categories={categories} />
             </View>
-            <View style={{ padding: 16 }}>
+            <View style={{ padding: 16, zIndex: 10 }}>
               <TouchableOpacity
                 onPress={() => setIsFilterEnabled(!isFilterEnabled)}
                 style={styles.filterButton}
@@ -62,6 +68,20 @@ export default function SearchPage() {
                   color={Gray.GRAY_500}
                 />
               </TouchableOpacity>
+              <View style={{ marginTop: 16 }}>
+                <SortSelect
+                  sortBy={sortBy}
+                  order={order}
+                  onValueChange={(newOption) => {
+                    const [sortBy, order] = newOption.split(":") as [
+                      string,
+                      "asc" | "desc"
+                    ];
+                    setSortBy(sortBy);
+                    setOrder(order);
+                  }}
+                />
+              </View>
               {isFilterEnabled && (
                 <View style={{ marginTop: 20 }}>
                   <PriceFilter

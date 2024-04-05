@@ -7,9 +7,8 @@ import { SearchQueries } from "@/types/search";
 import { useLocalSearchParams } from "expo-router";
 import { Range } from "@/types/base";
 import { PAGE_LIMIT } from "../constants";
-import { usePagination } from "./use-pagination";
 
-export const useProductsFilter = () => {
+export const useProductsFilterSort = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isOutOfStockIncluded, setIsOutOfStockIncluded] = useState(false);
@@ -20,6 +19,8 @@ export const useProductsFilter = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [currentPriceRange, setCurrentPriceRange] = useState<Range>([1, 500]);
+  const [sortBy, setSortBy] = useState("id");
+  const [order, setOrder] = useState<"asc" | "desc">("asc");
   // @ts-ignore
   const searchParams = useLocalSearchParams<SearchQueries>();
 
@@ -39,6 +40,7 @@ export const useProductsFilter = () => {
     queryString +=
       "&price=" + currentPriceRange[0] + "," + currentPriceRange[1];
     queryString += "&offset=" + (currentPage - 1) * PAGE_LIMIT;
+    queryString += "&sortBy=" + sortBy + "&order=" + order;
     setTimeout(
       () =>
         getProducts("?limit=" + PAGE_LIMIT + queryString).then(
@@ -55,6 +57,8 @@ export const useProductsFilter = () => {
     selectedCategory?.id,
     currentPriceRange,
     currentPage,
+    sortBy,
+    order,
   ]);
 
   useEffect(() => {
@@ -98,5 +102,9 @@ export const useProductsFilter = () => {
     currentPage,
     setCurrentPage,
     totalCount,
+    sortBy,
+    setSortBy,
+    order,
+    setOrder,
   };
 };

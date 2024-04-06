@@ -1,20 +1,15 @@
+import { getProduct, getProducts } from "@/api/products";
+import { AddToBagButton } from "@/components/product/add-to-bag-button";
+import { ProductImages } from "@/components/product/images";
+import { Products } from "@/components/products";
+import { useBagStore } from "@/hooks/use-bag-store";
+import { Product } from "@/types/product";
+import { Font, Gray, Green } from "@/types/theme";
+import { formatPrice } from "@/utils/format-price";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import {
-  Dimensions,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Product } from "@/types/product";
-import { getProduct, getProducts } from "@/api/products";
-import { ProductImages } from "@/components/product/images";
-import { Green, Font, Gray } from "@/types/theme";
-import { formatPrice } from "@/utils/format-price";
-import { Products } from "@/components/products";
 
 export default function ProductPage() {
   const insets = useSafeAreaInsets();
@@ -22,6 +17,7 @@ export default function ProductPage() {
   const productId = local.id as string;
   const [product, setProduct] = useState<Product | null>();
   const [refProducts, setRefProducts] = useState<Product[]>([]);
+  const addToBag = useBagStore((state) => state.addToBag);
 
   useEffect(() => {
     getProduct(productId).then((data) => {
@@ -63,14 +59,7 @@ export default function ProductPage() {
                     ? product.inStock + " in stock"
                     : "Out of stock"}
                 </Text>
-                {product.inStock > 0 && (
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    style={styles.addToBagButton}
-                  >
-                    <Text style={styles.addToBagText}>Add to bag</Text>
-                  </TouchableOpacity>
-                )}
+                <AddToBagButton product={product} />
               </View>
             </ScrollView>
             {refProducts.length > 0 && (
@@ -104,22 +93,6 @@ const styles = StyleSheet.create({
     marginTop: 12,
     fontFamily: Font.Medium,
     fontSize: 18,
-  },
-  addToBagButton: {
-    marginVertical: 12,
-    backgroundColor: Green.GREEN_500,
-    paddingHorizontal: 12,
-    paddingVertical: 20,
-    borderRadius: 9999,
-    alignItems: "center",
-    width: "100%",
-  },
-  addToBagText: {
-    fontSize: 16,
-    color: "white",
-    fontWeight: "600",
-    fontFamily: Font.SemiBold,
-    textAlign: "center",
   },
   refHeading: {
     fontSize: 20,

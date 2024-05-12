@@ -23,33 +23,42 @@ model User {
 }
 
 model File {
-  id        String @id
-  url       String
-  productId Int?
-
-  product Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+  id    String @id
+  url   String
+  image Image?
 }
 
 model Category {
-  id   Int    @id @default(autoincrement())
-  name String @db.VarChar(60)
+  id               Int        @id @default(autoincrement())
+  slug             String     @unique @db.VarChar(60)
+  name             String     @db.VarChar(60)
+  parentCategoryId Int?
+  parentCategory   Category?  @relation("CategoriesToSubcategories", fields: [parentCategoryId], references: [id], onDelete: Cascade)
+  subCategories    Category[] @relation("CategoriesToSubcategories")
 
   products Product[]
 }
 
-model Product {
-  id         Int      @id @default(autoincrement())
-  name       String   @unique @db.VarChar(120)
-  desc       String
-  price      Float
-  inStock    Int
-  categoryId Int
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  status     Status   @default(Active)
+model Image {
+  fileId    String  @id
+  file      File    @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  productId Int
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
 
-  images   File[]
-  category Category @relation(fields: [categoryId], references: [id])
+model Product {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(120)
+  slug      String   @unique
+  desc      String
+  price     Float
+  inStock   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  status    Status   @default(Active)
+
+  images     Image[]
+  categories Category[]
 
   orders OrdersOnProducts[]
 }
@@ -92,4 +101,5 @@ enum Role {
 enum Status {
   Active
   Draft
+  Archived
 }

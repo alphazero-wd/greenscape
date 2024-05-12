@@ -30,13 +30,27 @@ export class CategoriesController {
     };
   }
 
-  // categories will be displayed on the store so don't apply guard to this endpoint
   @Get()
-  async findAll(@Query() findManyDto: FindManyDto) {
-    const { count, categories } = await this.categoriesService.findAll(
-      findManyDto,
-    );
-    return { success: true, count, data: categories };
+  async findRootCategories(@Query() findManyDto: FindManyDto) {
+    const { count, categories, parents } =
+      await this.categoriesService.findBySlug(findManyDto);
+    return { success: true, count, data: { categories, parents } };
+  }
+
+  @Get(':slug/subs')
+  async findBySlug(
+    @Query() findManyDto: FindManyDto,
+    @Param('slug') slug: string,
+  ) {
+    const { count, categories, parents } =
+      await this.categoriesService.findBySlug(findManyDto, slug);
+    return { success: true, count, data: { categories, parents } };
+  }
+
+  @Get('tree')
+  async findCategoriesTree() {
+    const categories = await this.categoriesService.findCategoriesTree();
+    return { success: true, categories };
   }
 
   @Patch(':id')

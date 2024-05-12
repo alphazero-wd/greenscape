@@ -39,21 +39,19 @@ export class ProductsController {
 
   @Get()
   async findAll(@Query() findManyProductsDto: FindManyProductsDto) {
-    const { products, count, statusGroups, inStockGroups, categoryGroups } =
-      await this.productsService.findAll(findManyProductsDto);
+    const { products, count } = await this.productsService.findAll(
+      findManyProductsDto,
+    );
     return {
       success: true,
       data: products,
       count,
-      statusGroups,
-      categoryGroups,
-      inStockGroups,
     };
   }
 
-  @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number) {
-    const product = await this.productsService.findOne(id);
+  @Get('details/:slug')
+  async findOne(@Param('slug') slug: string) {
+    const product = await this.productsService.findBySlug(slug);
     return { success: true, data: product };
   }
 
@@ -69,7 +67,7 @@ export class ProductsController {
     )
     files: Express.Multer.File[],
   ) {
-    await this.productsService.uploadImages(
+    await this.productsService.uploadProductImages(
       id,
       files.map((file) => ({
         buffer: file.buffer,
@@ -77,6 +75,13 @@ export class ProductsController {
       })),
     );
     return { success: true };
+  }
+
+  @Get('aggregate')
+  async aggregateProducts(@Query() dto: FindManyProductsDto) {
+    const inStockGroups = await this.productsService.aggregate('inStock', dto);
+    const statusGroups = await this.productsService.aggregate('status', dto);
+    return { inStockGroups, statusGroups, status: true };
   }
 
   @Delete(':productId/remove-images')

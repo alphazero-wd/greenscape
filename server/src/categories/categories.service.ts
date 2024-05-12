@@ -5,21 +5,20 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateCategoryDto, UpdateCategoryDto } from './dto';
-import { PrismaService } from '../prisma/prisma.service';
-import { removeWhiteSpaces } from '../common/utils';
 import { Prisma } from '@prisma/client';
 import { PrismaError } from '../prisma/prisma-error';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateCategoryDto, UpdateCategoryDto } from './dto';
 import { FindManyDto } from '../common/dto';
 
 @Injectable()
 export class CategoriesService {
   constructor(private prisma: PrismaService) {}
 
-  async create({ name }: CreateCategoryDto) {
+  async create(dto: CreateCategoryDto) {
     try {
       const newCategory = await this.prisma.category.create({
-        data: { name: removeWhiteSpaces(name) },
+        data: dto,
       });
       return newCategory;
     } catch (error) {
@@ -27,8 +26,7 @@ export class CategoriesService {
         if (error.code === PrismaError.UniqueViolation)
           throw new BadRequestException({
             success: false,
-            message:
-              'Category with the given `name` already exists in the store',
+            message: 'Duplicate slug',
           });
       }
       throw new InternalServerErrorException({
@@ -38,29 +36,48 @@ export class CategoriesService {
     }
   }
 
-  async findAll({
-    limit,
-    order = 'asc',
-    sortBy = 'id',
-    offset = 0,
-    q = '',
-  }: FindManyDto) {
+  private formQueries({ q, sortBy, order }: FindManyDto, slug: string = null) {
     const where: Prisma.CategoryWhereInput = {
+      parentCategory: { slug },
       name: {
-        search: q ? removeWhiteSpaces(q).split(' ').join(' & ') : undefined,
+        contains: q,
         mode: 'insensitive',
       },
     };
     let orderBy = {};
     if (sortBy === 'products') orderBy = { products: { _count: order } };
     else orderBy = { [sortBy]: order };
+    return { where, orderBy };
+  }
+
+  async findBySlug(
+    { limit, offset = 0, ...findManyCategoriesDto }: FindManyDto,
+    slug: string = null,
+  ) {
+    const { where, orderBy } = this.formQueries(findManyCategoriesDto, slug);
+
     try {
       const categories = await this.prisma.category.findMany({
         take: limit,
         orderBy,
         skip: offset,
         where,
-        include: { _count: { select: { products: true } } },
+        include: {
+          _count: { select: { subCategories: true, products: true } },
+        },
+      });
+
+      const parents = await this.prisma.category.findUnique({
+        where: { slug },
+        include: {
+          parentCategory: {
+            select: {
+              slug: true,
+              name: true,
+              parentCategory: { select: { slug: true, name: true } },
+            },
+          },
+        },
       });
 
       const count = await this.prisma.category.count({
@@ -69,6 +86,7 @@ export class CategoriesService {
       return {
         count,
         categories,
+        parents,
       };
     } catch (error) {
       throw new InternalServerErrorException({
@@ -78,11 +96,22 @@ export class CategoriesService {
     }
   }
 
-  async update(id: number, { name }: UpdateCategoryDto) {
+  async findCategoriesTree() {
+    const categories = await this.prisma.category.findMany({
+      include: {
+        subCategories: {
+          include: { subCategories: { include: { subCategories: true } } },
+        },
+      },
+    });
+    return categories;
+  }
+
+  async update(id: number, dto: UpdateCategoryDto) {
     try {
       const updatedCategory = await this.prisma.category.update({
         where: { id },
-        data: { name: removeWhiteSpaces(name) },
+        data: dto,
       });
       return updatedCategory;
     } catch (error) {
@@ -90,8 +119,7 @@ export class CategoriesService {
         if (error.code === PrismaError.UniqueViolation)
           throw new BadRequestException({
             success: false,
-            message:
-              'Category with the given `name` already exists in the store',
+            message: 'Duplicate slug',
           });
         if (error.code === PrismaError.RecordNotFound)
           throw new NotFoundException({

@@ -20,15 +20,15 @@ export class FilesService {
     this.s3Client = new S3Client({});
   }
 
-  async createMany(uploadFilesDto: UploadFileDto[], productId?: number) {
+  async createMany(uploadFilesDto: UploadFileDto[]) {
     const uploadResults = await this.uploadToS3(uploadFilesDto);
-    return this.prisma.file.createMany({
+    await this.prisma.file.createMany({
       data: uploadResults.map(({ Key, Location }) => ({
         id: Key,
         url: Location,
-        productId,
       })),
     });
+    return uploadResults;
   }
 
   private async uploadToS3(uploadFilesDto: UploadFileDto[]) {

@@ -5,21 +5,18 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateProductDto, FindManyProductsDto, UpdateProductDto } from './dto';
-import { PrismaService } from '../prisma/prisma.service';
 import { Prisma } from '@prisma/client';
-import { PrismaError } from '../prisma/prisma-error';
 import { UploadFileDto } from '../files/dto';
 import { FilesService } from '../files/files.service';
-import { removeWhiteSpaces } from '../common/utils';
-import { ConfigService } from '@nestjs/config';
+import { PrismaError } from '../prisma/prisma-error';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateProductDto, FindManyProductsDto, UpdateProductDto } from './dto';
 
 @Injectable()
 export class ProductsService {
   constructor(
     private prisma: PrismaService,
     private filesService: FilesService,
-    private configService: ConfigService,
   ) {}
 
   async create(createProductDto: CreateProductDto) {
@@ -49,46 +46,58 @@ export class ProductsService {
     }
   }
 
-  async uploadImages(productId: number, uploadFilesDto: UploadFileDto[]) {
-    await this.filesService.createMany(uploadFilesDto, productId);
+  async uploadProductImages(
+    productId: number,
+    imagesUploadDto: UploadFileDto[],
+  ) {
+    const uploadResults = await this.filesService.createMany(imagesUploadDto);
+    await this.prisma.image.createMany({
+      data: uploadResults.map(({ Key }) => ({
+        fileId: Key,
+        productId,
+      })),
+    });
+  }
+
+  private formQueries({
+    q,
+    status,
+    categoryIds,
+    price,
+    inStock,
+    refIds,
+    sortBy,
+    order,
+  }: FindManyProductsDto) {
+    const where: Prisma.ProductWhereInput = {};
+    where.name = {
+      contains: q,
+      mode: 'insensitive',
+    };
+    if (status) where.status = status;
+    if (categoryIds) where.categories = { some: { id: { in: categoryIds } } };
+    if (price) {
+      where.price = {};
+      if (price[0]) where.price.gte = price[0];
+      if (price[1]) where.price.lte = price[1];
+    }
+    if (inStock !== undefined)
+      where.inStock = inStock ? { gt: 0 } : { equals: 0 };
+    if (refIds) where.id = { not: { in: refIds } };
+
+    let orderBy: Prisma.ProductOrderByWithRelationAndSearchRelevanceInput = {};
+    if (sortBy === 'orders') orderBy = { orders: { _count: order } };
+    else orderBy = { [sortBy]: order };
+    return { where, orderBy };
   }
 
   async findAll({
     limit = 10,
-    categoryIds,
     offset = 0,
-    q = '',
-    sortBy = 'id',
-    order = 'asc',
-    price,
-    status,
-    inStock,
-    refIds,
+    ...findManyProductsDto
   }: FindManyProductsDto) {
     try {
-      const where: Prisma.ProductWhereInput = {};
-      where.name = q
-        ? {
-            search: removeWhiteSpaces(q).split(' ').join(' & '),
-            mode: 'insensitive',
-          }
-        : undefined;
-      if (status) where.status = status;
-      if (categoryIds) where.categoryId = { in: categoryIds };
-      if (price) {
-        where.price = {};
-        if (price[0]) where.price.gte = price[0];
-        if (price[1]) where.price.lte = price[1];
-      }
-      if (inStock !== undefined)
-        where.inStock = inStock ? { gt: 0 } : { equals: 0 };
-      if (refIds) where.id = { not: { in: refIds } };
-
-      let orderBy: Prisma.ProductOrderByWithRelationAndSearchRelevanceInput =
-        {};
-      if (sortBy === 'orders') orderBy = { orders: { _count: order } };
-      else orderBy = { [sortBy]: order };
-
+      const { where, orderBy } = this.formQueries(findManyProductsDto);
       const products = await this.prisma.product.findMany({
         take: limit,
         skip: offset,
@@ -104,16 +113,17 @@ export class ProductsService {
           desc: true,
           status: true,
           images: {
-            select: { id: true, url: true },
-            orderBy: { id: 'asc' },
+            select: { file: { select: { url: true } } },
             take: 1,
           },
-          category: true,
+          categories: {
+            include: { parentCategory: { include: { parentCategory: true } } },
+          },
           _count: { select: { orders: true } },
         },
       });
-      const aggregateResult = await this.aggregateProducts(where);
-      return { products, ...aggregateResult };
+      const count = await this.prisma.product.count({ where });
+      return { products, count };
     } catch (error) {
       throw new InternalServerErrorException({
         success: false,
@@ -122,27 +132,9 @@ export class ProductsService {
     }
   }
 
-  private async aggregateProducts(where: Prisma.ProductWhereInput) {
-    const whereStatusGroups = { ...where };
-    delete whereStatusGroups.status;
-    const whereCategoryGroups = { ...where };
-    delete whereCategoryGroups.categoryId;
-    const whereInStockGroups = { ...where };
-    delete whereInStockGroups.inStock;
-    const statusGroups = await this.groupBy('status', whereStatusGroups);
-    const categoryGroups = await this.groupBy(
-      'categoryId',
-      whereCategoryGroups,
-    );
-    const inStockGroups = await this.groupBy('inStock', whereInStockGroups);
-    const count = await this.prisma.product.count({ where });
-    return { statusGroups, categoryGroups, inStockGroups, count };
-  }
-
-  private async groupBy(
-    field: 'status' | 'categoryId' | 'inStock',
-    where: Prisma.ProductWhereInput,
-  ) {
+  async aggregate(field: 'status' | 'inStock', dto: FindManyProductsDto) {
+    const { where } = this.formQueries(dto);
+    delete where[field];
     return this.prisma.product.groupBy({
       by: field,
       _count: { id: true },
@@ -150,12 +142,13 @@ export class ProductsService {
     });
   }
 
-  async findOne(id: number) {
+  async findBySlug(slug: string) {
     const product = await this.prisma.product.findUnique({
-      where: { id },
+      where: { slug },
       include: {
-        images: { select: { id: true, url: true }, orderBy: { id: 'asc' } },
-        category: true,
+        images: {
+          select: { file: { select: { id: true, url: true } } },
+        },
       },
     });
     if (!product)
@@ -195,8 +188,13 @@ export class ProductsService {
   }
 
   async removeImages(productId: number, imageIds: string[]) {
-    const product = await this.findOne(productId);
-    const productImageIds = product.images.map((img) => img.id);
+    const product = await this.prisma.product.findUnique({
+      where: { id: productId },
+      select: {
+        images: { select: { file: { select: { id: true } } } },
+      },
+    });
+    const productImageIds = product.images.map((img) => img.file.id);
     if (imageIds.some((id) => !productImageIds.includes(id)))
       throw new NotFoundException({
         success: false,
@@ -207,7 +205,6 @@ export class ProductsService {
         success: false,
         message: 'Cannot delete all images of the product',
       });
-    console.log({ imageIds });
     await this.filesService.remove(imageIds);
   }
 
@@ -217,7 +214,7 @@ export class ProductsService {
         const productsWithImagesOnly = await transactionClient.product.findMany(
           {
             where: { id: { in: ids } },
-            select: { images: { select: { id: true } } },
+            select: { images: { select: { file: true } } },
           },
         );
         if (productsWithImagesOnly.length !== ids.length)
@@ -228,7 +225,7 @@ export class ProductsService {
             } products were not deleted because they were not found`,
           });
         const imageKeys = productsWithImagesOnly.flatMap((img) =>
-          img.images.flatMap(({ id }) => id),
+          img.images.flatMap(({ file }) => file.id),
         );
         await this.filesService.remove(imageKeys);
         await transactionClient.product.deleteMany({

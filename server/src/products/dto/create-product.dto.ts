@@ -5,12 +5,20 @@ import {
   IsNumber,
   IsString,
   Length,
+  Matches,
   Min,
 } from 'class-validator';
+import { VALID_SLUG_REGEX } from '../../common/constants';
 
 export class CreateProductDto {
   @Length(1, 120)
+  @IsString()
   name: string;
+
+  @Matches(VALID_SLUG_REGEX, { message: 'invalid slug' })
+  @IsString()
+  @Length(1, 120)
+  slug: string;
 
   @IsNotEmpty()
   @IsString()

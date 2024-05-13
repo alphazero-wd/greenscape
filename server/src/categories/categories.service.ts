@@ -36,21 +36,48 @@ export class CategoriesService {
     }
   }
 
-  private formQueries({ q, sortBy, order }: FindManyDto, slug: string = null) {
+  private formQueries(
+    { q, sortBy = 'id', order = 'asc' }: FindManyDto,
+    slug: string = null,
+  ) {
     const where: Prisma.CategoryWhereInput = {
-      parentCategory: { slug },
+      parentCategory: slug ? { slug } : null,
       name: {
         contains: q,
         mode: 'insensitive',
       },
     };
     let orderBy = {};
-    if (sortBy === 'products') orderBy = { products: { _count: order } };
+    if (sortBy === 'products' || sortBy === 'subCategories')
+      orderBy = { [sortBy]: { _count: order } };
     else orderBy = { [sortBy]: order };
     return { where, orderBy };
   }
 
-  async findBySlug(
+  async findParentsBySlug(slug: string) {
+    return this.prisma.category.findUnique({
+      where: { slug: slug },
+      include: {
+        parentCategory: {
+          select: {
+            slug: true,
+            name: true,
+            parentCategory: { select: { slug: true, name: true } },
+          },
+        },
+      },
+    });
+  }
+
+  async paginate(dto: Omit<FindManyDto, 'limit' | 'offset'>, slug?: string) {
+    const { where } = this.formQueries(dto, slug);
+    const count = await this.prisma.category.count({
+      where,
+    });
+    return count;
+  }
+
+  async findAll(
     { limit, offset = 0, ...findManyCategoriesDto }: FindManyDto,
     slug: string = null,
   ) {
@@ -67,27 +94,7 @@ export class CategoriesService {
         },
       });
 
-      const parents = await this.prisma.category.findUnique({
-        where: { slug },
-        include: {
-          parentCategory: {
-            select: {
-              slug: true,
-              name: true,
-              parentCategory: { select: { slug: true, name: true } },
-            },
-          },
-        },
-      });
-
-      const count = await this.prisma.category.count({
-        where,
-      });
-      return {
-        count,
-        categories,
-        parents,
-      };
+      return categories;
     } catch (error) {
       throw new InternalServerErrorException({
         success: false,

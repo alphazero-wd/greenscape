@@ -1,5 +1,5 @@
 import { LoginForm } from "@/features/auth/login/login-form";
-import { Card, CardContent, CardHeader, CardTitle } from "@/features/ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@/features/ui/card";
 import { getCurrentUser } from "@/features/user/utils";
 import { redirect } from "next/navigation";
 

@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Controller,
   Get,
+  Param,
   ParseIntPipe,
   Query,
   UseGuards,
@@ -21,8 +22,8 @@ export class MetricsController {
     return { data: stats, success: true };
   }
 
-  @Get('year')
-  async getMonthlyRevenues(@Query('year', ParseIntPipe) year?: number) {
+  @Get('year/:year')
+  async getMonthlyRevenues(@Param('year', ParseIntPipe) year: number) {
     const stats = await this.metricsService.getMonthsRevenuesInYear(
       year || new Date().getFullYear(),
     );

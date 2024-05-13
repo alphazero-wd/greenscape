@@ -1,6 +1,6 @@
 import { getOrders } from "@/features/orders/actions";
 import { OrdersTable } from "@/features/orders/table";
-import { Breadcrumb } from "@/features/ui";
+import { Breadcrumb } from "@/features/ui/breadcrumb";
 import { getCurrentUser } from "@/features/user/utils";
 import { redirect } from "next/navigation";
 import qs from "query-string";

@@ -40,13 +40,13 @@ export class MetricsService {
       _avg: { total: true },
       where: { createdAt: { gte: startMonthDate, lte: date } },
     });
-    return [revenue, avgOrderValue];
+    return [+revenue, +avgOrderValue];
   }
 
   private async getMonthSales(date: Date) {
     const startMonthDate = startOfMonth(date);
     const {
-      _sum: { qty: sales = 0 },
+      _sum: { qty: sales },
     } = await this.prisma.ordersOnProducts.aggregate({
       _sum: { qty: true },
       where: {
@@ -54,19 +54,18 @@ export class MetricsService {
       },
     });
 
-    return sales;
+    return +sales;
   }
 
   private async getMonthCustomers(date: Date) {
     const startMonthDate = startOfMonth(date);
-    const customers = await this.prisma.order.count({
-      distinct: 'customer',
-      where: {
-        createdAt: { gte: startMonthDate, lte: date },
-      },
-    });
+    const [{ count }] = await this.prisma.$queryRaw<[{ count: BigInt }]>`
+      SELECT COUNT(DISTINCT "customer")
+      FROM "Order" o
+      WHERE o."createdAt" >= ${startMonthDate} AND o."createdAt" <= ${date};
+    `;
 
-    return customers;
+    return Number(count);
   }
 
   async getMonthsRevenuesInYear(year: number) {

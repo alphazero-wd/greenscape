@@ -1,3 +1,4 @@
+export { type FilePreview } from "./file-preview";
 export {
   type CategoryGroup,
   type InStockGroup,

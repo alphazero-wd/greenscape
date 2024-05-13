@@ -1,11 +1,9 @@
 "use client";
-import {
-  DataTable,
-  DataTablePagination,
-  DataTableViewOptions,
-  Input,
-  useTable,
-} from "@/features/ui";
+import { DataTable } from "@/features/common/data-table/data-table";
+import { DataTablePagination } from "@/features/common/data-table/pagination";
+import { useTable } from "@/features/common/data-table/use-table";
+import { DataTableViewOptions } from "@/features/common/data-table/view-options";
+import { Input } from "@/features/ui/input";
 import React from "react";
 import { Category } from "../types";
 import { columns } from "./columns";

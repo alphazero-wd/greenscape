@@ -1,7 +1,9 @@
 import { getCategories } from "@/features/categories/actions";
+import { DeleteRecordsModal } from "@/features/common/delete-records";
 import { getProducts } from "@/features/products/actions";
 import { ProductsTable } from "@/features/products/table";
-import { Breadcrumb, Button, DeleteRecordsModal } from "@/features/ui";
+import { Breadcrumb } from "@/features/ui/breadcrumb";
+import { Button } from "@/features/ui/button";
 import { getCurrentUser } from "@/features/user/utils";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
@@ -57,7 +59,9 @@ export default async function ProductsPage({
   });
   const { count, data, statusGroups, categoryGroups, inStockGroups } =
     await getProducts(query);
-  const { data: categories } = await getCategories();
+  const {
+    data: { categories },
+  } = await getCategories();
 
   return (
     <>

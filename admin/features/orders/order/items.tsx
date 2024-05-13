@@ -1,4 +1,5 @@
 "use client";
+import { formatPrice } from "@/features/common/utils";
 import {
   Table,
   TableBody,
@@ -7,7 +8,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/features/ui";
-import { formatPrice } from "@/features/utils";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Order } from "../types";

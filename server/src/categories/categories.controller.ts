@@ -30,11 +30,11 @@ export class CategoriesController {
     };
   }
 
-  @Get()
+  @Get('subs')
   async findRootCategories(@Query() findManyDto: FindManyDto) {
-    const { count, categories, parents } =
-      await this.categoriesService.findBySlug(findManyDto);
-    return { success: true, count, data: { categories, parents } };
+    const categories = await this.categoriesService.findAll(findManyDto);
+    const count = await this.categoriesService.paginate(findManyDto);
+    return { success: true, data: { categories, parents: null }, count };
   }
 
   @Get(':slug/subs')
@@ -42,15 +42,16 @@ export class CategoriesController {
     @Query() findManyDto: FindManyDto,
     @Param('slug') slug: string,
   ) {
-    const { count, categories, parents } =
-      await this.categoriesService.findBySlug(findManyDto, slug);
+    const categories = await this.categoriesService.findAll(findManyDto, slug);
+    const parents = await this.categoriesService.findParentsBySlug(slug);
+    const count = await this.categoriesService.paginate(findManyDto, slug);
     return { success: true, count, data: { categories, parents } };
   }
 
   @Get('tree')
   async findCategoriesTree() {
     const categories = await this.categoriesService.findCategoriesTree();
-    return { success: true, categories };
+    return { success: true, data: categories };
   }
 
   @Patch(':id')

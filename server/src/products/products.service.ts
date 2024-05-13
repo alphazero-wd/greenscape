@@ -59,6 +59,12 @@ export class ProductsService {
     });
   }
 
+  async findOne(id: number) {
+    const product = await this.prisma.product.findUnique({ where: { id } });
+    if (!product) throw new NotFoundException('Product not found');
+    return product;
+  }
+
   private formQueries({
     q,
     status,

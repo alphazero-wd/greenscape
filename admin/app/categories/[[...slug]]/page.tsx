@@ -1,12 +1,12 @@
 import { getCategories } from "@/features/categories/actions";
 import { CreateCategoryButton } from "@/features/categories/create-category";
 import { CategoriesTable } from "@/features/categories/table";
+import { generatePaths } from "@/features/categories/utils";
 import { Breadcrumb } from "@/features/ui/breadcrumb";
 import { getCurrentUser } from "@/features/user/utils";
 import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
 import qs from "query-string";
-import { generatePaths } from "../../../features/categories/utils";
 
 const CreateCategoryModal = dynamic(
   () => import("@/features/categories/create-category/modal"),

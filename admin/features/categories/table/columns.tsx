@@ -1,9 +1,11 @@
 "use client";
 
-import { CopyButton } from "@/features/common/components/copy-button";
-import { DataTableColumnHeader } from "@/features/common/data-table/column-header";
-import { DataTableRowActions } from "@/features/common/data-table/row-actions";
-import { useDeleteRecordsModal } from "@/features/common/delete-records/use-modal";
+import { CopyButton } from "@/features/common/components";
+import {
+  DataTableColumnHeader,
+  DataTableRowActions,
+} from "@/features/common/data-table";
+import { useDeleteRecordsModal } from "@/features/common/delete-records";
 import { Checkbox } from "@/features/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
 import { useEditCategoryModal } from "../edit-category";
@@ -82,6 +84,7 @@ export const columns: ColumnDef<Category>[] = [
       const { onOpen: onDeleteOpen } = useDeleteRecordsModal();
       return (
         <div className="flex items-center justify-end">
+          <ShowSubcategoriesButton slug={row.original.slug} />
           <ShowSubcategoriesButton slug={row.original.slug} />
           <CopyButton text="Copy category name" content={row.original.name} />
           <DataTableRowActions

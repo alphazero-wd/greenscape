@@ -1,6 +1,6 @@
 import { getCategories } from "@/features/categories/actions";
 import { CreateProduct } from "@/features/products/create-product";
-import { Breadcrumb } from "@/features/ui";
+import { Breadcrumb } from "@/features/ui/breadcrumb";
 import { getCurrentUser } from "@/features/user/utils";
 import { redirect } from "next/navigation";
 
@@ -11,7 +11,9 @@ export const metadata = {
 export default async function CreateProductPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/auth/login");
-  const { data: categories } = await getCategories();
+  const {
+    data: { categories },
+  } = await getCategories();
 
   return (
     <div className="container max-w-7xl">

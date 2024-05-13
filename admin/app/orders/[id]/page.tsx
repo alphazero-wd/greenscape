@@ -1,12 +1,13 @@
+import { formatPrice } from "@/features/common/utils";
 import { getOrder } from "@/features/orders/actions";
 import {
   OrderItems,
   OrderOverview,
   OrderSummary,
 } from "@/features/orders/order";
-import { Breadcrumb, Separator } from "@/features/ui";
+import { Breadcrumb } from "@/features/ui/breadcrumb";
+import { Separator } from "@/features/ui/separator";
 import { getCurrentUser } from "@/features/user/utils";
-import { formatPrice } from "@/features/utils";
 import { redirect } from "next/navigation";
 
 interface OrderPageProps {

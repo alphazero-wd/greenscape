@@ -1,5 +1,14 @@
 export interface Category {
   id: number;
   name: string;
-  _count: { products: number };
+  slug: string;
+  parentCategory: Category | null;
+  subCategories?: Category[];
+  parentCategoryId?: number;
+  _count: { products: number; subCategories: number };
+}
+
+export interface CategoryFormDto {
+  name: string;
+  slug: string;
 }

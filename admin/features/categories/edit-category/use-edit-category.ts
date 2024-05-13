@@ -6,15 +6,9 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
+import { formSchema } from "../form";
 import { Category } from "../types";
-import { useEditCategoryModal } from "./use-edit-category-modal";
-
-const formSchema = z.object({
-  name: z
-    .string()
-    .min(1, { message: "Category name must be between 1 and 20 characters" })
-    .max(20, { message: "Category name must be between 1 and 20 characters" }),
-});
+import { useEditCategoryModal } from "./use-modal";
 
 export const useEditCategory = (category: Category | null) => {
   const [loading, setLoading] = useState(false);
@@ -26,7 +20,10 @@ export const useEditCategory = (category: Category | null) => {
   });
 
   useEffect(() => {
-    if (category) form.setValue("name", category.name);
+    if (category) {
+      form.setValue("name", category.name);
+      form.setValue("slug", category.slug);
+    }
   }, [category]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {

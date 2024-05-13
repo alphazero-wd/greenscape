@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/features/ui";
+import { Button } from "@/features/ui/button";
 import Link from "next/link";
 
 export default function Error() {

@@ -1,14 +1,14 @@
 "use client";
+import { Button } from "@/features/ui/button";
 import {
-  Button,
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-  Input,
-} from "@/features/ui";
+} from "@/features/ui/form";
+import { Input } from "@/features/ui/input";
 import { Loader2 } from "lucide-react";
 import { useLogin } from "./use-login";
 

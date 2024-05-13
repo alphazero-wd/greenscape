@@ -1,8 +1,10 @@
 export interface KeyStats {
-  curMonthRevenue: number;
-  curMonthAvgOrder: number;
-  prevMonthAvgOrder: number;
-  prevMonthProductSales: number;
-  prevMonthRevenue: number;
-  curMonthProductSales: number;
+  thisMonthRevenue: number;
+  lastMonthRevenue: number;
+  thisMonthAvgOrderValue: number;
+  lastMonthAvgOrderValue: number;
+  thisMonthSales: number;
+  lastMonthSales: number;
+  thisMonthCustomers: number;
+  lastMonthCustomers: number;
 }

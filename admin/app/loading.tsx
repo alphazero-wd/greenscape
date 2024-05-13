@@ -1,4 +1,4 @@
-import { MobileLogo } from "@/features/ui";
+import { MobileLogo } from "@/features/common/components";
 
 export default function Loading() {
   return (

@@ -2,11 +2,29 @@ import axios from "axios";
 import { cookies } from "next/headers";
 import { Category } from "../types";
 
-export const getCategories = async (query = "") => {
-  const {
-    data: { count, data },
-  } = await axios.get(process.env.NEXT_PUBLIC_API_URL + "/categories" + query, {
-    headers: { Cookie: cookies().toString() },
-  });
-  return { count, data: data as Category[] };
+interface CategoriesResponse {
+  count: number;
+  data: {
+    categories: Category[];
+    parents: Category;
+  };
+}
+
+export const getCategories = async (query = "", slug: string = "") => {
+  try {
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/categories${(slug ? '/' : '') + slug}/subs${query}`;
+
+    const {
+      data: { count, data },
+    } = await axios.get<CategoriesResponse>(url, {
+      headers: { Cookie: cookies().toString() },
+    });
+    return {
+      count,
+      data,
+    };
+  } catch (error: any) {
+    console.log({ message: error?.response?.data?.message });
+    return { count: 0, data: { categories: [], parents: null } };
+  }
 };

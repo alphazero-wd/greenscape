@@ -1,5 +1,5 @@
-import { Toaster } from "@/features/ui";
-import Navbar from "@/features/ui/navbar/navbar";
+import { Navbar } from "@/features/layout/navbar";
+import { Toaster } from "@/features/layout/toaster";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";

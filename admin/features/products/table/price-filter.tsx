@@ -1,4 +1,5 @@
 "use client";
+import { formatPrice } from "@/features/common/utils";
 import {
   Button,
   Label,
@@ -7,7 +8,6 @@ import {
   PopoverTrigger,
   PriceInput,
 } from "@/features/ui";
-import { formatPrice } from "@/features/utils";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { Table } from "@tanstack/react-table";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";

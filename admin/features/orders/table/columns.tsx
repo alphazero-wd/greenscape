@@ -1,3 +1,4 @@
+import { formatPrice } from "@/features/common/utils";
 import {
   Badge,
   Button,
@@ -7,7 +8,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/features/ui";
-import { formatPrice } from "@/features/utils";
 import { ViewfinderCircleIcon } from "@heroicons/react/24/outline";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";

@@ -1,18 +1,19 @@
 "use client";
-import { formatPrice } from "@/features/common/utils";
+import { CopyButton } from "@/features/common/components";
 import {
-  Badge,
-  Checkbox,
-  CopyButton,
   DataTableColumnHeader,
   DataTableRowActions,
-  useDeleteRecordsModal,
-} from "@/features/ui";
+} from "@/features/common/data-table";
+import { useDeleteRecordsModal } from "@/features/common/delete-records";
+import { formatPrice } from "@/features/common/utils";
+import { Badge } from "@/features/ui/badge";
+import { Checkbox } from "@/features/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { generatePaths } from "../../categories/utils";
 import { Product } from "../types";
-import { PreviewButton } from "./preview-button";
 
 export const columns: ColumnDef<Product>[] = [
   {
@@ -66,7 +67,23 @@ export const columns: ColumnDef<Product>[] = [
     id: "category",
     accessorKey: "category",
     header: () => <div>Category</div>,
-    cell: ({ row }) => row.original.category.name,
+    cell: ({ row }) => {
+      return row.original.categories.map((c) => (
+        <Link
+          href={
+            "/categories/" +
+            generatePaths(c)
+              .map((p) => p.slug)
+              .join("/")
+          }
+          className="block text-sm text-muted-foreground underline"
+        >
+          {generatePaths(c)
+            .map((p) => p.name)
+            .join("/")}
+        </Link>
+      ));
+    },
   },
   {
     id: "inStock",
@@ -136,7 +153,6 @@ export const columns: ColumnDef<Product>[] = [
       return (
         <div className="flex justify-end">
           <CopyButton text="Copy product name" content={row.original.name} />
-          <PreviewButton id={row.original.id} />
           <DataTableRowActions
             row={row}
             onEditAction={() =>

@@ -105,6 +105,7 @@ export class CategoriesService {
 
   async findCategoriesTree() {
     const categories = await this.prisma.category.findMany({
+      where: { parentCategory: null },
       include: {
         subCategories: {
           include: { subCategories: { include: { subCategories: true } } },

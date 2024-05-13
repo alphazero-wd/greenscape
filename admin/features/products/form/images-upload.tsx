@@ -1,5 +1,6 @@
-import { FilePreview } from "@/features/types";
-import { Dropzone, Label } from "@/features/ui";
+import { Dropzone } from "@/features/common/components";
+import { FilePreview } from "@/features/products/types";
+import { Label } from "@/features/ui/label";
 import { PhotoIcon } from "@heroicons/react/24/solid";
 import { DropzoneState } from "react-dropzone";
 

@@ -1,4 +1,5 @@
 import { Input } from "@/features/ui/input";
+import { cn } from "@/lib/utils";
 
 export const PriceInput = (
   props: React.InputHTMLAttributes<HTMLInputElement>,
@@ -13,8 +14,8 @@ export const PriceInput = (
         step={0.01}
         min={0.01}
         placeholder="19.99"
-        className="pl-7 text-gray-900"
         {...props}
+        className={cn("pl-7 text-gray-900", props.className)}
       />
     </div>
   );

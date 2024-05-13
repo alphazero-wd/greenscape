@@ -38,6 +38,7 @@ export class ProductsController {
   }
 
   @Get()
+  @UseGuards(RolesGuard(Role.Admin))
   async findAll(@Query() findManyProductsDto: FindManyProductsDto) {
     const { products, count } = await this.productsService.findAll(
       findManyProductsDto,
@@ -81,7 +82,7 @@ export class ProductsController {
   async aggregateProducts(@Query() dto: FindManyProductsDto) {
     const inStockGroups = await this.productsService.aggregate('inStock', dto);
     const statusGroups = await this.productsService.aggregate('status', dto);
-    return { inStockGroups, statusGroups, status: true };
+    return { inStockGroups, statusGroups, success: true };
   }
 
   @Delete(':productId/remove-images')

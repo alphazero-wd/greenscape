@@ -1,14 +1,19 @@
 import { getCategories } from "@/features/categories/actions";
-import { DeleteRecordsModal } from "@/features/common/delete-records";
-import { getProducts } from "@/features/products/actions";
+import { aggregateProducts, getProducts } from "@/features/products/actions";
 import { ProductsTable } from "@/features/products/table";
+import { Status } from "@/features/products/types";
 import { Breadcrumb } from "@/features/ui/breadcrumb";
 import { Button } from "@/features/ui/button";
 import { getCurrentUser } from "@/features/user/utils";
 import { PlusIcon } from "lucide-react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import qs from "query-string";
+
+const DeleteRecordsModal = dynamic(
+  () => import("@/features/common/delete-records/modal"),
+);
 
 export const metadata = {
   title: "Products",
@@ -21,7 +26,7 @@ interface ProductsPageProps {
     sortBy?: string;
     order?: "asc" | "desc";
     q?: string;
-    status?: "Active" | "Draft";
+    status?: Status;
     categoryIds?: string;
     price?: number;
     inStock?: string;
@@ -57,8 +62,8 @@ export default async function ProductsPage({
       inStock,
     },
   });
-  const { count, data, statusGroups, categoryGroups, inStockGroups } =
-    await getProducts(query);
+  const { count, data } = await getProducts(query);
+  const { inStockGroups, statusGroups } = await aggregateProducts(query);
   const {
     data: { categories },
   } = await getCategories();
@@ -83,7 +88,6 @@ export default async function ProductsPage({
         </div>
         <div className="mt-6 space-y-3">
           <ProductsTable
-            categoryGroups={categoryGroups}
             categories={categories}
             statusGroups={statusGroups}
             count={count}

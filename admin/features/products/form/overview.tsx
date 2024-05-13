@@ -1,3 +1,11 @@
+import { PriceInput } from "@/features/common/components";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/features/ui/card";
 import {
   FormControl,
   FormDescription,
@@ -5,14 +13,12 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  Input,
-  PriceInput,
-  Textarea,
-} from "@/features/ui";
+} from "@/features/ui/form";
+import { Input } from "@/features/ui/input";
+import { Textarea } from "@/features/ui/textarea";
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
 import { ProductFormDto } from "../types";
-import { FormSection } from "./form-section";
 
 interface ProductOverviewProps {
   form: UseFormReturn<ProductFormDto, any, undefined>;
@@ -24,82 +30,101 @@ export const ProductOverview: React.FC<ProductOverviewProps> = ({
   loading,
 }) => {
   return (
-    <FormSection
-      heading="Overview"
-      description="Provide some basic information about the product"
-    >
-      <FormField
-        control={form.control}
-        name="name"
-        render={({ field }) => (
-          <FormItem className="sm:col-span-4">
-            <FormLabel className="block">Product name</FormLabel>
-            <FormControl>
-              <Input disabled={loading} placeholder="Product name" {...field} />
-            </FormControl>
-            <FormDescription>
-              Keep it short and easy to remember.
-            </FormDescription>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={form.control}
-        name="desc"
-        render={({ field }) => (
-          <FormItem className="col-span-full">
-            <FormLabel className="block">Description</FormLabel>
-            <FormControl>
-              <Textarea
-                disabled={loading}
-                placeholder="Add a description here..."
-                {...field}
-                className="col-span-3 w-full"
-              />
-            </FormControl>
-            <FormDescription>
-              Briefly describe the materials, styles, as well as highlight some
-              features, how to take care of it.
-            </FormDescription>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+    <Card x-chunk="dashboard-07-chunk-0">
+      <CardHeader>
+        <CardTitle>Product Details</CardTitle>
+        <CardDescription>
+          Lipsum dolor sit amet, consectetur adipiscing elit
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="grid gap-6">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="block">Name</FormLabel>
+                <FormControl>
+                  <Input
+                    disabled={loading}
+                    type="text"
+                    className="w-full"
+                    placeholder="Product name"
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Keep it short and easy to remember.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="desc"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel htmlFor="desc" className="block">
+                  Description
+                </FormLabel>
+                <FormControl>
+                  <Textarea
+                    id="desc"
+                    rows={6}
+                    disabled={loading}
+                    placeholder="Add a description here..."
+                    {...field}
+                    className="min-h-32 w-full"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="flex items-center gap-4">
+            <FormField
+              control={form.control}
+              name="price"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormLabel className="block">Pricing</FormLabel>
+                  <FormControl>
+                    <PriceInput
+                      className="w-full"
+                      {...field}
+                      value={field.value || ""}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-      <FormField
-        control={form.control}
-        name="price"
-        render={({ field }) => (
-          <FormItem className="sm:col-span-3">
-            <FormLabel className="block">Pricing</FormLabel>
-            <FormControl>
-              <PriceInput {...field} value={field.value || ""} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      <FormField
-        control={form.control}
-        name="inStock"
-        render={({ field }) => (
-          <FormItem className="sm:col-span-3">
-            <FormLabel className="block">In stock</FormLabel>
-            <FormControl>
-              <Input
-                type="number"
-                placeholder="4"
-                min={0}
-                {...field}
-                value={field.value || ""}
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-    </FormSection>
+            <FormField
+              control={form.control}
+              name="inStock"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormLabel className="block">In stock</FormLabel>
+                  <FormControl>
+                    <Input
+                      className="w-full"
+                      type="number"
+                      placeholder="4"
+                      min={0}
+                      {...field}
+                      value={field.value || ""}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 };

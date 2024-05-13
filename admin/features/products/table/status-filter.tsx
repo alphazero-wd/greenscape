@@ -1,24 +1,22 @@
 "use client";
+import { Badge } from "@/features/ui/badge";
+import { Button } from "@/features/ui/button";
 import {
-  Badge,
-  Button,
   Command,
   CommandGroup,
   CommandItem,
   CommandList,
   CommandSeparator,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-  Separator,
-} from "@/features/ui";
+} from "@/features/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/features/ui/popover";
+import { Separator } from "@/features/ui/separator";
 import { cn } from "@/lib/utils";
 import { DotFilledIcon, PlusCircledIcon } from "@radix-ui/react-icons";
 import { Table } from "@tanstack/react-table";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import qs from "query-string";
 import { useEffect, useState } from "react";
-import { Product, StatusGroup } from "../types";
+import { Product, Status, StatusGroup } from "../types";
 
 interface StatusFilterProps {
   table: Table<Product>;
@@ -29,15 +27,15 @@ export const StatusFilter: React.FC<StatusFilterProps> = ({
   statusGroups,
   table,
 }) => {
-  const [status, setStatus] = useState<"Active" | "Draft" | null>(null);
+  const [status, setStatus] = useState<Status | null>(null);
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const currentStatus = searchParams.get("status") as "Active" | "Draft";
+    const currentStatus = searchParams.get("status");
     if (!currentStatus) setStatus(null);
-    else setStatus(currentStatus);
+    else setStatus(currentStatus as Status);
   }, [searchParams.get("status")]);
 
   useEffect(() => {
@@ -76,13 +74,13 @@ export const StatusFilter: React.FC<StatusFilterProps> = ({
         <Command>
           <CommandList>
             <CommandGroup>
-              {(["Active", "Draft"] as const).map((s) => (
+              {(["Active", "Draft", "Archived"] as const).map((s) => (
                 <CommandItem key={s} onSelect={() => setStatus(s)}>
                   <div
                     className={cn(
                       "mr-2 h-4 w-4",
                       status === s
-                        ? "bg-primary text-primary-foreground"
+                        ? "text-primary"
                         : "opacity-50 [&_svg]:invisible",
                     )}
                   >

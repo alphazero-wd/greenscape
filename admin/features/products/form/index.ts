@@ -1,5 +1,4 @@
-export { ProductCategory } from "./category";
-export { ProductFinal } from "./final";
-export { FormSection } from "./form-section";
+export { ProductFormFields } from "./fields";
 export { ImagesUpload } from "./images-upload";
 export { ProductOverview } from "./overview";
+export { formSchema } from "./schema";

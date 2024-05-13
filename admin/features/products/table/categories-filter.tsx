@@ -1,8 +1,6 @@
 "use client";
 import { Category } from "@/features/categories/types";
 import {
-  Badge,
-  Button,
   Command,
   CommandEmpty,
   CommandGroup,
@@ -10,11 +8,8 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-  Separator,
-} from "@/features/ui";
+} from "@/features/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/features/ui/popover";
 import { cn } from "@/lib/utils";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { Table } from "@tanstack/react-table";
@@ -22,6 +17,9 @@ import { CheckIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import qs from "query-string";
 import { useEffect, useState } from "react";
+import { Badge } from "../../ui/badge";
+import { Button } from "../../ui/button";
+import { Separator } from "../../ui/separator";
 import { CategoryGroup, Product } from "../types";
 
 interface CategoriesFilterProps {
@@ -123,7 +121,7 @@ export const CategoriesFilter: React.FC<CategoriesFilterProps> = ({
                   >
                     <div
                       className={cn(
-                        "border-primary mr-2 flex h-4 w-4 items-center justify-center rounded-sm border",
+                        "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
                         isSelected
                           ? "bg-primary text-primary-foreground"
                           : "opacity-50 [&_svg]:invisible",

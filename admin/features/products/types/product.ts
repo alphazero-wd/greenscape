@@ -1,6 +1,10 @@
 import { Category } from "@/features/categories/types";
 
-export type Status = "Active" | "Draft" | "Archived";
+export enum Status {
+  Active = "Active",
+  Draft = "Draft",
+  Archived = "Archived",
+}
 
 export interface Product {
   id: number;
@@ -23,10 +27,11 @@ export interface ProductImage {
 }
 export interface ProductFormDto {
   name: string;
+  slug: string;
   desc: string;
   price: number;
   inStock: number;
-  status: Status;
+  status: "Active" | "Draft" | "Archived";
   categoryIds: number[];
 }
 

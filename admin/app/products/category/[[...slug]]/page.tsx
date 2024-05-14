@@ -1,4 +1,4 @@
-import { getCategories } from "@/features/categories/actions";
+import { getCategoriesTree } from "@/features/categories/actions";
 import { aggregateProducts, getProducts } from "@/features/products/actions";
 import { ProductsTable } from "@/features/products/table";
 import { Status } from "@/features/products/types";
@@ -27,24 +27,17 @@ interface ProductsPageProps {
     order?: "asc" | "desc";
     q?: string;
     status?: Status;
-    categoryIds?: string;
     price?: number;
     inStock?: string;
+  };
+  params: {
+    slug?: string[];
   };
 }
 
 export default async function ProductsPage({
-  searchParams: {
-    limit,
-    offset,
-    order,
-    q,
-    sortBy,
-    status,
-    categoryIds,
-    price,
-    inStock,
-  },
+  searchParams: { limit, offset, order, q, sortBy, status, price, inStock },
+  params: { slug },
 }: ProductsPageProps) {
   const user = await getCurrentUser();
   if (!user) redirect("/auth/login");
@@ -57,16 +50,14 @@ export default async function ProductsPage({
       q,
       sortBy,
       status,
-      categoryIds,
       price,
       inStock,
     },
   });
-  const { count, data } = await getProducts(query);
+  const { count, data } = await getProducts(slug?.at(-1), query);
   const { inStockGroups, statusGroups } = await aggregateProducts(query);
-  const {
-    data: { categories },
-  } = await getCategories();
+
+  const categories = await getCategoriesTree();
 
   return (
     <>

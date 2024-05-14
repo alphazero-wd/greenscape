@@ -1,10 +1,8 @@
-import { formSchema } from "@/features/products/form";
-import { FilePreview } from "@/features/products/types";
+import { formSchema, useImagesUpload } from "@/features/products/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useDropzone } from "react-dropzone";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import * as z from "zod";
@@ -20,27 +18,11 @@ export const useEditProduct = (product: Product) => {
       categoryIds: [],
     },
   });
-  const [files, setFiles] = useState<FilePreview[]>([]);
-  const dropzoneState = useDropzone({
-    multiple: true,
-    maxFiles: 4,
-    maxSize: Math.pow(1024, 2) * 5, // 5MB
-    accept: {
-      "image/png": [".png"],
-      "image/jpeg": [".jpg", ".jpeg"],
-    },
-    onDrop: (acceptedFiles) => {
-      setFiles(
-        acceptedFiles.map((file) =>
-          Object.assign(file, {
-            preview: URL.createObjectURL(file),
-          }),
-        ),
-      );
-    },
-  });
   const [tempImages, setTempImages] = useState<Product["images"]>([]);
   const [loading, setLoading] = useState(false);
+  const { files, dropzoneState, createFilesFormData } = useImagesUpload(
+    tempImages.length,
+  );
 
   useEffect(() => {
     setTempImages(product.images);
@@ -65,10 +47,7 @@ export const useEditProduct = (product: Product) => {
 
     try {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
-      const formData = new FormData();
-      files.forEach((file) => {
-        formData.append("images", file);
-      });
+      const formData = createFilesFormData();
       setLoading(true);
       await axios.patch(API_URL + "/products/" + product.id, values, {
         withCredentials: true,

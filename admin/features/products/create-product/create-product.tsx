@@ -3,7 +3,11 @@
 import { Category } from "@/features/categories/types";
 import { Form } from "@/features/ui/form";
 import React, { useEffect } from "react";
-import { ProductFormFields } from "../form";
+import {
+  ProductFormFields,
+  ProductFormHeader,
+  ProductFormSubmit,
+} from "../form";
 import { useCreateProduct } from "./use-create-product";
 
 interface CreateProductProps {
@@ -11,7 +15,7 @@ interface CreateProductProps {
 }
 
 export const CreateProduct: React.FC<CreateProductProps> = ({ categories }) => {
-  const { loading, form, handleSubmit, files, dropzoneState } =
+  const { loading, form, handleSubmit, files, dropzoneState, deleteFile } =
     useCreateProduct();
 
   useEffect(() => {
@@ -23,11 +27,18 @@ export const CreateProduct: React.FC<CreateProductProps> = ({ categories }) => {
   return (
     <Form {...form}>
       <form onSubmit={handleSubmit}>
-        <ProductFormFields
-          categories={categories}
-          form={form}
-          loading={loading}
-        />
+        <div className="space-y-4">
+          <ProductFormHeader heading="Create new product" />
+          <ProductFormFields
+            deleteImage={deleteFile}
+            files={files}
+            categories={categories}
+            form={form}
+            loading={loading}
+            dropzoneState={dropzoneState}
+          />
+          <ProductFormSubmit className="flex justify-center md:hidden" />
+        </div>
       </form>
     </Form>
   );

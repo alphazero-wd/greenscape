@@ -9,10 +9,11 @@ import {
 import { Button } from "@/features/ui/button";
 import { Input } from "@/features/ui/input";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import qs from "query-string";
 import React from "react";
 import { InStockGroup, Product, StatusGroup } from "../types";
+import { CategoriesFilter } from "./categories-filter";
 import { columns } from "./columns";
 import { InStockFilter } from "./in-stock-filter";
 import { PriceFilter } from "./price-filter";
@@ -35,6 +36,7 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({
 }) => {
   const { q, setQ, table } = useTable(columns, products, count);
   const searchParams = useSearchParams();
+  const { slug } = useParams();
   const router = useRouter();
   const reset = () => {
     const currentQuery = qs.parse(searchParams.toString());
@@ -62,10 +64,11 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({
             className="h-8 w-[250px]"
           />
           <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-            {/* <CategoriesFilter
+            <CategoriesFilter
+              slug={slug?.at(-1)}
               categories={categories}
               table={table}
-            /> */}
+            />
             <StatusFilter table={table} statusGroups={statusGroups} />
             <PriceFilter table={table} />
             <InStockFilter table={table} inStockGroups={inStockGroups} />

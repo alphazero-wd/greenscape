@@ -32,10 +32,10 @@ export class CreateProductDto {
   @Min(0)
   inStock: number;
 
-  @IsInt()
-  @Min(1)
-  categoryId: number;
+  @IsInt({ each: true })
+  @Min(1, { each: true })
+  categoryIds: number[];
 
-  @IsIn(['Active', 'Draft'])
-  status: 'Active' | 'Draft';
+  @IsIn(['Active', 'Draft', 'Archived'])
+  status: 'Active' | 'Draft' | 'Archived';
 }

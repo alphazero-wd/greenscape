@@ -3,16 +3,19 @@
 import { ChangeEventHandler, useEffect } from "react";
 import { DropzoneState, ErrorCode } from "react-dropzone";
 import { toast } from "react-hot-toast";
+import { cn } from "../../../lib/utils";
 
 interface DropzoneProps {
   children: React.ReactNode;
   state: DropzoneState;
   onChange?: ChangeEventHandler<HTMLInputElement>;
+  className?: string;
 }
 
 export const Dropzone: React.FC<DropzoneProps> = ({
   children,
   state: { fileRejections, getRootProps, getInputProps, inputRef },
+  className,
 }) => {
   useEffect(() => {
     if (fileRejections.length > 0) {
@@ -38,14 +41,15 @@ export const Dropzone: React.FC<DropzoneProps> = ({
   }, [fileRejections]);
 
   return (
-    <section className="container">
-      <div
-        {...getRootProps()}
-        className="flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10"
-      >
-        <input ref={inputRef} {...getInputProps()} />
-        {children}
-      </div>
-    </section>
+    <div
+      {...getRootProps()}
+      className={cn(
+        "flex aspect-square w-full items-center justify-center rounded-md border border-dashed",
+        className,
+      )}
+    >
+      <input ref={inputRef} {...getInputProps()} />
+      {children}
+    </div>
   );
 };

@@ -9,12 +9,12 @@ import { ReactNode } from "react";
 import { Category } from "../types";
 import { CategorySubmenu } from "./submenu";
 
-type CategoryRadioOption = `${number}|${string}`;
+type CategoryRadioOption = `${string}|${string}`;
 
 interface CategoriesRadioMenuProps {
   categories: Category[];
   trigger: ReactNode;
-  selectedCategory: CategoryRadioOption;
+  selectedCategory?: CategoryRadioOption;
   onChange: (selectedCategory: string) => void;
   field: "id" | "slug";
 }
@@ -40,9 +40,15 @@ export const CategoriesRadioMenu = ({
               key={c.id}
               render={(category) => (
                 <DropdownMenuRadioItem
+                  className="min-w-[180px]"
                   value={`${category[field]}|${category.name}`}
                 >
                   {category.name}
+                  {category?._count?.products > 0 && (
+                    <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
+                      {category?._count?.products}
+                    </span>
+                  )}
                 </DropdownMenuRadioItem>
               )}
             />

@@ -50,6 +50,23 @@ export class ProductsController {
     };
   }
 
+  @Get('category/:slug')
+  @UseGuards(RolesGuard(Role.Admin))
+  async findAllBySlug(
+    @Query() findManyProductsDto: FindManyProductsDto,
+    @Param('slug') slug: string,
+  ) {
+    const { products, count } = await this.productsService.findAll(
+      findManyProductsDto,
+      slug,
+    );
+    return {
+      success: true,
+      data: products,
+      count,
+    };
+  }
+
   @Get('details/:slug')
   async findOne(@Param('slug') slug: string) {
     const product = await this.productsService.findBySlug(slug);
@@ -82,6 +99,7 @@ export class ProductsController {
   async aggregateProducts(@Query() dto: FindManyProductsDto) {
     const inStockGroups = await this.productsService.aggregate('inStock', dto);
     const statusGroups = await this.productsService.aggregate('status', dto);
+
     return { inStockGroups, statusGroups, success: true };
   }
 

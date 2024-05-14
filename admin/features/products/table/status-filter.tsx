@@ -74,7 +74,7 @@ export const StatusFilter: React.FC<StatusFilterProps> = ({
         <Command>
           <CommandList>
             <CommandGroup>
-              {(["Active", "Draft", "Archived"] as const).map((s) => (
+              {Object.values(Status).map((s) => (
                 <CommandItem key={s} onSelect={() => setStatus(s)}>
                   <div
                     className={cn(

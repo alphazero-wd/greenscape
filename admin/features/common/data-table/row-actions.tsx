@@ -2,13 +2,14 @@
 
 import { Button } from "@/features/ui/button";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/features/ui/tooltip";
-import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/features/ui/dropdown-menu";
 import { Row } from "@tanstack/react-table";
+import { MoreHorizontal } from "lucide-react";
 
 interface DataTableRowActionsProps<TData extends { id: number }> {
   row: Row<TData>;
@@ -22,38 +23,26 @@ export function DataTableRowActions<TData extends { id: number }>({
   onEditAction,
 }: DataTableRowActionsProps<TData>) {
   return (
-    <div className="flex items-center justify-end gap-x-2">
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipContent>Edit</TooltipContent>
-          <TooltipTrigger asChild>
-            <Button
-              onClick={() => {
-                onEditAction(row.original);
-              }}
-              variant="ghost"
-              size="icon"
-            >
-              <PencilSquareIcon className="h-5 w-5" />
-            </Button>
-          </TooltipTrigger>
-        </Tooltip>
-      </TooltipProvider>
-
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipContent>Delete</TooltipContent>
-          <TooltipTrigger asChild>
-            <Button
-              onClick={() => onDeleteAction([row.original.id])}
-              variant="destructive"
-              size="icon"
-            >
-              <TrashIcon className="h-5 w-5" />
-            </Button>
-          </TooltipTrigger>
-        </Tooltip>
-      </TooltipProvider>
-    </div>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button aria-haspopup="true" size="icon" variant="ghost">
+          <MoreHorizontal className="h-4 w-4" />
+          <span className="sr-only">Toggle menu</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        <DropdownMenuItem
+          onClick={() => {
+            onEditAction(row.original);
+          }}
+        >
+          Edit
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => onDeleteAction([row.original.id])}>
+          Delete
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

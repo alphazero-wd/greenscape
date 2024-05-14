@@ -7,11 +7,20 @@ interface ProductsResponse {
   data: Product[];
 }
 
-export const getProducts = async (query = ""): Promise<ProductsResponse> => {
+export const getProducts = async (
+  slug = "",
+  query = "",
+): Promise<ProductsResponse> => {
   const {
     data: { count, data },
-  } = await axios.get(process.env.NEXT_PUBLIC_API_URL + "/products" + query, {
-    headers: { Cookie: cookies().toString() },
-  });
+  } = await axios.get(
+    process.env.NEXT_PUBLIC_API_URL +
+      "/products/" +
+      (slug ? "category/" + slug : slug) +
+      query,
+    {
+      headers: { Cookie: cookies().toString() },
+    },
+  );
   return { count, data };
 };

@@ -19,10 +19,15 @@ export class ProductsService {
     private filesService: FilesService,
   ) {}
 
-  async create(createProductDto: CreateProductDto) {
+  async create({ categoryIds, ...dto }: CreateProductDto) {
     try {
       const newProduct = await this.prisma.product.create({
-        data: createProductDto,
+        data: {
+          ...dto,
+          categories: {
+            connect: categoryIds.map((id) => ({ id })),
+          },
+        },
       });
       return newProduct;
     } catch (error) {
@@ -65,23 +70,17 @@ export class ProductsService {
     return product;
   }
 
-  private formQueries({
-    q,
-    status,
-    categoryIds,
-    price,
-    inStock,
-    refIds,
-    sortBy,
-    order,
-  }: FindManyProductsDto) {
+  private formQueries(
+    { q, status, price, inStock, refIds, sortBy, order }: FindManyProductsDto,
+    slug?: string,
+  ) {
     const where: Prisma.ProductWhereInput = {};
     where.name = {
       contains: q,
       mode: 'insensitive',
     };
     if (status) where.status = status;
-    if (categoryIds) where.categories = { some: { id: { in: categoryIds } } };
+    if (slug) where.categories = { some: { slug } };
     if (price) {
       where.price = {};
       if (price[0]) where.price.gte = price[0];
@@ -97,13 +96,12 @@ export class ProductsService {
     return { where, orderBy };
   }
 
-  async findAll({
-    limit = 10,
-    offset = 0,
-    ...findManyProductsDto
-  }: FindManyProductsDto) {
+  async findAll(
+    { limit = 10, offset = 0, ...findManyProductsDto }: FindManyProductsDto,
+    slug?: string,
+  ) {
     try {
-      const { where, orderBy } = this.formQueries(findManyProductsDto);
+      const { where, orderBy } = this.formQueries(findManyProductsDto, slug);
       const products = await this.prisma.product.findMany({
         take: limit,
         skip: offset,
@@ -115,7 +113,6 @@ export class ProductsService {
           inStock: true,
           price: true,
           createdAt: true,
-          updatedAt: true,
           desc: true,
           status: true,
           images: {
@@ -165,11 +162,27 @@ export class ProductsService {
     return product;
   }
 
-  async update(id: number, updateProductDto: UpdateProductDto) {
+  async update(id: number, { categoryIds, ...dto }: UpdateProductDto) {
     try {
+      const { categories } = await this.prisma.product.findUnique({
+        where: { id },
+        select: { categories: true },
+      });
+      const updatedCategoryIdsSet = new Set(categoryIds);
+      const currentCategoryIdsSet = new Set(categories.map((c) => c.id));
       const updatedProduct = await this.prisma.product.update({
         where: { id },
-        data: updateProductDto,
+        data: {
+          ...dto,
+          categories: {
+            disconnect: categories
+              .filter((c) => !updatedCategoryIdsSet.has(c.id))
+              .map(({ id }) => ({ id })),
+            connect: categoryIds
+              .filter((id) => !currentCategoryIdsSet.has(id))
+              .map((id) => ({ id })),
+          },
+        },
       });
       return updatedProduct;
     } catch (error) {

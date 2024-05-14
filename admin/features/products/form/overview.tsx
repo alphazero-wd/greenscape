@@ -18,6 +18,7 @@ import { Input } from "@/features/ui/input";
 import { Textarea } from "@/features/ui/textarea";
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
+import { slugify } from "../../common/utils";
 import { ProductFormDto } from "../types";
 
 interface ProductOverviewProps {
@@ -52,6 +53,10 @@ export const ProductOverview: React.FC<ProductOverviewProps> = ({
                     className="w-full"
                     placeholder="Product name"
                     {...field}
+                    onChange={(event) => {
+                      field.onChange(event);
+                      form.setValue("slug", slugify(field.value));
+                    }}
                   />
                 </FormControl>
                 <FormDescription>
@@ -92,6 +97,7 @@ export const ProductOverview: React.FC<ProductOverviewProps> = ({
                   <FormLabel className="block">Pricing</FormLabel>
                   <FormControl>
                     <PriceInput
+                      disabled={loading}
                       className="w-full"
                       {...field}
                       value={field.value || ""}
@@ -110,6 +116,7 @@ export const ProductOverview: React.FC<ProductOverviewProps> = ({
                   <FormLabel className="block">In stock</FormLabel>
                   <FormControl>
                     <Input
+                      disabled={loading}
                       className="w-full"
                       type="number"
                       placeholder="4"

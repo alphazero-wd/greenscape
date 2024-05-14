@@ -3,7 +3,7 @@ export const navLinks = [
   { name: "Categories", href: "/categories" },
   {
     name: "Products",
-    href: "/products",
+    href: "/products/category",
   },
   { name: "Orders", href: "/orders" },
 ];

@@ -10,9 +10,11 @@ import { Badge } from "@/features/ui/badge";
 import { Checkbox } from "@/features/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { generatePaths } from "../../categories/utils";
+import { Button } from "../../ui/button";
 import { Product } from "../types";
 
 export const columns: ColumnDef<Product>[] = [
@@ -38,11 +40,27 @@ export const columns: ColumnDef<Product>[] = [
     enableHiding: false,
   },
   {
+    id: "images",
+    accessorKey: "images",
+    header: "",
+    cell: ({ row }) => (
+      <div className="h-16 w-16">
+        <Image
+          alt="Product image"
+          className="aspect-square rounded-md object-cover"
+          height="640"
+          src={row.original.images[0].file.url}
+          width="640"
+        />
+      </div>
+    ),
+  },
+  {
     id: "name",
     accessorKey: "name",
     header: "Product",
     cell: ({ row }) => (
-      <div className="line-clamp-2 max-w-xs font-medium">
+      <div className="line-clamp-3 whitespace-pre-wrap font-medium">
         {row.getValue("name")}
       </div>
     ),
@@ -69,19 +87,24 @@ export const columns: ColumnDef<Product>[] = [
     header: () => <div>Category</div>,
     cell: ({ row }) => {
       return row.original.categories.map((c) => (
-        <Link
-          href={
-            "/categories/" +
-            generatePaths(c)
-              .map((p) => p.slug)
-              .join("/")
-          }
-          className="block text-sm text-muted-foreground underline"
+        <Button
+          asChild
+          className="line-clamp-2 h-fit max-w-[128px] whitespace-pre-wrap p-0"
+          variant="link"
         >
-          {generatePaths(c)
-            .map((p) => p.name)
-            .join("/")}
-        </Link>
+          <Link
+            href={
+              "/categories/" +
+              generatePaths(c)
+                .map((p) => p.slug)
+                .join("/")
+            }
+          >
+            {generatePaths(c)
+              .map((p) => p.name)
+              .join("/")}
+          </Link>
+        </Button>
       ));
     },
   },
@@ -95,7 +118,9 @@ export const columns: ColumnDef<Product>[] = [
         className="justify-end"
       />
     ),
-    cell: ({ row }) => <div className="text-right">{row.original.inStock}</div>,
+    cell: ({ row }) => (
+      <div className="mr-3 text-right">{row.original.inStock}</div>
+    ),
   },
   {
     id: "orders",
@@ -103,12 +128,12 @@ export const columns: ColumnDef<Product>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader
         column={column}
-        title="Orders"
+        title="Sales"
         className="justify-end"
       />
     ),
     cell: ({ row }) => (
-      <div className="text-right">{row.original._count.orders}</div>
+      <div className="mr-3 text-right">{row.original._count.orders}</div>
     ),
   },
   {
@@ -132,16 +157,6 @@ export const columns: ColumnDef<Product>[] = [
     ),
     cell: ({ row }) => (
       <div>{format(new Date(row.original.createdAt), "Pp")}</div>
-    ),
-  },
-  {
-    id: "updatedAt",
-    accessorKey: "updatedAt",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Updated at" />
-    ),
-    cell: ({ row }) => (
-      <div>{format(new Date(row.original.updatedAt), "Pp")}</div>
     ),
   },
   {

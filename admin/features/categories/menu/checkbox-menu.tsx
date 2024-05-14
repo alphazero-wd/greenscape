@@ -45,6 +45,7 @@ export const CategoriesCheckboxMenu = ({
             key={c.id}
             render={(category) => (
               <DropdownMenuCheckboxItem
+                className="min-w-[180px]"
                 onCheckedChange={(checked) => {
                   if (!checked) removeCategory(category[field]);
                   else addCategory(category[field]);
@@ -52,6 +53,12 @@ export const CategoriesCheckboxMenu = ({
                 checked={selectedSet.has(category[field])}
               >
                 {category.name}
+
+                {category?._count?.products > 0 && (
+                  <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
+                    {category?._count?.products}
+                  </span>
+                )}
               </DropdownMenuCheckboxItem>
             )}
           />

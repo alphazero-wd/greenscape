@@ -108,7 +108,13 @@ export class CategoriesService {
       where: { parentCategory: null },
       include: {
         subCategories: {
-          include: { subCategories: { include: { subCategories: true } } },
+          include: {
+            subCategories: {
+              include: {
+                _count: { select: { products: true } },
+              },
+            },
+          },
         },
       },
     });

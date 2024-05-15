@@ -35,7 +35,7 @@ export const PriceFilter = () => {
       currentQuery.offset = "0";
 
       const urlWithPriceRange = qs.stringifyUrl({
-        url: "/products",
+        url: "/products/category",
         query: currentQuery,
       });
       router.push(urlWithPriceRange, { scroll: false });

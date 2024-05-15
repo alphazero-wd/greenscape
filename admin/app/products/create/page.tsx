@@ -18,7 +18,7 @@ export default async function CreateProductPage() {
       <div className="mb-8">
         <Breadcrumb
           links={[
-            { name: "Products", href: `/products` },
+            { name: "Products", href: "/products/category" },
             { name: "Create", href: "#" },
           ]}
         />

@@ -16,7 +16,7 @@ export const Links = () => {
               "flex h-16 items-center border-b-2 border-transparent px-1 text-sm font-medium text-gray-900",
               pathname === link.href ||
                 (pathname.startsWith(link.href) && link.href !== "/")
-                ? "border-green-500"
+                ? "border-primary"
                 : "hover:border-gray-300",
             )}
           >

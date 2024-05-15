@@ -19,7 +19,7 @@ export const HeroSection = () => {
             </p>
             <div className="mt-6">
               <Button className="text-base px-12" size="lg" asChild>
-                <Link href="/products">Shop now</Link>
+                <Link href="/products/category">Shop now</Link>
               </Button>
             </div>
           </div>

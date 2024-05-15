@@ -36,7 +36,7 @@ export const SortSelect = () => {
     if (sortValue.order) currentQuery.order = sortValue.order;
     else delete currentQuery.order;
     const urlWithSortQuery = qs.stringifyUrl({
-      url: "/products",
+      url: "/products/category",
       query: currentQuery,
     });
     router.push(urlWithSortQuery, { scroll: false });

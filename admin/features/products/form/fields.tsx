@@ -44,6 +44,7 @@ export const ProductFormFields = memo(
           <ImagesUpload
             dropzoneState={dropzoneState}
             files={files}
+            loading={loading}
             existingImages={existingImages}
             deleteImage={deleteImage}
           />

@@ -47,7 +47,7 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({
     delete currentQuery.q;
     table.resetPageIndex();
     const resetQuery = qs.stringifyUrl({
-      url: "/products",
+      url: "/products/category",
       query: currentQuery,
     });
     router.push(resetQuery, { scroll: false });

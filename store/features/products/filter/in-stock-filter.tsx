@@ -22,7 +22,7 @@ export const InStockFilter = () => {
 
     currentQuery.offset = "0";
     const urlWithAvailability = qs.stringifyUrl({
-      url: "/products",
+      url: "/products/category",
       query: currentQuery,
     });
 

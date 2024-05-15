@@ -48,7 +48,7 @@ export const AddToCart = ({ product }: { product: Product }) => {
 
   return (
     <div className="mt-6">
-      <div className="flex justify-between w-1/2 items-center rounded-full p-1 bg-green-500">
+      <div className="flex justify-between w-1/2 items-center rounded-full p-1 bg-primary">
         <Button
           className="bg-transparent font-normal hover:bg-green-800 rounded-full text-2xl"
           size="icon"

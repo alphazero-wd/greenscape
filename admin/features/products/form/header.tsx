@@ -5,9 +5,13 @@ import { ProductFormSubmit } from "./submit";
 
 interface ProductFormHeaderProps {
   heading: string;
+  loading: boolean;
 }
 
-export const ProductFormHeader = ({ heading }: ProductFormHeaderProps) => {
+export const ProductFormHeader = ({
+  heading,
+  loading,
+}: ProductFormHeaderProps) => {
   return (
     <div className="flex justify-between">
       <div className="flex items-center gap-4">
@@ -18,7 +22,7 @@ export const ProductFormHeader = ({ heading }: ProductFormHeaderProps) => {
           size="icon"
           className="h-7 w-7"
         >
-          <Link href="/products">
+          <Link href="/products/category">
             <ChevronLeft className="h-4 w-4" />
             <span className="sr-only">Back</span>
           </Link>
@@ -27,7 +31,7 @@ export const ProductFormHeader = ({ heading }: ProductFormHeaderProps) => {
           {heading}
         </h1>
       </div>
-      <ProductFormSubmit className="hidden md:flex" />
+      <ProductFormSubmit loading={loading} className="hidden md:flex" />
     </div>
   );
 };

@@ -39,7 +39,7 @@ export default async function ProductPage({
         <div className="lg:px-8 py-4 sm:px-6 px-4 container max-w-7xl">
           <Breadcrumb
             links={[
-              { name: "Products", href: "/products" },
+              { name: "Products", href: "/products/category" },
               { name: product.name, href: "#" },
             ]}
           />

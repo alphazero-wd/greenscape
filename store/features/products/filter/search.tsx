@@ -24,7 +24,7 @@ export const Search = () => {
     currentQuery.offset = "0";
 
     const urlWithSearchQuery = qs.stringifyUrl({
-      url: "/products",
+      url: "/products/category",
       query: currentQuery,
     });
     router.push(urlWithSearchQuery, { scroll: false });

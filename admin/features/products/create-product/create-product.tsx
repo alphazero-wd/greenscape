@@ -28,7 +28,7 @@ export const CreateProduct: React.FC<CreateProductProps> = ({ categories }) => {
     <Form {...form}>
       <form onSubmit={handleSubmit}>
         <div className="space-y-4">
-          <ProductFormHeader heading="Create new product" />
+          <ProductFormHeader loading={loading} heading="Create new product" />
           <ProductFormFields
             deleteImage={deleteFile}
             files={files}
@@ -37,7 +37,10 @@ export const CreateProduct: React.FC<CreateProductProps> = ({ categories }) => {
             loading={loading}
             dropzoneState={dropzoneState}
           />
-          <ProductFormSubmit className="flex justify-center md:hidden" />
+          <ProductFormSubmit
+            loading={loading}
+            className="flex justify-center md:hidden"
+          />
         </div>
       </form>
     </Form>

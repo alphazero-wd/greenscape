@@ -109,6 +109,7 @@ export class ProductsService {
         where,
         select: {
           id: true,
+          slug: true,
           name: true,
           inStock: true,
           price: true,
@@ -118,9 +119,6 @@ export class ProductsService {
           images: {
             select: { file: { select: { url: true } } },
             take: 1,
-          },
-          categories: {
-            include: { parentCategory: { include: { parentCategory: true } } },
           },
           _count: { select: { orders: true } },
         },
@@ -149,6 +147,7 @@ export class ProductsService {
     const product = await this.prisma.product.findUnique({
       where: { slug },
       include: {
+        categories: true,
         images: {
           select: { file: { select: { id: true, url: true } } },
         },

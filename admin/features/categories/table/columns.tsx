@@ -85,7 +85,6 @@ export const columns: ColumnDef<Category>[] = [
       return (
         <div className="flex items-center justify-end">
           <ShowSubcategoriesButton slug={row.original.slug} />
-          <ShowSubcategoriesButton slug={row.original.slug} />
           <CopyButton text="Copy category name" content={row.original.name} />
           <DataTableRowActions
             row={row}

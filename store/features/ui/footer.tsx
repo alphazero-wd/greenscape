@@ -23,7 +23,7 @@ export const Footer = () => {
         <div className="md:order-2 justify-center flex gap-x-6">
           {socialLinks.map((link) => (
             <Link href={link.href} key={link.href}>
-              <link.icon className="text-gray-400 hover:text-green-500 transition-colors w-5 h-5" />
+              <link.icon className="text-gray-400 hover:text-primary transition-colors w-5 h-5" />
             </Link>
           ))}
         </div>

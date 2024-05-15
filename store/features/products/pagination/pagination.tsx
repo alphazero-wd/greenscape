@@ -28,7 +28,7 @@ export const Pagination: React.FC<PaginationProps> = ({ totalCount }) => {
     const currentQuery = qs.parse(searchParams.toString());
     currentQuery.offset = ((currentPage - 1) * PAGE_SIZE).toString();
     const urlWithOffset = qs.stringifyUrl({
-      url: "/products",
+      url: "/products/category",
       query: currentQuery,
     });
     router.push(urlWithOffset, { scroll: false });

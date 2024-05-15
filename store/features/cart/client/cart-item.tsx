@@ -40,7 +40,7 @@ export const CartItem: React.FC<CartItemProps> = ({ item }) => {
             <select
               value={item.qty}
               onChange={(e) => updateQty(item.id, +e.target.value)}
-              className="rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-500"
+              className="rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-primary"
               id="qty"
             >
               {Array(item.inStock)

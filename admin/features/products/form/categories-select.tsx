@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/features/ui/card";
 import { FormField } from "@/features/ui/form";
 import { Separator } from "@/features/ui/separator";
 import { UseFormReturn } from "react-hook-form";
+import { searchCategory } from "../../categories/utils";
 import { ProductFormDto } from "../types";
 
 interface CategoriesSelectProps {
@@ -46,9 +47,21 @@ export const CategoriesSelect = ({
               }
               categories={categories}
               selectedCategories={field.value}
-              onChange={(newValues) =>
-                form.setValue("categoryIds", newValues as number[])
-              }
+              onChange={(newValues) => {
+                const categoryIdsWithParents = new Set<number>();
+                for (const value of newValues) {
+                  const [path] = searchCategory(categories, value, "id");
+                  path.forEach((category) => {
+                    if (!categoryIdsWithParents.has(category.id))
+                      categoryIdsWithParents.add(category.id);
+                  });
+                }
+
+                form.setValue(
+                  "categoryIds",
+                  Array.from(categoryIdsWithParents),
+                );
+              }}
               field="id"
             />
           )}

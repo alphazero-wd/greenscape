@@ -32,7 +32,7 @@ export const CategoriesFilter: React.FC<CategoriesFilterProps> = ({
     else delete currentQuery.categoryIds;
     currentQuery.offset = "0";
     const urlWithCategoryIdsQuery = qs.stringifyUrl({
-      url: "/products",
+      url: "/products/category",
       query: currentQuery,
     });
     router.push(urlWithCategoryIdsQuery, { scroll: false });

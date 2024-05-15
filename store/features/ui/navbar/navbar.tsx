@@ -35,14 +35,14 @@ export const Navbar = () => {
           {/* <div className="lg:flex hidden h-5 space-x-6">
             <Link
               href="/auth/signin"
-              className="font-semibold h-[2.625rem] block text-sm hover:border-b-2 hover:border-b-green-500"
+              className="font-semibold h-[2.625rem] block text-sm hover:border-b-2 hover:border-b-primary"
             >
               Sign in
             </Link>
             <Separator orientation="vertical" />
             <Link
               href="auth/create-account"
-              className="font-semibold h-[2.625rem] block text-sm hover:border-b-2 hover:border-b-green-500"
+              className="font-semibold h-[2.625rem] block text-sm hover:border-b-2 hover:border-b-primary"
             >
               Create account
             </Link>

@@ -9,6 +9,7 @@ export enum Status {
 export interface Product {
   id: number;
   name: string;
+  slug: string;
   desc: string;
   price: number;
   status: Status;

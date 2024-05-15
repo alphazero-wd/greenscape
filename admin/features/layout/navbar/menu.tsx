@@ -1,12 +1,10 @@
 "use client";
-import { useLogout } from "@/features/auth/logout";
 import { Button } from "@/features/ui/button";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/features/ui/collapsible";
-import { Separator } from "@/features/ui/separator";
 import { User } from "@/features/user/types";
 import { cn } from "@/lib/utils";
 import { Bars3Icon } from "@heroicons/react/24/outline";
@@ -16,7 +14,8 @@ import { navLinks } from "./links-data";
 
 export const NavMobileMenu = ({ user }: { user?: User }) => {
   const pathname = usePathname();
-  const { logout } = useLogout();
+
+  if (!user) return null;
 
   return (
     <Collapsible>
@@ -34,24 +33,13 @@ export const NavMobileMenu = ({ user }: { user?: User }) => {
               "block border-l-4 border-transparent px-3 py-2 pr-4 text-base font-medium",
               pathname === link.href ||
                 (pathname.startsWith(link.href) && link.href !== "/")
-                ? "border-green-500 bg-green-50 text-green-800"
+                ? "border-primary bg-green-50 text-green-800"
                 : "text-gray-500 hover:border-gray-300 hover:bg-gray-100 hover:text-gray-700",
             )}
           >
             {link.name}
           </Link>
         ))}
-        {user && (
-          <>
-            <Separator />
-            <button
-              onClick={logout}
-              className="block w-full cursor-pointer border-l-4 border-transparent px-3 py-2 pr-4 text-start text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-100 hover:text-gray-700"
-            >
-              Log out
-            </button>
-          </>
-        )}
       </CollapsibleContent>
     </Collapsible>
   );

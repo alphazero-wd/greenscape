@@ -21,7 +21,7 @@ export const CartList = () => {
       <section className="lg:col-span-7 mt-8">
         <p className="text-gray-500">Your cart is currently empty</p>
         <Button size="lg" className="mt-4">
-          <Link href="/products">Continue shopping</Link>
+          <Link href="/products/category">Continue shopping</Link>
         </Button>
       </section>
     );

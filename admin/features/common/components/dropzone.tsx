@@ -1,13 +1,14 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { ChangeEventHandler, useEffect } from "react";
 import { DropzoneState, ErrorCode } from "react-dropzone";
 import { toast } from "react-hot-toast";
-import { cn } from "../../../lib/utils";
 
 interface DropzoneProps {
   children: React.ReactNode;
   state: DropzoneState;
+  loading?: boolean;
   onChange?: ChangeEventHandler<HTMLInputElement>;
   className?: string;
 }
@@ -16,6 +17,7 @@ export const Dropzone: React.FC<DropzoneProps> = ({
   children,
   state: { fileRejections, getRootProps, getInputProps, inputRef },
   className,
+  loading = false,
 }) => {
   useEffect(() => {
     if (fileRejections.length > 0) {
@@ -45,10 +47,11 @@ export const Dropzone: React.FC<DropzoneProps> = ({
       {...getRootProps()}
       className={cn(
         "flex aspect-square w-full items-center justify-center rounded-md border border-dashed",
+        loading && "cursor-not-allowed bg-gray-100",
         className,
       )}
     >
-      <input ref={inputRef} {...getInputProps()} />
+      <input disabled={loading} ref={inputRef} {...getInputProps()} />
       {children}
     </div>
   );

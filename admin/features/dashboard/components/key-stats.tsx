@@ -96,7 +96,7 @@ export const KeyStats = ({
                     <>
                       {+stat.rate > 0 && (
                         <div className="inline-flex items-baseline rounded-full bg-green-100 px-2.5 py-0.5 text-sm font-medium text-green-800 md:mt-2 lg:mt-0">
-                          <ArrowUpIcon className="-ml-1 mr-0.5 h-4 w-4 flex-shrink-0 self-center text-green-500" />
+                          <ArrowUpIcon className="-ml-1 mr-0.5 h-4 w-4 flex-shrink-0 self-center text-primary" />
                           <span className="sr-only">Increased by</span>
                           {Math.abs(stat.rate).toFixed(2)}%
                         </div>

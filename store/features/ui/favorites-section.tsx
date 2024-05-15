@@ -16,8 +16,8 @@ export const FavoritesSection = async () => {
         </h2>
 
         <Link
-          className="sm:block text-green-500 font-semibold text-sm hidden hover:text-green-400"
-          href="/products"
+          className="sm:block text-primary font-semibold text-sm hidden hover:text-green-400"
+          href="/products/category"
         >
           Browse all products
           <span> →</span>
@@ -29,8 +29,8 @@ export const FavoritesSection = async () => {
         className="mt-6 lg:grid-cols-4 md:grid-cols-2"
       />
       <Link
-        className="mt-6 block text-green-500 font-semibold text-sm sm:hidden hover:text-green-400"
-        href="/products"
+        className="mt-6 block text-primary font-semibold text-sm sm:hidden hover:text-green-400"
+        href="/products/category"
       >
         Browse all products
         <span> →</span>

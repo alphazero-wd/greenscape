@@ -53,15 +53,13 @@ export const ProductOverview: React.FC<ProductOverviewProps> = ({
                     className="w-full"
                     placeholder="Product name"
                     {...field}
-                    onChange={(event) => {
-                      field.onChange(event);
+                    onBlur={() => {
+                      field.onBlur();
                       form.setValue("slug", slugify(field.value));
                     }}
                   />
                 </FormControl>
-                <FormDescription>
-                  Keep it short and easy to remember.
-                </FormDescription>
+                <FormDescription>Blur to auto-fill the slug</FormDescription>
                 <FormMessage />
               </FormItem>
             )}

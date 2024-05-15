@@ -1,10 +1,16 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
+import toast from "react-hot-toast";
 import { MAX_FILES } from "../constants";
-import { FilePreview } from "../types";
+import { FilePreview, ProductImage } from "../types";
 
-export const useImagesUpload = (numberOfExistingFiles = 0) => {
+export const useImagesUpload = () => {
   const [files, setFiles] = useState<FilePreview[]>([]);
+  const [prevImages, setPrevImages] = useState<ProductImage[]>([]);
+
+  const populateImages = useCallback((existingImages: ProductImage[]) => {
+    setPrevImages(existingImages);
+  }, []);
 
   const dropzoneState = useDropzone({
     multiple: true,
@@ -14,34 +20,48 @@ export const useImagesUpload = (numberOfExistingFiles = 0) => {
       "image/jpeg": [".jpg", ".jpeg"],
     },
     onDrop: (acceptedFiles) => {
-      setFiles((prevFiles) => [
-        ...prevFiles,
-        ...acceptedFiles
-          .slice(0, MAX_FILES - numberOfExistingFiles - files.length)
-          .map((file) =>
+      console.log({ acceptedFiles, prevImages });
+
+      if (acceptedFiles.length + prevImages.length > MAX_FILES)
+        toast.error(`Cannot have more than ${MAX_FILES} images`);
+      else
+        setFiles(
+          acceptedFiles.map((file) =>
             Object.assign(file, {
               preview: URL.createObjectURL(file),
             }),
           ),
-      ]);
+        );
     },
   });
 
-  const clearFiles = () => {
+  const clearFiles = useCallback(() => {
     setFiles([]);
-  };
+    setPrevImages([]);
+  }, []);
 
-  const createFilesFormData = () => {
+  const createFilesFormData = useCallback(() => {
     const formData = new FormData();
     files.forEach((file) => {
       formData.append("images", file);
     });
     return formData;
-  };
+  }, [files]);
 
-  const deleteFile = (url: string) => {
+  const deleteFile = useCallback((url: string) => {
+    setPrevImages((prevImages) =>
+      prevImages.filter((image) => image.file.url !== url),
+    );
     setFiles((prevFiles) => prevFiles.filter((file) => file.preview !== url));
-  };
+  }, []);
 
-  return { dropzoneState, files, clearFiles, createFilesFormData, deleteFile };
+  return {
+    prevImages,
+    dropzoneState,
+    files,
+    clearFiles,
+    createFilesFormData,
+    deleteFile,
+    populateImages,
+  };
 };

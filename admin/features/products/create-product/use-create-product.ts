@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import * as z from "zod";
+import { MAX_FILES } from "../constants";
 
 export const useCreateProduct = () => {
   const router = useRouter();
@@ -20,9 +21,12 @@ export const useCreateProduct = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      if (files.length < MAX_FILES) {
+        toast.error("Please upload 4 images");
+        return;
+      }
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
       const formData = createFilesFormData();
-
       setLoading(true);
       const {
         data: { data },
@@ -38,7 +42,7 @@ export const useCreateProduct = () => {
       clearFiles();
       toast.success("Product created");
       router.refresh();
-      router.replace("/products");
+      router.replace("/products/category");
     } catch (error: any) {
       toast.error(error.response.data.message);
     } finally {

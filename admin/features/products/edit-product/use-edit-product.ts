@@ -6,7 +6,8 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import * as z from "zod";
-import { Product } from "../types";
+import { MAX_FILES } from "../constants";
+import { Product, Status } from "../types";
 
 export const useEditProduct = (product: Product) => {
   const router = useRouter();
@@ -16,21 +17,29 @@ export const useEditProduct = (product: Product) => {
       name: "",
       desc: "",
       categoryIds: [],
+      slug: "",
+      status: Status.Draft,
     },
   });
-  const [tempImages, setTempImages] = useState<Product["images"]>([]);
   const [loading, setLoading] = useState(false);
-  const { files, dropzoneState, createFilesFormData } = useImagesUpload(
-    tempImages.length,
-  );
+  const {
+    prevImages,
+    files,
+    dropzoneState,
+    createFilesFormData,
+    deleteFile,
+    populateImages,
+    clearFiles,
+  } = useImagesUpload();
 
   useEffect(() => {
-    setTempImages(product.images);
-  }, [product.images]);
+    populateImages(product.images);
+  }, [populateImages]);
 
   useEffect(() => {
     form.reset({
       categoryIds: product.categories.map((c) => c.id),
+      slug: product.slug,
       desc: product.desc,
       name: product.name,
       inStock: product.inStock,
@@ -40,8 +49,8 @@ export const useEditProduct = (product: Product) => {
   }, [product]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    if (tempImages.length + files.length === 0) {
-      toast.error("Please upload at least 1 image");
+    if (prevImages.length + files.length !== MAX_FILES) {
+      toast.error("Please upload 4 images");
       return;
     }
 
@@ -49,6 +58,7 @@ export const useEditProduct = (product: Product) => {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
       const formData = createFilesFormData();
       setLoading(true);
+
       await axios.patch(API_URL + "/products/" + product.id, values, {
         withCredentials: true,
       });
@@ -58,11 +68,11 @@ export const useEditProduct = (product: Product) => {
           formData,
           { withCredentials: true },
         );
+
+      const existingImageIds = new Set(prevImages.map((img) => img.file.id));
       const deletedImages = product.images
         .map((image) => image.file.id)
-        .filter(
-          (imageId) => !tempImages.map((img) => img.file.id).includes(imageId),
-        );
+        .filter((imageId) => !existingImageIds.has(imageId));
       if (deletedImages.length > 0)
         await axios.delete(
           `${API_URL}/products/${
@@ -71,8 +81,16 @@ export const useEditProduct = (product: Product) => {
           { withCredentials: true },
         );
       toast.success("Product updated");
+      form.reset({
+        name: "",
+        desc: "",
+        categoryIds: [],
+        slug: "",
+        status: Status.Draft,
+      });
+      clearFiles();
       router.refresh();
-      router.push("/products");
+      router.push("/products/category");
     } catch (error: any) {
       toast.error(error.response.data.message);
     } finally {
@@ -86,7 +104,7 @@ export const useEditProduct = (product: Product) => {
     handleSubmit: form.handleSubmit(onSubmit),
     dropzoneState,
     files,
-    tempImages,
-    setTempImages,
+    deleteFile,
+    prevImages,
   };
 };

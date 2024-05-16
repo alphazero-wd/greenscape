@@ -1,17 +1,15 @@
 "use client";
+import { Badge } from "@/features/ui/badge";
+import { Button } from "@/features/ui/button";
 import {
-  Badge,
-  Button,
   Command,
   CommandGroup,
   CommandItem,
   CommandList,
   CommandSeparator,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-  Separator,
-} from "@/features/ui";
+} from "@/features/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/features/ui/popover";
+import { Separator } from "@/features/ui/separator";
 import { cn } from "@/lib/utils";
 import { DotFilledIcon, PlusCircledIcon } from "@radix-ui/react-icons";
 import { Table } from "@tanstack/react-table";

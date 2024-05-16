@@ -46,7 +46,7 @@ export const columns: ColumnDef<Product>[] = [
           alt="Product image"
           className="aspect-square rounded-md object-cover"
           height="128"
-          src={row.original.images[0].file.url}
+          src={row.original.images[0]?.file?.url}
           width="128"
         />
       </div>

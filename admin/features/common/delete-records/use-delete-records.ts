@@ -19,7 +19,6 @@ export const useDeleteRecords = () => {
 
       toast.success("Records deleted successfully");
     } catch (error) {
-      console.log({ error });
       toast.error("Something went wrong");
     } finally {
       setLoading(false);

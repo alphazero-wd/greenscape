@@ -150,32 +150,30 @@ export class CategoriesService {
   }
 
   async remove(ids: number[]) {
-    return this.prisma.$transaction(async (transactionClient) => {
-      try {
-        const { count } = await transactionClient.category.deleteMany({
-          where: { id: { in: ids } },
-        });
-        if (count !== ids.length)
-          throw new NotFoundException({
-            success: false,
-            message: `${
-              ids.length - count
-            } categories were not deleted because they were not found`,
-          });
-      } catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError)
-          if (error.code === PrismaError.ForeignViolation)
-            throw new ForbiddenException({
-              success: false,
-              message:
-                'Cannot delete categories because they are linked to existing products',
-            });
-        if (error instanceof NotFoundException) throw error;
-        throw new InternalServerErrorException({
+    try {
+      const { count } = await this.prisma.category.deleteMany({
+        where: { id: { in: ids } },
+      });
+      if (count !== ids.length)
+        throw new NotFoundException({
           success: false,
-          message: 'Something went wrong',
+          message: `${
+            ids.length - count
+          } categories were not deleted because they were not found`,
         });
-      }
-    });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError)
+        if (error.code === PrismaError.ForeignViolation)
+          throw new ForbiddenException({
+            success: false,
+            message:
+              'Cannot delete categories because they are linked to existing products',
+          });
+      if (error instanceof NotFoundException) throw error;
+      throw new InternalServerErrorException({
+        success: false,
+        message: 'Something went wrong',
+      });
+    }
   }
 }

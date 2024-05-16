@@ -12,6 +12,6 @@ export const getCurrentUser = async () => {
     );
     return data?.data as User | undefined;
   } catch (error: any) {
-    console.log({ error });
+    return null;
   }
 };

@@ -1,16 +1,16 @@
+import { CopyButton } from "@/features/common/components";
 import { formatPrice } from "@/features/common/utils";
+import { Badge } from "@/features/ui/badge";
+import { Button } from "@/features/ui/button";
 import {
-  Badge,
-  Button,
-  CopyButton,
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/features/ui";
+} from "@/features/ui/tooltip";
 import { ViewfinderCircleIcon } from "@heroicons/react/24/outline";
 import { ColumnDef } from "@tanstack/react-table";
-import { format } from "date-fns";
+import format from "date-fns/format";
 import { useRouter } from "next/navigation";
 import { Order } from "../types/order";
 import { getCountryName, getPostalAddress, getShippingOption } from "../utils";

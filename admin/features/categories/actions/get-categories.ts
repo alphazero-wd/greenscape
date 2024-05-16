@@ -12,7 +12,9 @@ interface CategoriesResponse {
 
 export const getCategories = async (query = "", slug: string = "") => {
   try {
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/categories${(slug ? '/' : '') + slug}/subs${query}`;
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/categories${
+      (slug ? "/" : "") + slug
+    }/subs${query}`;
 
     const {
       data: { count, data },
@@ -24,7 +26,6 @@ export const getCategories = async (query = "", slug: string = "") => {
       data,
     };
   } catch (error: any) {
-    console.log({ message: error?.response?.data?.message });
     return { count: 0, data: { categories: [], parents: null } };
   }
 };

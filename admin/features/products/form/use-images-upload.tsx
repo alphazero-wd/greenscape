@@ -20,8 +20,6 @@ export const useImagesUpload = () => {
       "image/jpeg": [".jpg", ".jpeg"],
     },
     onDrop: (acceptedFiles) => {
-      console.log({ acceptedFiles, prevImages });
-
       if (acceptedFiles.length + prevImages.length > MAX_FILES)
         toast.error(`Cannot have more than ${MAX_FILES} images`);
       else

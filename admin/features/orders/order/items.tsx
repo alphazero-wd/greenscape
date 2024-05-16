@@ -7,8 +7,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/features/ui";
-import Image from "next/image";
+} from "@/features/ui/table";
 import { useRouter } from "next/navigation";
 import { Order } from "../types";
 import { getShippingOption } from "../utils";
@@ -33,18 +32,6 @@ export const OrderItems = ({ order }: { order: Order }) => {
             onClick={() => router.push(`/products/${productId}/preview`)}
             key={productId}
           >
-            <TableCell className="flex items-center gap-x-3">
-              <Image
-                src={product.images[0].url}
-                alt={product.name}
-                width={128}
-                height={128}
-                className="aspect-square h-16 w-16 rounded-md object-cover"
-              />
-              <span className="line-clamp-2 text-sm font-medium">
-                {product.name}
-              </span>
-            </TableCell>
             <TableCell>{product.category.name}</TableCell>
             <TableCell className="text-right">{qty}</TableCell>
             <TableCell className="text-right">

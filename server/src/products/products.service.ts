@@ -246,36 +246,32 @@ export class ProductsService {
   }
 
   async remove(ids: number[]) {
-    return this.prisma.$transaction(async (transactionClient) => {
-      try {
-        const productsWithImagesOnly = await transactionClient.product.findMany(
-          {
-            where: { id: { in: ids } },
-            select: { images: { select: { file: true } } },
-          },
-        );
-        if (productsWithImagesOnly.length !== ids.length)
-          throw new NotFoundException({
-            success: false,
-            message: `${
-              ids.length - productsWithImagesOnly.length
-            } products were not deleted because they were not found`,
-          });
-        const imageKeys = productsWithImagesOnly.flatMap((img) =>
-          img.images.flatMap(({ file }) => file.id),
-        );
-        await this.filesService.remove(imageKeys);
-        await transactionClient.product.deleteMany({
-          where: { id: { in: ids } },
-        });
-      } catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError)
-          if (error instanceof NotFoundException) throw error;
-        throw new InternalServerErrorException({
+    try {
+      const productsWithImagesOnly = await this.prisma.product.findMany({
+        where: { id: { in: ids } },
+        select: { images: { select: { fileId: true } } },
+      });
+      if (productsWithImagesOnly.length !== ids.length)
+        throw new NotFoundException({
           success: false,
-          message: 'Something went wrong',
+          message: `${
+            ids.length - productsWithImagesOnly.length
+          } products were not deleted because they were not found`,
         });
-      }
-    });
+      const imageKeys = productsWithImagesOnly.flatMap((img) =>
+        img.images.map((image) => image.fileId),
+      );
+      await this.filesService.remove(imageKeys);
+      await this.prisma.product.deleteMany({
+        where: { id: { in: ids } },
+      });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError)
+        if (error instanceof NotFoundException) throw error;
+      throw new InternalServerErrorException({
+        success: false,
+        message: error.message,
+      });
+    }
   }
 }

@@ -26,7 +26,6 @@ export const getProducts = async (
     return { count, data };
   } catch (error: any) {
     const message = error.response.data.message;
-    console.log({ message });
     return { data: [], count: 0 };
   }
 };

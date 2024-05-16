@@ -34,7 +34,6 @@ export const useCreateCategory = (parentCategoryId?: number) => {
       const message: string = error?.response?.data?.message;
       if (message.includes("slug"))
         form.setError("slug", { message }, { shouldFocus: true });
-      else console.log({ error });
     } finally {
       setLoading(false);
     }

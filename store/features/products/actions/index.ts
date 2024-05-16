@@ -1,3 +1,3 @@
 export { getProduct } from "./get-product";
 export { getProducts } from "./get-products";
-export { getCategories } from "./get-categories";
+export { getCategories } from "../../categories/actions/get-categories";

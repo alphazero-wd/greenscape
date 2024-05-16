@@ -1,5 +1,6 @@
 "use client";
-import { Label, Switch } from "@/features/ui";
+import { Label } from "@/features/ui/label";
+import { Switch } from "@/features/ui/switch";
 import React, { useEffect } from "react";
 import { Order } from "../types";
 import { getPostalAddress } from "../utils";

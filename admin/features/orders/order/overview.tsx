@@ -1,11 +1,11 @@
+import { Badge } from "@/features/ui/badge";
 import {
-  Badge,
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-  Label,
-  Separator,
-} from "@/features/ui";
+} from "@/features/ui/hover-card";
+import { Label } from "@/features/ui/label";
+import { Separator } from "@/features/ui/separator";
 import { EnvelopeIcon, PhoneIcon } from "@heroicons/react/24/solid";
 import { format } from "date-fns";
 import { Order } from "../types";

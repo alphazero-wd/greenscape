@@ -4,8 +4,8 @@ import { UploadFileDto } from './dto';
 import { ConfigService } from '@nestjs/config';
 import {
   S3Client,
-  DeleteObjectCommand,
   CompleteMultipartUploadCommandOutput,
+  DeleteObjectsCommand,
 } from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
 import { v4 } from 'uuid';
@@ -62,15 +62,16 @@ export class FilesService {
   }
 
   async remove(keys: string[]) {
-    for (const key of keys) {
-      const command = new DeleteObjectCommand({
-        Bucket: this.configService.get('AWS_BUCKET_NAME'),
-        Key: this.configService.get('AWS_OBJECT_DEST') + key,
-        ExpectedBucketOwner: this.configService.get('AWS_ACCOUNT_ID'),
-      });
-      const result = await this.s3Client.send(command);
-      console.log({ result });
-    }
+    const command = new DeleteObjectsCommand({
+      Bucket: this.configService.get('AWS_BUCKET_NAME'),
+      Delete: {
+        Objects: keys.map((key) => ({
+          Key: this.configService.get('AWS_OBJECT_DEST') + key,
+        })),
+      },
+      ExpectedBucketOwner: this.configService.get('AWS_ACCOUNT_ID'),
+    });
+    await this.s3Client.send(command);
     await this.prisma.file.deleteMany({ where: { id: { in: keys } } });
   }
 }

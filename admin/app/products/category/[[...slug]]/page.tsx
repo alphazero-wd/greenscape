@@ -29,6 +29,8 @@ interface ProductsPageProps {
     status?: Status;
     price?: number;
     inStock?: string;
+    from?: string;
+    to?: string;
   };
   params: {
     slug?: string[];
@@ -36,7 +38,18 @@ interface ProductsPageProps {
 }
 
 export default async function ProductsPage({
-  searchParams: { limit, offset, order, q, sortBy, status, price, inStock },
+  searchParams: {
+    limit,
+    offset,
+    order,
+    q,
+    sortBy,
+    status,
+    price,
+    inStock,
+    from,
+    to,
+  },
   params: { slug },
 }: ProductsPageProps) {
   const user = await getCurrentUser();
@@ -52,6 +65,8 @@ export default async function ProductsPage({
       status,
       price,
       inStock,
+      from,
+      to,
     },
   });
   const { count, data } = await getProducts(slug?.at(-1), query);

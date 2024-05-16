@@ -4,6 +4,7 @@ import {
   DataTable,
   DataTablePagination,
   DataTableViewOptions,
+  DateRangeFilter,
   useTable,
 } from "@/features/common/data-table";
 import { Button } from "@/features/ui/button";
@@ -43,6 +44,8 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({
     delete currentQuery.price;
     delete currentQuery.inStock;
     delete currentQuery.categoryIds;
+    delete currentQuery.from;
+    delete currentQuery.to;
     delete currentQuery.status;
     delete currentQuery.q;
     table.resetPageIndex();
@@ -69,11 +72,14 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({
               categories={categories}
               table={table}
             />
+            <DateRangeFilter table={table} />
             <StatusFilter table={table} statusGroups={statusGroups} />
             <PriceFilter table={table} />
             <InStockFilter table={table} inStockGroups={inStockGroups} />
             {(searchParams.get("price") ||
               searchParams.get("inStock") ||
+              searchParams.get("from") ||
+              searchParams.get("to") ||
               searchParams.get("categoryIds") ||
               searchParams.get("q") ||
               searchParams.get("status")) && (

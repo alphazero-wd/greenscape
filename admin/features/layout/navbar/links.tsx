@@ -13,10 +13,10 @@ export const Links = () => {
           <Link
             href={link.href}
             className={cn(
-              "flex h-16 items-center border-b-2 border-transparent px-1 text-sm font-medium text-gray-900",
+              "flex h-16 items-center border-b-2 border-transparent px-1 text-sm font-medium text-muted-foreground",
               pathname === link.href ||
                 (pathname.startsWith(link.href) && link.href !== "/")
-                ? "border-primary"
+                ? "border-primary font-semibold text-gray-900"
                 : "hover:border-gray-300",
             )}
           >

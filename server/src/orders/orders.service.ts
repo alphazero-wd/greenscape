@@ -21,8 +21,8 @@ export class OrdersService {
   private formQueries({
     q,
     countries,
-    startDate,
-    endDate,
+    from,
+    to,
     status,
     shippingCost,
     totalRange,
@@ -45,8 +45,8 @@ export class OrdersService {
       ];
     }
     if (countries) where.country = { in: countries };
-    where.createdAt = { gte: startDate, lt: endDate };
-    where.shippingCost = { equals: shippingCost };
+    where.createdAt = { gte: from, lt: to };
+    where.shippingCost = shippingCost;
     if (totalRange) {
       where.total = {};
       if (totalRange[0]) where.total.gte = totalRange[0];

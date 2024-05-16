@@ -1,34 +1,31 @@
 "use client";
 
-import {
-  Button,
-  Calendar,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/features/ui";
+import { Button } from "@/features/ui/button";
+import { Calendar } from "@/features/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/features/ui/popover";
 import { CalendarIcon } from "@heroicons/react/24/outline";
 import { Table } from "@tanstack/react-table";
-import { differenceInCalendarDays, format, isValid } from "date-fns";
+import differenceInCalendarDays from "date-fns/differenceInCalendarDays";
+import format from "date-fns/format";
+import isValid from "date-fns/isValid";
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "query-string";
 import { useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
 import { useDebouncedCallback } from "use-debounce";
-import { Order } from "../types";
 
-interface DateRangeFilterProps {
-  table: Table<Order>;
+interface DateRangeFilterProps<T> {
+  table: Table<T>;
 }
 
-export function DateRangeFilter({ table }: DateRangeFilterProps) {
+export function DateRangeFilter<T>({ table }: DateRangeFilterProps<T>) {
   const searchParams = useSearchParams();
   const [date, setDate] = useState<DateRange | undefined>();
   const router = useRouter();
 
   useEffect(() => {
-    const startDate = searchParams.get("startDate");
-    const endDate = searchParams.get("endDate");
+    const startDate = searchParams.get("from");
+    const endDate = searchParams.get("to");
     if (
       startDate &&
       endDate &&
@@ -41,16 +38,16 @@ export function DateRangeFilter({ table }: DateRangeFilterProps) {
         to: new Date(endDate),
       });
     else setDate(undefined);
-  }, [searchParams.get("startDate"), searchParams.get("endDate")]);
+  }, [searchParams.get("from"), searchParams.get("to")]);
 
-  const filterOrdersWithinDateRange = useDebouncedCallback(() => {
+  const filterWithinDateRange = useDebouncedCallback(() => {
     const currentQuery = qs.parse(searchParams.toString());
-    if (date?.from && date.to) {
-      currentQuery.startDate = date.from.toISOString();
-      currentQuery.endDate = date.to.toISOString();
+    if (date?.from && date?.to) {
+      currentQuery.from = format(date.from, "yyyy-MM-dd");
+      currentQuery.to = format(date.to, "yyyy-MM-dd");
     } else {
-      delete currentQuery.startDate;
-      delete currentQuery.endDate;
+      delete currentQuery.from;
+      delete currentQuery.to;
     }
     table.resetPageIndex();
     const urlWithDateRange = qs.stringifyUrl({ url: "", query: currentQuery });
@@ -58,7 +55,7 @@ export function DateRangeFilter({ table }: DateRangeFilterProps) {
   }, 500);
 
   useEffect(() => {
-    filterOrdersWithinDateRange();
+    filterWithinDateRange();
   }, [date]);
 
   return (

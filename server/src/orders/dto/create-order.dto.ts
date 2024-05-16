@@ -9,6 +9,9 @@ export interface CreateOrderDto {
   line2?: string;
   city?: string;
   state?: string;
+  tax: number;
+  cardType: string;
+  cardLast4: string;
   postalCode?: string;
   country?: string;
   cart: {

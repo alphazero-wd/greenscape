@@ -11,6 +11,7 @@ import { FilesService } from '../files/files.service';
 import { PrismaError } from '../prisma/prisma-error';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateProductDto, FindManyProductsDto, UpdateProductDto } from './dto';
+import { endOfDay, startOfDay } from 'date-fns';
 
 @Injectable()
 export class ProductsService {
@@ -71,7 +72,17 @@ export class ProductsService {
   }
 
   private formQueries(
-    { q, status, price, inStock, refIds, sortBy, order }: FindManyProductsDto,
+    {
+      q,
+      status,
+      price,
+      inStock,
+      refIds,
+      from,
+      to,
+      sortBy,
+      order,
+    }: FindManyProductsDto,
     slug?: string,
   ) {
     const where: Prisma.ProductWhereInput = {};
@@ -89,6 +100,14 @@ export class ProductsService {
     if (inStock !== undefined)
       where.inStock = inStock ? { gt: 0 } : { equals: 0 };
     if (refIds) where.id = { not: { in: refIds } };
+    let start: Date, end: Date;
+    if (from) start = startOfDay(new Date(from));
+    if (to) end = endOfDay(new Date(to));
+
+    where.createdAt = {
+      gte: start,
+      lte: end,
+    };
 
     let orderBy: Prisma.ProductOrderByWithRelationAndSearchRelevanceInput = {};
     if (sortBy === 'orders') orderBy = { orders: { _count: order } };

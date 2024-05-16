@@ -15,8 +15,8 @@ interface OrdersPageProps {
     offset?: string;
     q?: string;
     totalRange?: string;
-    startDate?: string;
-    endDate?: string;
+    from?: string;
+    to?: string;
     countries?: string;
     shippingCost?: string;
     status?: "pending" | "delivered";
@@ -29,8 +29,8 @@ export default async function OrdersPage({
     offset = "0",
     q,
     totalRange,
-    startDate,
-    endDate,
+    from,
+    to,
     countries,
     shippingCost,
     status,
@@ -46,8 +46,8 @@ export default async function OrdersPage({
       offset,
       q,
       totalRange,
-      startDate,
-      endDate,
+      from,
+      to,
       countries,
       shippingCost,
       status,

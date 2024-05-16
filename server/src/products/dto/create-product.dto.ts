@@ -1,4 +1,5 @@
 import {
+  IsEnum,
   IsIn,
   IsInt,
   IsNotEmpty,
@@ -9,6 +10,7 @@ import {
   Min,
 } from 'class-validator';
 import { VALID_SLUG_REGEX } from '../../common/constants';
+import { Status } from '@prisma/client';
 
 export class CreateProductDto {
   @Length(1, 120)
@@ -36,6 +38,6 @@ export class CreateProductDto {
   @Min(1, { each: true })
   categoryIds: number[];
 
-  @IsIn(['Active', 'Draft', 'Archived'])
-  status: 'Active' | 'Draft' | 'Archived';
+  @IsEnum(Status)
+  status: Status;
 }

@@ -38,7 +38,14 @@ export class CheckoutService implements OnModuleInit {
       webhookSecret,
     );
     const session = event.data.object as Stripe.Checkout.Session;
-
+    const { payment_intent } = await this.stripe.checkout.sessions.retrieve(
+      session.id,
+      {
+        expand: ['payment_intent.payment_method.card'],
+      },
+    );
+    const payment_method = (payment_intent as Stripe.PaymentIntent)
+      .payment_method as Stripe.PaymentMethod;
     if (event.type === 'checkout.session.completed') {
       const productIds = session.metadata.cartItemIds
         .split(',')
@@ -46,10 +53,14 @@ export class CheckoutService implements OnModuleInit {
       const quantities = session.metadata.quantities
         .split(',')
         .map((id) => +id);
+
       const { city, country, postal_code, state, line1, line2 } =
         session.customer_details.address;
       await this.ordersService.create({
         id: session.payment_intent.toString().split('_')[1],
+        tax: session.total_details.amount_tax,
+        cardLast4: payment_method.card.last4,
+        cardType: payment_method.card.brand,
         line1,
         line2,
         state,
@@ -129,6 +140,7 @@ export class CheckoutService implements OnModuleInit {
       line_items: lineItems,
       mode: 'payment',
       billing_address_collection: 'required',
+      automatic_tax: { enabled: true },
       phone_number_collection: { enabled: true },
       success_url: `${this.configService.get(
         'CORS_ORIGIN_STORE',

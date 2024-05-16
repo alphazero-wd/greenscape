@@ -34,7 +34,7 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({ links }) => {
                   "ml-4 line-clamp-1 text-sm font-medium text-gray-400",
                   index === links.length - 1
                     ? "text-gray-900"
-                    : "hover:text-gray-500"
+                    : "hover:text-gray-500",
                 )}
               >
                 {link.name}

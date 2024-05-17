@@ -66,7 +66,7 @@ export class FilesService {
       Bucket: this.configService.get('AWS_BUCKET_NAME'),
       Delete: {
         Objects: keys.map((key) => ({
-          Key: this.configService.get('AWS_OBJECT_DEST') + key,
+          Key: key,
         })),
       },
       ExpectedBucketOwner: this.configService.get('AWS_ACCOUNT_ID'),

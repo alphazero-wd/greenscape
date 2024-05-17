@@ -6,7 +6,6 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import * as z from "zod";
-import { MAX_FILES } from "../constants";
 
 export const useCreateProduct = () => {
   const router = useRouter();
@@ -21,8 +20,8 @@ export const useCreateProduct = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      if (files.length < MAX_FILES) {
-        toast.error("Please upload 4 images");
+      if (files.length === 0) {
+        toast.error("Please upload at least an image");
         return;
       }
       const API_URL = process.env.NEXT_PUBLIC_API_URL;

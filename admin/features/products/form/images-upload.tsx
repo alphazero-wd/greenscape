@@ -34,7 +34,7 @@ export const ImagesUpload: React.FC<ImagesUploadProps> = memo(
         <CardHeader>
           <CardTitle>Product Images</CardTitle>
           <CardDescription>
-            Upload 4 images displaying the product
+            Upload up to 4 images displaying the product
           </CardDescription>
         </CardHeader>
         <CardContent>

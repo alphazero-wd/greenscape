@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import * as z from "zod";
-import { MAX_FILES } from "../constants";
 import { Product, Status } from "../types";
 
 export const useEditProduct = (product: Product) => {
@@ -49,8 +48,8 @@ export const useEditProduct = (product: Product) => {
   }, [product]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    if (prevImages.length + files.length !== MAX_FILES) {
-      toast.error("Please upload 4 images");
+    if (prevImages.length + files.length === 0) {
+      toast.error("Please upload at least an image");
       return;
     }
 

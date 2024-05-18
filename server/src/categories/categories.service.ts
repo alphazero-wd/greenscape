@@ -109,6 +109,7 @@ export class CategoriesService {
       include: {
         subCategories: {
           include: {
+            _count: { select: { products: true } },
             subCategories: {
               include: {
                 _count: { select: { products: true } },

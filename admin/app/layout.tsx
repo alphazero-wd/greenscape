@@ -1,3 +1,4 @@
+import { iconMetadata } from "@/features/config";
 import { Navbar } from "@/features/layout/navbar";
 import { Toaster } from "@/features/layout/toaster";
 import type { Metadata } from "next";
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
     default: "Admin",
   },
   description: "Welcome to the admin page",
+  icons: iconMetadata,
 };
 
 export default async function RootLayout({

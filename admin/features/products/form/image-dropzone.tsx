@@ -12,7 +12,7 @@ export const ImageDropzone = ({
   loading,
 }: ImageDropzoneProps) => {
   return (
-    <Dropzone loading={loading} state={dropzoneState}>
+    <Dropzone disabled={loading} state={dropzoneState}>
       <Upload className="h-4 w-4 text-muted-foreground" />
       <span className="sr-only">Upload</span>
     </Dropzone>

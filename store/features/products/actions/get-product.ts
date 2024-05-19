@@ -4,6 +4,8 @@ import { Product } from "../types";
 export const getProduct = async (id: string) => {
   const {
     data: { data },
-  } = await axios.get(process.env.NEXT_PUBLIC_API_URL + "/products/" + id);
+  } = await axios.get(
+    process.env.NEXT_PUBLIC_API_URL + "/products/details" + id
+  );
   return { data: data as Product };
 };

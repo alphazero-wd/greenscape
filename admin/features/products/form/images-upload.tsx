@@ -50,6 +50,7 @@ export const ImagesUpload: React.FC<ImagesUploadProps> = memo(
               {urls.slice(1).map((url) => (
                 <PreviewImage
                   deleteImage={deleteImage}
+                  loading={loading}
                   key={url}
                   size="sm"
                   url={url}

@@ -2,7 +2,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Product } from "@/features/products/types";
 import { useCartStore } from "../contexts";
-import { Skeleton } from "@/features/ui";
+import { Skeleton } from "@/features/ui/skeleton";
 import { ProductList } from "@/features/products/product-list";
 import { getProducts } from "@/features/products/actions";
 
@@ -18,7 +18,7 @@ export const Related = () => {
 
   const fetchRelatedProducts = useCallback(async () => {
     setLoading(true);
-    const { data: products } = await getProducts(
+    const products = await getProducts(
       `?limit=4&categoryIds=${cartCategoryIds.join(
         ","
       )}&refIds=${cartItemIds.join(",")}`

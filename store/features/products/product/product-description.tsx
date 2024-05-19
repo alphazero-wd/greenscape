@@ -1,5 +1,5 @@
 "use client";
-import { Label } from "@/features/ui";
+import { Label } from "@/features/ui/label";
 
 export const ProductDescription = ({ desc }: { desc: string }) => {
   return (

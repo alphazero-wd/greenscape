@@ -115,6 +115,14 @@ export class ProductsService {
     return { where, orderBy };
   }
 
+  async paginate(
+    dto: Omit<FindManyProductsDto, 'limit' | 'offset' | 'sortBy' | 'order'>,
+    slug: string = '',
+  ) {
+    const { where } = this.formQueries(dto, slug);
+    return this.prisma.product.count({ where });
+  }
+
   async findAll(
     { limit = 10, offset = 0, ...findManyProductsDto }: FindManyProductsDto,
     slug?: string,
@@ -142,8 +150,7 @@ export class ProductsService {
           _count: { select: { orders: true } },
         },
       });
-      const count = await this.prisma.product.count({ where });
-      return { products, count };
+      return products;
     } catch (error) {
       throw new InternalServerErrorException({
         success: false,

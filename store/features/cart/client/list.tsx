@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useCartStore } from "../contexts";
 import { CartItem } from "./cart-item";
 import Link from "next/link";
-import { Button } from "@/features/ui";
+import { Button } from "@/features/ui/button";
 
 export const CartList = () => {
   const [mounted, setMounted] = useState(false);

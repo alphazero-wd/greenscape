@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useCartStore } from "../contexts";
 import { formatPrice } from "@/features/products/utils";
-import { Button } from "@/features/ui";
+import { Button } from "@/features/ui/button";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";

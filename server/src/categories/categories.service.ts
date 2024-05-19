@@ -90,6 +90,11 @@ export class CategoriesService {
         skip: offset,
         where,
         include: {
+          products: {
+            include: {
+              images: { take: 1, select: { file: { select: { url: true } } } },
+            },
+          },
           _count: { select: { subCategories: true, products: true } },
         },
       });

@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["greenify-buck.s3.us-east-1.amazonaws.com"],
+    domains: ["varve.s3.us-east-1.amazonaws.com"],
   },
 };
 

@@ -8,7 +8,7 @@ import { toast } from "react-hot-toast";
 interface DropzoneProps {
   children: React.ReactNode;
   state: DropzoneState;
-  loading?: boolean;
+  disabled?: boolean;
   onChange?: ChangeEventHandler<HTMLInputElement>;
   className?: string;
 }
@@ -17,7 +17,7 @@ export const Dropzone: React.FC<DropzoneProps> = ({
   children,
   state: { fileRejections, getRootProps, getInputProps, inputRef },
   className,
-  loading = false,
+  disabled = false,
 }) => {
   useEffect(() => {
     if (fileRejections.length > 0) {
@@ -47,11 +47,11 @@ export const Dropzone: React.FC<DropzoneProps> = ({
       {...getRootProps()}
       className={cn(
         "flex aspect-square w-full items-center justify-center rounded-md border border-dashed",
-        loading && "cursor-not-allowed bg-gray-100",
+        disabled && "cursor-not-allowed bg-gray-100",
         className,
       )}
     >
-      <input disabled={loading} ref={inputRef} {...getInputProps()} />
+      <input disabled={disabled} ref={inputRef} {...getInputProps()} />
       {children}
     </div>
   );

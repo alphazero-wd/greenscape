@@ -1,5 +1,9 @@
 import { getCategoriesTree } from "@/features/categories/actions";
-import { aggregateProducts, getProducts } from "@/features/products/actions";
+import {
+  aggregateProducts,
+  getProducts,
+  paginateProducts,
+} from "@/features/products/actions";
 import { ProductsTable } from "@/features/products/table";
 import { Status } from "@/features/products/types";
 import { Breadcrumb } from "@/features/ui/breadcrumb";
@@ -69,7 +73,8 @@ export default async function ProductsPage({
       to,
     },
   });
-  const { count, data } = await getProducts(slug?.at(-1), query);
+  const data = await getProducts(slug?.at(-1), query);
+  const count = await paginateProducts(slug?.at(-1), query);
   const { inStockGroups, statusGroups } = await aggregateProducts(query);
 
   const categories = await getCategoriesTree();

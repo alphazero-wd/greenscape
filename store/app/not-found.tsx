@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button } from "@/features/ui";
+import { Button } from "@/features/ui/button";
 
 export const metadata = {
   title: "Page not found",

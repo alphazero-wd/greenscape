@@ -3,7 +3,7 @@ import Image from "next/image";
 import { CartItem as ICartItem } from "../types";
 import { formatPrice } from "@/features/products/utils";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { Button } from "@/features/ui";
+import { Button } from "@/features/ui/button";
 import { useCartStore } from "../contexts";
 
 interface CartItemProps {

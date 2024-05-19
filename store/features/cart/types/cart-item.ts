@@ -1,4 +1,4 @@
-import { Category } from "@/features/products/types";
+import { Category } from "@/features/categories/types";
 
 export interface CartItem {
   id: number;

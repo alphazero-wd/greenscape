@@ -1,4 +1,4 @@
-import { Category } from "../../categories/types";
+import { Category } from "@/features/categories/types";
 
 export interface Product {
   id: number;
@@ -9,10 +9,5 @@ export interface Product {
   categories: Category[];
   createdAt: Date;
   updatedAt: Date;
-  images: { id: string; url: string }[];
-}
-
-export interface InStockGroup {
-  _count: { id: number };
-  inStock: number;
+  images: { file: { id: string; url: string } }[];
 }

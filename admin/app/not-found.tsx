@@ -2,7 +2,7 @@ import { Button } from "@/features/ui/button";
 import Link from "next/link";
 
 export const metadata = {
-  title: "Greenify | Page not found",
+  title: "Greenscape | Page not found",
 };
 
 export default function NotFound() {

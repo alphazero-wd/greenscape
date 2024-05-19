@@ -2,30 +2,24 @@ import axios from "axios";
 import { cookies } from "next/headers";
 import { Product } from "../types";
 
-interface ProductsResponse {
-  count: number;
-  data: Product[];
-}
-
 export const getProducts = async (
   slug = "",
   query = "",
-): Promise<ProductsResponse> => {
+): Promise<Product[]> => {
   try {
     const {
-      data: { count, data },
+      data: { data },
     } = await axios.get(
       process.env.NEXT_PUBLIC_API_URL +
-        "/products/" +
-        (slug ? "category/" + slug : slug) +
+        "/products" +
+        (slug ? "/category/" + slug : slug) +
         query,
       {
         headers: { Cookie: cookies().toString() },
       },
     );
-    return { count, data };
+    return data as Product[];
   } catch (error: any) {
-    const message = error.response.data.message;
-    return { data: [], count: 0 };
+    return [];
   }
 };

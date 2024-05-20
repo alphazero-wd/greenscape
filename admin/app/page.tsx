@@ -31,6 +31,8 @@ export default async function DashboardPage({
   const keyStats = await getKeyStats();
   const { startYear, endYear, monthlyRevenues } =
     await getMonthlyRevenuesInYear(year || new Date().getFullYear().toString());
+  console.log({ startYear, endYear });
+
   const salesByCountries = await getSalesByCountries();
 
   return (

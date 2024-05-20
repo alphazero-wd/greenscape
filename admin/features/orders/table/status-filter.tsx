@@ -80,7 +80,7 @@ export const StatusFilter: React.FC<StatusFilterProps> = ({
                     className={cn(
                       "mr-2 h-4 w-4",
                       status === s
-                        ? "bg-primary text-primary-foreground"
+                        ? "text-primary"
                         : "opacity-50 [&_svg]:invisible",
                     )}
                   >

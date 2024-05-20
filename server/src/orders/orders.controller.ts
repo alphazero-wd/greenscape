@@ -23,7 +23,27 @@ export class OrdersController {
     return { ...response, success: true };
   }
 
-  @Get(':id')
+  @Get('aggregate')
+  async aggregate(@Query() findManyOrdersDto: FindManyOrdersDto) {
+    const countryGroups = await this.ordersService.aggregate(
+      'country',
+      findManyOrdersDto,
+    );
+    const statusGroups = await this.ordersService.aggregate(
+      'deliveredAt',
+      findManyOrdersDto,
+    );
+    const shippingOptionGroups = await this.ordersService.aggregate(
+      'shippingCost',
+      findManyOrdersDto,
+    );
+    return {
+      success: true,
+      data: { countryGroups, statusGroups, shippingOptionGroups },
+    };
+  }
+
+  @Get('details/:id')
   async findOne(@Param('id') id: string) {
     const order = await this.ordersService.findOne(id);
     return { data: order, success: true };

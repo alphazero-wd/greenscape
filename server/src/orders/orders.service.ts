@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateOrderDto, FindManyOrdersDto, UpdateOrderDto } from './dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma } from '@prisma/client';
+import { endOfDay, startOfDay } from 'date-fns';
 
 @Injectable()
 export class OrdersService {
@@ -45,13 +46,16 @@ export class OrdersService {
       ];
     }
     if (countries) where.country = { in: countries };
-    where.createdAt = { gte: from, lt: to };
     where.shippingCost = shippingCost;
     if (totalRange) {
       where.total = {};
       if (totalRange[0]) where.total.gte = totalRange[0];
       if (totalRange[1]) where.total.lte = totalRange[1];
     }
+    let start: Date, end: Date;
+    if (from) start = startOfDay(new Date(from));
+    if (to) end = endOfDay(new Date(to));
+    where.createdAt = { gte: start, lte: end };
     if (status === 'delivered') where.deliveredAt = { not: null };
     if (status === 'pending') where.deliveredAt = null;
     return where;

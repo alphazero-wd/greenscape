@@ -84,7 +84,7 @@ export const ShippingOptionFilter: React.FC<ShippingOptionFilterProps> = ({
                     className={cn(
                       "mr-2 h-4 w-4",
                       shippingOption === option
-                        ? "bg-primary text-primary-foreground"
+                        ? "text-primary"
                         : "opacity-50 [&_svg]:invisible",
                     )}
                   >

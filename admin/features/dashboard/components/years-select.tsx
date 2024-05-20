@@ -8,6 +8,7 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "query-string";
 import { useEffect, useMemo, useState } from "react";
+import { useDebouncedCallback } from "use-debounce";
 
 interface YearsSelectProps {
   startYear: number;
@@ -24,25 +25,29 @@ export const YearsSelect = ({ startYear, endYear }: YearsSelectProps) => {
   );
 
   useEffect(() => {
-    const shownYear = +(searchParams.get("year") || new Date().getFullYear());
-    if (shownYear) {
-      if (shownYear >= startYear && shownYear <= endYear) setYear(shownYear);
-      else setYear(new Date().getFullYear());
-    } else setYear(new Date().getFullYear());
-  }, [searchParams.get("year")]);
+    const shownYear = searchParams.get("year");
 
-  useEffect(() => {
+    if (shownYear && !isNaN(+shownYear)) {
+      const currentYear = +shownYear;
+      if (currentYear >= startYear && currentYear <= endYear)
+        setYear(currentYear);
+      else setYear(new Date().getFullYear());
+    }
+  }, [startYear, endYear, searchParams.get("year")]);
+
+  const getMonthlyRevenuesInYear = useDebouncedCallback(() => {
     const currentQuery = qs.parse(searchParams.toString());
     currentQuery.year = year.toString();
     const urlWithYear = qs.stringifyUrl({ url: "/", query: currentQuery });
     router.push(urlWithYear, { scroll: false });
+  }, 1000);
+
+  useEffect(() => {
+    getMonthlyRevenuesInYear();
   }, [year]);
 
   return (
-    <Select
-      defaultValue={String(diffBetweenTwoYears - 1)}
-      onValueChange={(value) => setYear(+value)}
-    >
+    <Select value={year.toString()} onValueChange={(value) => setYear(+value)}>
       <SelectTrigger className="w-[100px] font-normal">
         <SelectValue placeholder="Year" />
       </SelectTrigger>
@@ -50,7 +55,7 @@ export const YearsSelect = ({ startYear, endYear }: YearsSelectProps) => {
         {Array(diffBetweenTwoYears)
           .fill(null)
           .map((_, i) => (
-            <SelectItem key={i} value={i.toString()}>
+            <SelectItem key={i} value={(i + startYear).toString()}>
               {i + startYear}
             </SelectItem>
           ))}

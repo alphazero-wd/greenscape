@@ -1,4 +1,4 @@
-import { getOrders } from "@/features/orders/actions";
+import { aggregateOrders, getOrders } from "@/features/orders/actions";
 import { OrdersTable } from "@/features/orders/table";
 import { Breadcrumb } from "@/features/ui/breadcrumb";
 import { getCurrentUser } from "@/features/user/utils";
@@ -54,8 +54,9 @@ export default async function OrdersPage({
     },
   });
 
-  const { data, count, countryGroups, statusGroups, shippingOptionGroups } =
-    await getOrders(query);
+  const { data, count } = await getOrders(query);
+  const { countryGroups, statusGroups, shippingOptionGroups } =
+    await aggregateOrders(query);
   return (
     <>
       <div className="container max-w-7xl">

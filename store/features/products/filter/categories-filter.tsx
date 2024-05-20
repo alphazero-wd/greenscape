@@ -30,32 +30,45 @@ export const CategoriesFilter: React.FC<CategoriesFilterProps> = ({
   }, []);
 
   return (
-    <CategoriesRadioMenu
-      categories={categories}
-      field="slug"
-      onChange={(newValue) => {
-        const newSlug = newValue.split("|")[0];
+    <div className="space-y-3">
+      <CategoriesRadioMenu
+        categories={categories}
+        field="slug"
+        onChange={(newValue) => {
+          const newSlug = newValue.split("|")[0];
 
-        if (newSlug === selectedCategory) update({ selectedCategory: null });
-        else update({ selectedCategory: newSlug });
-      }}
-      selectedCategory={`${foundCategory?.slug}|${foundCategory?.name}`}
-      trigger={
-        <Button variant="outline" className="w-full">
-          Categories
-          {foundCategoryPath.length > 0 && (
-            <>
-              <Separator orientation="vertical" className="mx-2 h-4" />
-              <Badge
-                variant="secondary"
-                className="rounded-sm px-1 font-normal"
-              >
-                {foundCategoryPath.map((p) => p.name).join("/")}
-              </Badge>
-            </>
-          )}
+          if (newSlug === selectedCategory) update({ selectedCategory: null });
+          else update({ selectedCategory: newSlug });
+        }}
+        selectedCategory={`${foundCategory?.slug}|${foundCategory?.name}`}
+        trigger={
+          <Button variant="outline" className="w-full">
+            Categories
+            {foundCategoryPath.length > 0 && (
+              <>
+                <Separator orientation="vertical" className="mx-2 h-4" />
+                <Badge
+                  variant="secondary"
+                  className="rounded-sm px-1 font-normal"
+                >
+                  {foundCategoryPath.map((p) => p.name).join("/")}
+                </Badge>
+              </>
+            )}
+          </Button>
+        }
+      />
+      {selectedCategory && (
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() => {
+            update({ selectedCategory: null });
+          }}
+        >
+          Reset
         </Button>
-      }
-    />
+      )}
+    </div>
   );
 };

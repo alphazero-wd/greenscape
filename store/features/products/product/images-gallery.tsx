@@ -19,7 +19,7 @@ export const ImagesGallery: React.FC<ImagesGalleryProps> = ({ product }) => {
           alt="Cover image"
           width={1024}
           height={1024}
-          className="aspect-square h-full w-full object-cover"
+          className="aspect-square rounded-lg h-full w-full object-cover"
         />
       </div>
       <div className="grid h-fit w-full grid-cols-4 gap-6">

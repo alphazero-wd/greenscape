@@ -6,6 +6,7 @@ import {
   BanknotesIcon,
   CreditCardIcon,
   CurrencyDollarIcon,
+  UserGroupIcon,
 } from "@heroicons/react/24/outline";
 import { useMemo } from "react";
 import { KeyStats as IKeyStats } from "../types";
@@ -37,6 +38,10 @@ export const KeyStats = ({
     () => getGrowthRate(thisMonthAvgOrderValue, lastMonthAvgOrderValue),
     [thisMonthAvgOrderValue, lastMonthAvgOrderValue],
   );
+  const customersGrowthRate = useMemo(
+    () => getGrowthRate(thisMonthCustomers, lastMonthCustomers),
+    [thisMonthCustomers, lastMonthCustomers],
+  );
 
   const stats = useMemo(
     () => [
@@ -61,6 +66,13 @@ export const KeyStats = ({
         rate: avgOrderGrowthRate,
         icon: BanknotesIcon,
       },
+      {
+        term: "Customers",
+        curMonth: thisMonthCustomers,
+        prevMonth: lastMonthCustomers,
+        rate: customersGrowthRate,
+        icon: UserGroupIcon,
+      },
     ],
     [
       thisMonthAvgOrderValue,
@@ -77,7 +89,7 @@ export const KeyStats = ({
       <h3 className="text-base font-semibold leading-6 text-gray-900">
         This month
       </h3>
-      <dl className="mt-5 grid gap-4 md:grid-cols-3">
+      <dl className="mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
           <Card key={stat.term}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

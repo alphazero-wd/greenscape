@@ -10,8 +10,6 @@ export interface CreateOrderDto {
   city?: string;
   state?: string;
   tax: number;
-  cardType: string;
-  cardLast4: string;
   postalCode?: string;
   country?: string;
   bag: {

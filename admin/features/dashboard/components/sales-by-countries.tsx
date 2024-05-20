@@ -16,15 +16,16 @@ const colors = [
   "#f43f5e",
 ];
 export const SalesByCountries = ({ data }: { data: SaleByCountry[] }) => {
-  const formattedData = useMemo(
-    () =>
-      data.map((group, index) => ({
-        name: getCountryName(group.country),
-        value: group._sum,
-        color: colors[index],
-      })),
-    [data],
-  );
+  const formattedData = useMemo(() => {
+    if (data.length === 0) {
+      return [{ name: "None", value: 0, color: "#d1d5db" }];
+    }
+    return data.map((group, index) => ({
+      name: getCountryName(group.country),
+      value: group._sum,
+      color: colors[index % colors.length],
+    }));
+  }, [data]);
 
   const cssString = useMemo(
     () => getSalesPieChartCss(formattedData),
@@ -37,47 +38,68 @@ export const SalesByCountries = ({ data }: { data: SaleByCountry[] }) => {
         <CardTitle className="text-base">Sales by Countries</CardTitle>
       </CardHeader>
       <CardContent className="w-full">
-        <svg
-          viewBox="0 0 100 100"
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-full w-full rounded-full"
-        >
-          <clipPath id="hole">
-            <path d="M 50 0 a 50 50 0 0 1 0 100 50 50 0 0 1 0 -100 v 18 a 2 2 0 0 0 0 64 2 2 0 0 0 0 -64" />
-          </clipPath>
-          <foreignObject
-            x="0"
-            y="0"
-            width="100"
-            height="100"
-            clipPath="url(#hole)"
-          >
-            <div
-              className="h-full w-full"
-              style={{
-                background: `conic-gradient(${cssString})`,
-              }}
-            />
-          </foreignObject>
-        </svg>
-
-        <ul className="mt-4 space-y-4">
-          {formattedData.map((sale) => (
-            <li key={sale.name} className="flex items-center justify-between">
-              <div className="flex items-center gap-x-3">
+        {formattedData.length === 0 ? (
+          <div className="flex h-full items-center justify-center lg:mt-16">
+            <h3 className="text-center text-xl font-medium text-muted-foreground">
+              No data available
+              <br />
+              right now
+            </h3>
+          </div>
+        ) : (
+          <>
+            <svg
+              viewBox="0 0 100 100"
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-full w-full rounded-full"
+            >
+              <clipPath id="hole">
+                <path d="M 50 0 a 50 50 0 0 1 0 100 50 50 0 0 1 0 -100 v 18 a 2 2 0 0 0 0 64 2 2 0 0 0 0 -64" />
+              </clipPath>
+              <foreignObject
+                x="0"
+                y="0"
+                width="100"
+                height="100"
+                clipPath="url(#hole)"
+              >
                 <div
-                  className="inline-block h-3 w-3 rounded-full"
-                  style={{ backgroundColor: sale.color }}
+                  className="h-full w-full"
+                  style={{
+                    background: `conic-gradient(${cssString})`,
+                  }}
                 />
-                <span className="text-sm font-medium">{sale.name}</span>
-              </div>
+              </foreignObject>
+            </svg>
+            <ul className="mt-4 space-y-4">
+              {formattedData.length === 1 &&
+              formattedData.some((data) => data.value === 0) ? (
+                <div className="w-full text-center text-sm text-muted-foreground">
+                  No data available
+                </div>
+              ) : (
+                formattedData.map((sale) => (
+                  <li
+                    key={sale.name}
+                    className="flex items-center justify-between"
+                  >
+                    <div className="flex items-center gap-x-3">
+                      <div
+                        className="inline-block h-3 w-3 rounded-full"
+                        style={{ backgroundColor: sale.color }}
+                      />
+                      <span className="text-sm font-medium">{sale.name}</span>
+                    </div>
 
-              <span className="text-sm text-gray-500">
-                {formatPrice(sale.value)}
-              </span>
-            </li>
-          ))}
-        </ul>
+                    <span className="text-sm text-muted-foreground">
+                      {formatPrice(+sale.value)}
+                    </span>
+                  </li>
+                ))
+              )}
+            </ul>
+          </>
+        )}
       </CardContent>
     </Card>
   );

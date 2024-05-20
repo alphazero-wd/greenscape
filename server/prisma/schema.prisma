@@ -77,8 +77,6 @@ model Order {
   total        Int
   shippingCost Int
   tax          Int
-  cardType     String
-  cardLast4    String
   createdAt    DateTime  @default(now())
   deliveredAt  DateTime?
 

@@ -10,7 +10,6 @@ export const AddToBag = ({ product }: { product: Product }) => {
     () => findBagItem(product.id)?.qty || 0,
     [findBagItem(product.id)?.qty]
   );
-  const [qty, setQty] = useState(0);
 
   const onAddToBag = () => {
     const toBeAddedProduct = {
@@ -28,10 +27,6 @@ export const AddToBag = ({ product }: { product: Product }) => {
     () => product.inStock - existingQty,
     [existingQty, product.inStock]
   );
-
-  useEffect(() => {
-    setQty(existingQty);
-  }, [existingQty]);
 
   if (product.inStock === 0)
     return <div className="mt-6 text-red-600 font-semibold">Out of stock</div>;
@@ -53,8 +48,8 @@ export const AddToBag = ({ product }: { product: Product }) => {
           className="bg-transparent font-normal hover:bg-green-800 rounded-full text-2xl"
           size="icon"
           onClick={() => {
-            if (qty === 1) removeBagItem(product.id);
-            else updateQty(product.id, qty - 1);
+            if (existingQty === 1) removeBagItem(product.id);
+            else updateQty(product.id, existingQty - 1);
           }}
         >
           -
@@ -66,7 +61,7 @@ export const AddToBag = ({ product }: { product: Product }) => {
           disabled={rem === 0}
           className="bg-transparent font-normal hover:bg-green-800 rounded-full text-2xl"
           size="icon"
-          onClick={() => updateQty(product.id, qty + 1)}
+          onClick={() => updateQty(product.id, existingQty + 1)}
         >
           +
         </Button>

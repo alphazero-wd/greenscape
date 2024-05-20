@@ -3,10 +3,8 @@ import { cookies } from "next/headers";
 import { Category } from "../types";
 
 interface CategoriesResponse {
-  count: number;
   data: {
     categories: Category[];
-    parents: Category;
   };
 }
 
@@ -17,15 +15,14 @@ export const getCategories = async (query = "", slug = "") => {
     }/subs${query}`;
 
     const {
-      data: { count, data },
+      data: {
+        data: { categories },
+      },
     } = await axios.get<CategoriesResponse>(url, {
       headers: { Cookie: cookies().toString() },
     });
-    return {
-      count,
-      data,
-    };
+    return categories;
   } catch (error: any) {
-    return { count: 0, data: { categories: [] as Category[], parents: null } };
+    return [] as Category[];
   }
 };

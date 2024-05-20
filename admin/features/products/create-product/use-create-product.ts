@@ -41,7 +41,7 @@ export const useCreateProduct = () => {
       clearFiles();
       toast.success("Product created");
       router.refresh();
-      router.replace("/products/category");
+      router.replace("/products");
     } catch (error: any) {
       toast.error(error.response.data.message);
     } finally {

@@ -64,6 +64,7 @@ export class ProductsController {
       ...dto,
       status: Status.Active,
     });
+
     return {
       success: true,
       data: products,
@@ -126,6 +127,12 @@ export class ProductsController {
     return { success: true, data: product };
   }
 
+  @Get('search/:term')
+  async search(@Param('term') term: string) {
+    const products = await this.productsService.search(term);
+    return { success: true, data: products };
+  }
+
   @Patch(':id/upload-images')
   @UseGuards(RolesGuard(Role.Admin))
   @UseInterceptors(FilesInterceptor('images', 4))
@@ -153,6 +160,26 @@ export class ProductsController {
   async aggregateProducts(@Query() dto: FindManyProductsDto) {
     const inStockGroups = await this.productsService.aggregate('inStock', dto);
     const statusGroups = await this.productsService.aggregate('status', dto);
+
+    return { inStockGroups, statusGroups, success: true };
+  }
+
+  @Get('aggregate/:slug')
+  @UseGuards(RolesGuard(Role.Admin))
+  async aggregateProductsBySlug(
+    @Query() dto: FindManyProductsDto,
+    @Param('slug') slug,
+  ) {
+    const inStockGroups = await this.productsService.aggregate(
+      'inStock',
+      dto,
+      slug,
+    );
+    const statusGroups = await this.productsService.aggregate(
+      'status',
+      dto,
+      slug,
+    );
 
     return { inStockGroups, statusGroups, success: true };
   }

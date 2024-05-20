@@ -14,7 +14,7 @@ export interface CreateOrderDto {
   cardLast4: string;
   postalCode?: string;
   country?: string;
-  cart: {
+  bag: {
     productId: number;
     qty: number;
   }[];

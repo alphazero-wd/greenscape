@@ -1,63 +1,43 @@
 "use client";
-import qs from "query-string";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/features/ui";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useDebouncedCallback } from "use-debounce";
+} from "@/features/ui/select";
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { useQueryStore } from "../hooks";
 
 export const SortSelect = () => {
-  const [sortValue, setSortValue] = useState({
-    sortBy: "",
-    order: "",
-  });
+  const sortBy = useQueryStore((state) => state.sortBy);
+  const order = useQueryStore((state) => state.order);
+  const update = useQueryStore((state) => state.update);
 
-  const router = useRouter();
   const searchParams = useSearchParams();
 
   useEffect(() => {
     const sortByQuery = searchParams.get("sortBy");
     const orderQuery = searchParams.get("order");
-    if (sortByQuery && orderQuery)
-      setSortValue({ sortBy: sortByQuery, order: orderQuery });
+    if (sortByQuery && orderQuery) {
+      update({ sortBy: sortByQuery, order: orderQuery as "asc" | "desc" });
+    }
   }, [searchParams.get("sortBy"), searchParams.get("order")]);
-
-  const sortProducts = useDebouncedCallback(() => {
-    const currentQuery = qs.parse(searchParams.toString());
-    if (sortValue.sortBy) {
-      currentQuery.sortBy = sortValue.sortBy;
-    } else delete currentQuery.sortBy;
-
-    if (sortValue.order) currentQuery.order = sortValue.order;
-    else delete currentQuery.order;
-    const urlWithSortQuery = qs.stringifyUrl({
-      url: "/products/category",
-      query: currentQuery,
-    });
-    router.push(urlWithSortQuery, { scroll: false });
-  }, 1000);
-
-  useEffect(() => {
-    sortProducts();
-  }, [sortValue, searchParams.toString()]);
 
   return (
     <Select
       onValueChange={(val) => {
         const [sortBy, order] = val.split(":");
-        setSortValue({ sortBy, order });
+        update({ sortBy, order: order as "asc" | "desc" });
       }}
-      value={`${sortValue.sortBy}:${sortValue.order}`}
+      value={`${sortBy}:${order}`}
     >
       <SelectTrigger className="w-[180px] font-medium">
-        {!sortValue.sortBy || !sortValue.order ? "Sort" : <SelectValue />}
+        {sortBy === "id" && order === "asc" ? "Sort" : <SelectValue />}
       </SelectTrigger>
       <SelectContent>
+        <SelectItem value="id:asc">None</SelectItem>
         <SelectItem value="orders:desc">Most popular</SelectItem>
         <SelectItem value="createdAt:desc">Newest</SelectItem>
         <SelectItem value="price:asc">Price: Low to High</SelectItem>

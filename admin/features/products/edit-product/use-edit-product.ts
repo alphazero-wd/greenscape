@@ -89,7 +89,7 @@ export const useEditProduct = (product: Product) => {
       });
       clearFiles();
       router.refresh();
-      router.push("/products/category");
+      router.push("/products");
     } catch (error: any) {
       toast.error(error.response.data.message);
     } finally {

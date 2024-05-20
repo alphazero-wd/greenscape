@@ -10,7 +10,12 @@ import {
 import { Button } from "@/features/ui/button";
 import { Input } from "@/features/ui/input";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import qs from "query-string";
 import React from "react";
 import { InStockGroup, Product, StatusGroup } from "../types";
@@ -38,19 +43,19 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({
   const { q, setQ, table } = useTable(columns, products, count);
   const searchParams = useSearchParams();
   const { slug } = useParams();
+  const pathname = usePathname();
   const router = useRouter();
   const reset = () => {
     const currentQuery = qs.parse(searchParams.toString());
     delete currentQuery.price;
     delete currentQuery.inStock;
-    delete currentQuery.categoryIds;
     delete currentQuery.from;
     delete currentQuery.to;
     delete currentQuery.status;
     delete currentQuery.q;
     table.resetPageIndex();
     const resetQuery = qs.stringifyUrl({
-      url: "/products/category",
+      url: pathname,
       query: currentQuery,
     });
     router.push(resetQuery, { scroll: false });
@@ -80,7 +85,6 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({
               searchParams.get("inStock") ||
               searchParams.get("from") ||
               searchParams.get("to") ||
-              searchParams.get("categoryIds") ||
               searchParams.get("q") ||
               searchParams.get("status")) && (
               <Button

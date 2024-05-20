@@ -3,8 +3,8 @@ import { cookies } from "next/headers";
 import { Product } from "../types";
 
 export const getProducts = async (
-  slug = "",
   query = "",
+  slug = "",
 ): Promise<Product[]> => {
   try {
     const {

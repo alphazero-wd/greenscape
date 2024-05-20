@@ -22,7 +22,7 @@ export const ProductFormHeader = ({
           size="icon"
           className="h-7 w-7"
         >
-          <Link href="/products/category">
+          <Link href="/products">
             <ChevronLeft className="h-4 w-4" />
             <span className="sr-only">Back</span>
           </Link>

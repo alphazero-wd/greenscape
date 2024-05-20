@@ -1,80 +1,61 @@
-import { Button, Checkbox, Label } from "@/features/ui";
-import { Category, CategoryGroup } from "../types";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import qs from "query-string";
+"use client";
+import { CategoriesRadioMenu } from "@/features/categories/menu";
+import { Category } from "@/features/categories/types";
+import { searchCategory } from "@/features/categories/utils";
+import { Badge } from "@/features/ui/badge";
+import { Button } from "@/features/ui/button";
+import { Separator } from "@/features/ui/separator";
+import { useParams } from "next/navigation";
+import { useEffect, useMemo } from "react";
+import { useQueryStore } from "../hooks";
 
 interface CategoriesFilterProps {
   categories: Category[];
-  categoryGroups: CategoryGroup[];
 }
+
 export const CategoriesFilter: React.FC<CategoriesFilterProps> = ({
-  categoryGroups,
   categories,
 }) => {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([]);
+  const selectedCategory = useQueryStore((state) => state.selectedCategory);
+  const update = useQueryStore((state) => state.update);
+  const params = useParams();
 
-  const countProductsInCategory = (cid: number) =>
-    categoryGroups.find((group) => group.categoryId === cid);
-
-  useEffect(() => {
-    const categoryIds = searchParams.get("categoryIds");
-    if (categoryIds)
-      setSelectedCategoryIds(categoryIds.split(",").map((id) => +id));
-  }, [searchParams.get("categoryIds")]);
+  const [foundCategoryPath, foundCategory] = useMemo(() => {
+    if (!selectedCategory) return [[], null];
+    return searchCategory(categories, selectedCategory, "slug");
+  }, [selectedCategory, categories]);
 
   useEffect(() => {
-    const currentQuery = qs.parse(searchParams.toString());
-    if (selectedCategoryIds.length > 0)
-      currentQuery.categoryIds = selectedCategoryIds.join(",");
-    else delete currentQuery.categoryIds;
-    currentQuery.offset = "0";
-    const urlWithCategoryIdsQuery = qs.stringifyUrl({
-      url: "/products/category",
-      query: currentQuery,
-    });
-    router.push(urlWithCategoryIdsQuery, { scroll: false });
-  }, [selectedCategoryIds, router, searchParams.toString()]);
+    if (params?.slug) update({ selectedCategory: params.slug.at(-1) });
+  }, []);
 
   return (
-    <div>
-      <Label>Categories</Label>
-      <div className="mt-6 space-y-5">
-        {categories.map((c) => (
-          <div key={c.id} className="flex justify-between items-center">
-            <div className="flex items-center gap-x-3">
-              <Checkbox
-                checked={selectedCategoryIds.includes(c.id)}
-                onCheckedChange={() =>
-                  setSelectedCategoryIds(
-                    !selectedCategoryIds.includes(c.id)
-                      ? [...selectedCategoryIds, c.id]
-                      : selectedCategoryIds.filter((cid) => cid !== c.id)
-                  )
-                }
-              />
-              <Label className="font-normal text-gray-600">{c.name}</Label>
-            </div>
+    <CategoriesRadioMenu
+      categories={categories}
+      field="slug"
+      onChange={(newValue) => {
+        const newSlug = newValue.split("|")[0];
 
-            {countProductsInCategory(c.id)?._count && (
-              <span className="text-gray-500 text-xs">
-                {countProductsInCategory(c.id)?._count.id}
-              </span>
-            )}
-          </div>
-        ))}
-        {selectedCategoryIds.length > 0 && (
-          <Button
-            variant="secondary"
-            className="mt-3"
-            onClick={() => setSelectedCategoryIds([])}
-          >
-            Reset
-          </Button>
-        )}
-      </div>
-    </div>
+        if (newSlug === selectedCategory) update({ selectedCategory: null });
+        else update({ selectedCategory: newSlug });
+      }}
+      selectedCategory={`${foundCategory?.slug}|${foundCategory?.name}`}
+      trigger={
+        <Button variant="outline" className="w-full">
+          Categories
+          {foundCategoryPath.length > 0 && (
+            <>
+              <Separator orientation="vertical" className="mx-2 h-4" />
+              <Badge
+                variant="secondary"
+                className="rounded-sm px-1 font-normal"
+              >
+                {foundCategoryPath.map((p) => p.name).join("/")}
+              </Badge>
+            </>
+          )}
+        </Button>
+      }
+    />
   );
 };

@@ -19,7 +19,7 @@ export default function Error({ error }: { error: Error }) {
           It&apos;s not your fault. It&apos;s ours
         </p>
         <Button className="mt-10" asChild>
-          <Link href="/products/category">Continue shopping</Link>
+          <Link href="/products">Continue shopping</Link>
         </Button>
       </div>
     </main>

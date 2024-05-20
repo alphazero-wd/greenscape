@@ -13,7 +13,7 @@ export const ProductFormSubmit = ({
   const router = useRouter();
   const onDiscard = () => {
     if (confirm("Are you sure you want to discard the product?"))
-      router.push("/products/category");
+      router.push("/products");
   };
   return (
     <div className={cn("items-center gap-2", className)}>

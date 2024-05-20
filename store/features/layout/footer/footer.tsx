@@ -42,12 +42,14 @@ const footerLinks = [
 ];
 
 export const Footer = async () => {
-  const {
-    data: { categories: plantsCategories },
-  } = await getCategories("?limit=3&sortBy=products&order=desc", "plants");
-  const {
-    data: { categories: careCategories },
-  } = await getCategories("?limit=2&sortBy=products&order=desc", "care");
+  const plantsCategories = await getCategories(
+    "?limit=3&sortBy=products&order=desc",
+    "plants"
+  );
+  const careCategories = await getCategories(
+    "?limit=2&sortBy=products&order=desc",
+    "care"
+  );
 
   return (
     <footer className="px-4 sm:px-6 lg:px-8 py-16 bg-gray-100 dark:bg-gray-900">

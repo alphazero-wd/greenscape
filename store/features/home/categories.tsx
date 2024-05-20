@@ -4,12 +4,14 @@ import Link from "next/link";
 import { Category } from "../categories/types";
 
 export const Categories = async () => {
-  const {
-    data: { categories: plantsCategories },
-  } = await getCategories("?limit=3&sortBy=products&order=desc", "plants");
-  const {
-    data: { categories: careCategories },
-  } = await getCategories("?limit=2&sortBy=products&order=desc", "care");
+  const plantsCategories = await getCategories(
+    "?limit=3&sortBy=products&order=desc",
+    "plants"
+  );
+  const careCategories = await getCategories(
+    "?limit=2&sortBy=products&order=desc",
+    "care"
+  );
 
   return (
     <section className="lg:py-32 sm:py-24 py-16 bg-gray-100 px-4 sm:px-6 lg:px-8">
@@ -20,10 +22,10 @@ export const Categories = async () => {
         <div className="mt-8 relative">
           <ul role="list" className="grid grid-cols-fit gap-4">
             {plantsCategories.map((c) => (
-              <CategoryItem category={c} key={c.id} />
+              <CategoryItem parentSlug="plants" category={c} key={c.id} />
             ))}
             {careCategories.map((c) => (
-              <CategoryItem category={c} key={c.id} />
+              <CategoryItem parentSlug="care" category={c} key={c.id} />
             ))}
           </ul>
         </div>
@@ -34,13 +36,14 @@ export const Categories = async () => {
 
 interface CategoryProps {
   category: Category;
+  parentSlug: string;
 }
-const CategoryItem = ({ category }: CategoryProps) => {
+const CategoryItem = ({ category, parentSlug }: CategoryProps) => {
   return (
     <li>
       <Link
         className="relative group flex justify-end flex-col p-6 h-80 overflow-hidden rounded-md"
-        href={`/products/plants/${category.slug}`}
+        href={`/products/category/${parentSlug}/${category.slug}`}
       >
         <Image
           alt={category.name + " image"}

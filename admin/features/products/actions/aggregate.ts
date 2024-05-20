@@ -9,11 +9,16 @@ interface ProductsResponse {
 
 export const aggregateProducts = async (
   query = "",
+  slug = "",
 ): Promise<ProductsResponse> => {
   const {
     data: { statusGroups, inStockGroups },
   } = await axios.get(
-    process.env.NEXT_PUBLIC_API_URL + "/products/aggregate" + query,
+    process.env.NEXT_PUBLIC_API_URL +
+      "/products/aggregate" +
+      (slug ? "/" : "") +
+      slug +
+      query,
     {
       headers: { Cookie: cookies().toString() },
     },

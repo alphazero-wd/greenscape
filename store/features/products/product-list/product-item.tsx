@@ -10,9 +10,9 @@ interface ProductItemProps {
 export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
   return (
     <Link
-      href={`/products/${product.id}`}
+      href={`/products/details/${product.slug}`}
       key={product.id}
-      className="relative w-fit group h-full"
+      className="relative max-w-[300px] mx-auto sm:mx-0 w-fit group h-full"
     >
       <Image
         alt={product.name}

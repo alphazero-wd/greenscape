@@ -1,9 +1,9 @@
 export const navLinks = [
-  { name: "Overview", href: "/" },
+  { name: "Dashboard", href: "/" },
   { name: "Categories", href: "/categories" },
   {
     name: "Products",
-    href: "/products/category",
+    href: "/products",
   },
   { name: "Orders", href: "/orders" },
 ];

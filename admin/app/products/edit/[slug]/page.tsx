@@ -33,7 +33,7 @@ export default async function ProductSettingsPage({
       <div className="mb-8">
         <Breadcrumb
           links={[
-            { name: "Products", href: "/products/category" },
+            { name: "Products", href: "/products" },
             { name: product.name, href: "#" },
           ]}
         />

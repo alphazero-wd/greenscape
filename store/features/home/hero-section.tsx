@@ -24,7 +24,7 @@ export const HeroSection = () => {
                 size="lg"
                 asChild
               >
-                <Link href="/products/category">Shop now</Link>
+                <Link href="/products">Shop now</Link>
               </Button>
             </div>
           </div>

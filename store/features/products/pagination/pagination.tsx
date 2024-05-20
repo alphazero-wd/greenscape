@@ -1,38 +1,43 @@
 "use client";
 import qs from "query-string";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { usePagination } from "./use-pagination";
-import { Button } from "@/features/ui";
+import { Button } from "@/features/ui/button";
 import { DOTS, PAGE_SIZE } from "@/constants";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useQueryStore } from "../hooks";
 
 interface PaginationProps {
   totalCount: number;
 }
 
 export const Pagination: React.FC<PaginationProps> = ({ totalCount }) => {
-  const [currentPage, setCurrentPage] = useState(1);
+  const currentPage = useQueryStore((state) => state.page);
+  const update = useQueryStore((state) => state.update);
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const paginationRange = usePagination({
     currentPage,
     totalCount,
   });
+
   const router = useRouter();
+
   useEffect(() => {
     const offset = searchParams.get("offset");
     if (offset && !isNaN(parseInt(offset)))
-      setCurrentPage(Math.floor(+offset / PAGE_SIZE) + 1); // currentPage starts at 1
+      update({ page: Math.floor(+offset / PAGE_SIZE) + 1 }); // currentPage starts at 1
   }, [searchParams.get("offset")]);
 
   useEffect(() => {
     const currentQuery = qs.parse(searchParams.toString());
     currentQuery.offset = ((currentPage - 1) * PAGE_SIZE).toString();
     const urlWithOffset = qs.stringifyUrl({
-      url: "/products/category",
+      url: pathname,
       query: currentQuery,
     });
     router.push(urlWithOffset, { scroll: false });
-  }, [searchParams.toString(), currentPage]);
+  }, [currentPage]);
 
   // If there are less than 2 times in pagination range we shall not render the component
   if (currentPage === 0 || paginationRange.length < 2) {
@@ -40,11 +45,11 @@ export const Pagination: React.FC<PaginationProps> = ({ totalCount }) => {
   }
 
   const onNext = () => {
-    setCurrentPage(currentPage + 1);
+    update({ page: currentPage + 1 });
   };
 
   const onPrevious = () => {
-    setCurrentPage(currentPage - 1);
+    update({ page: currentPage - 1 });
   };
 
   return (
@@ -67,7 +72,7 @@ export const Pagination: React.FC<PaginationProps> = ({ totalCount }) => {
             <Button
               key={i}
               onClick={() =>
-                currentPage !== page ? setCurrentPage(page as number) : {}
+                currentPage !== page ? update({ page: page as number }) : {}
               }
               variant={currentPage === page ? "default" : "outline"}
             >

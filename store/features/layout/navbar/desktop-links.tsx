@@ -35,10 +35,10 @@ export const DesktopLinks = ({ categories }: DesktopLinksProps) => {
                           variant="link"
                           asChild
                           className="mt-1 p-0 font-normal h-fit justify-start leading-snug text-muted-foreground"
+                          key={ssc.id}
                         >
                           <Link
                             href={`/products/category/${c.slug}/${sc.slug}/${ssc.slug}`}
-                            key={ssc.id}
                           >
                             {ssc.name}
                           </Link>

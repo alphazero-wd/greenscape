@@ -1,47 +1,31 @@
-import qs from "query-string";
-import { Checkbox, Label } from "@/features/ui";
-import { useDebouncedCallback } from "use-debounce";
-import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { Checkbox } from "@/features/ui/checkbox";
+import { Label } from "@/features/ui/label";
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { useQueryStore } from "@/features/products/hooks";
 
 export const InStockFilter = () => {
   const searchParams = useSearchParams();
-  const [isOutOfStockIncluded, setIsOutOfStockIncluded] = useState(false);
-  const router = useRouter();
+  const outOfStockIncluded = useQueryStore((state) => state.outOfStockIncluded);
+  const update = useQueryStore((state) => state.update);
 
   useEffect(() => {
     const inStock = searchParams.get("inStock");
-    if (inStock === "true") setIsOutOfStockIncluded(false);
-    else setIsOutOfStockIncluded(true);
+    if (inStock === "true") update({ outOfStockIncluded: false });
+    else update({ outOfStockIncluded: true });
   }, [searchParams.get("inStock")]);
-
-  const filterProductsByAvailability = useDebouncedCallback(() => {
-    const currentQuery = qs.parse(searchParams.toString());
-    if (isOutOfStockIncluded) delete currentQuery.inStock;
-    else currentQuery.inStock = "true";
-
-    currentQuery.offset = "0";
-    const urlWithAvailability = qs.stringifyUrl({
-      url: "/products/category",
-      query: currentQuery,
-    });
-
-    router.push(urlWithAvailability, { scroll: false });
-  }, 1000);
-
-  useEffect(() => {
-    filterProductsByAvailability();
-  }, [isOutOfStockIncluded, searchParams.toString()]);
 
   return (
     <div className="pt-4">
       <Label className="mb-4 block">Availability</Label>
       <div className="flex items-center gap-x-3">
         <Checkbox
-          checked={isOutOfStockIncluded}
-          onCheckedChange={() => setIsOutOfStockIncluded(!isOutOfStockIncluded)}
+          checked={!outOfStockIncluded}
+          onCheckedChange={() =>
+            update({ outOfStockIncluded: !outOfStockIncluded })
+          }
         />
-        <Label className="font-normal">Include out of stock</Label>
+        <Label className="font-normal">Don&apos;t include out of stock</Label>
       </div>
     </div>
   );

@@ -17,7 +17,7 @@ export default function NotFound() {
           Sorry, we couldn&apos;t find the page you&apos;re looking for.
         </p>
         <Button className="mt-10" asChild>
-          <Link href="/products/category">Continue shopping</Link>
+          <Link href="/products">Continue shopping</Link>
         </Button>
       </div>
     </main>

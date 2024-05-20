@@ -7,12 +7,12 @@ import { Prisma } from '@prisma/client';
 export class OrdersService {
   constructor(private prisma: PrismaService) {}
 
-  create({ cart, ...createOrderDto }: CreateOrderDto) {
+  create({ bag, ...createOrderDto }: CreateOrderDto) {
     return this.prisma.order.create({
       data: {
         ...createOrderDto,
         products: {
-          create: cart,
+          create: bag,
         },
       },
     });

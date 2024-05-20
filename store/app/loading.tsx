@@ -2,7 +2,7 @@ import { MobileLogo } from "@/features/common/components";
 
 export default function Loading() {
   return (
-    <div className="flex h-1/2 w-full flex-col items-center justify-center gap-y-8">
+    <div className="flex h-1/2 py-24 w-full flex-col items-center justify-center gap-y-8">
       <MobileLogo />
       <svg
         className="h-8 w-8 animate-spin text-primary"

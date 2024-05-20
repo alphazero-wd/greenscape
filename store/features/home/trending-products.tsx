@@ -15,7 +15,7 @@ export const TrendingProducts = async () => {
             Trending Products
           </h2>
           <Button variant="link" asChild className="text-primary p-0">
-            <Link href="/products/category" className="flex gap-2 items-center">
+            <Link href="/products" className="flex gap-2 items-center">
               See more
               <ChevronRightIcon className="w-4 h-4" />
             </Link>

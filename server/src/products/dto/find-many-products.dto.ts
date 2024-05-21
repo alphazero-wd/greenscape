@@ -26,15 +26,6 @@ export class FindManyProductsDto extends FindManyDto {
   price?: [number, number];
 
   @IsOptional()
-  @Transform(({ value }: { value: string }) =>
-    value.split(',').map((id) => +id),
-  )
-  @ArrayMinSize(1)
-  @IsInt({ each: true })
-  @Min(1, { each: true })
-  refIds?: number[];
-
-  @IsOptional()
   @IsEnum(Status)
   status?: Status;
 

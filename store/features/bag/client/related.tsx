@@ -4,7 +4,7 @@ import { Product } from "@/features/products/types";
 import { useBagStore } from "../contexts";
 import { Skeleton } from "@/features/ui/skeleton";
 import { ProductList } from "@/features/products/product-list";
-import { getProducts } from "@/features/products/actions";
+import { getRelatedProducts } from "@/features/products/actions";
 
 export const Related = () => {
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
@@ -14,9 +14,7 @@ export const Related = () => {
 
   const fetchRelatedProducts = useCallback(async () => {
     setLoading(true);
-    const products = await getProducts(
-      `?limit=4&refIds=${bagItemIds.join(",")}`
-    );
+    const products = await getRelatedProducts(bagItemIds);
     setRelatedProducts(products);
     setLoading(false);
   }, [bag, bagItemIds]);

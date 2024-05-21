@@ -19,6 +19,7 @@ import {
   DeleteImagesDto,
   FindManyProductsDto,
   FindManyStoreProductsDto,
+  FindRelatedProductsDto,
   UpdateProductDto,
 } from './dto';
 import { DeleteManyDto } from '../common/dto';
@@ -107,6 +108,12 @@ export class ProductsController {
   ) {
     const count = await this.productsService.paginate(dto, slug);
     return { success: true, count };
+  }
+
+  @Get('recommend')
+  async recommend(@Query() { refIds }: FindRelatedProductsDto) {
+    const recommendedProducts = await this.productsService.recommend(refIds);
+    return { success: true, data: recommendedProducts };
   }
 
   @Get('store/category/:slug')

@@ -34,7 +34,7 @@ export const NavMobileMenu = ({ user }: { user?: User }) => {
               pathname === link.href ||
                 (pathname.startsWith(link.href) && link.href !== "/")
                 ? "border-primary bg-green-50 text-green-800"
-                : "text-gray-500 hover:border-gray-300 hover:bg-gray-100 hover:text-gray-700",
+                : "text-muted-foreground hover:border-gray-300 hover:bg-gray-100 hover:text-gray-700",
             )}
           >
             {link.name}

@@ -13,13 +13,13 @@ export const BagList = () => {
   if (!mounted)
     return (
       <section className="lg:col-span-7 mt-8">
-        <p className="text-gray-500">Loading bag...</p>
+        <p className="text-muted-foreground">Loading bag...</p>
       </section>
     );
   if (bag.length === 0)
     return (
       <section className="lg:col-span-7 mt-8">
-        <p className="text-gray-500">Your bag is currently empty</p>
+        <p className="text-muted-foreground">Your bag is currently empty</p>
         <Button size="lg" className="mt-4">
           <Link href="/products">Continue shopping</Link>
         </Button>

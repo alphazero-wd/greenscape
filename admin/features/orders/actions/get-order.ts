@@ -5,9 +5,12 @@ import { Order } from "../types";
 export const getOrder = async (id: string) => {
   const {
     data: { data },
-  } = await axios.get(process.env.NEXT_PUBLIC_API_URL + "/orders/" + id, {
-    headers: { Cookie: cookies().toString() },
-  });
+  } = await axios.get(
+    process.env.NEXT_PUBLIC_API_URL + "/orders/details/" + id,
+    {
+      headers: { Cookie: cookies().toString() },
+    },
+  );
 
   return data as Order | undefined;
 };

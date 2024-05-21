@@ -35,7 +35,7 @@ export function DataTablePagination<TData extends { id: number | string }>({
     <>
       <div className="flex flex-col items-center gap-y-3 px-2 md:flex-row md:justify-between md:gap-y-0">
         <div className="flex items-center justify-start gap-x-3">
-          <div className="text-sm text-gray-500">
+          <div className="text-sm text-muted-foreground">
             {table.getFilteredSelectedRowModel().rows.length} of{" "}
             {table.getFilteredRowModel().rows.length} row(s) selected.
           </div>

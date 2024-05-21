@@ -67,7 +67,7 @@ export const BagItem: React.FC<BagItemProps> = ({ item }) => {
               variant="ghost"
               className="group hover:bg-transparent"
             >
-              <XMarkIcon className="h-5 w-5 text-gray-500 group-hover:text-gray-700" />
+              <XMarkIcon className="h-5 w-5 text-muted-foreground group-hover:text-gray-700" />
             </Button>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import { getProduct, getProducts } from "@/features/products/actions";
+import { getProduct, getRelatedProducts } from "@/features/products/actions";
 import { redirect } from "next/navigation";
 import { Breadcrumb } from "@/features/ui/breadcrumb";
 import {
@@ -29,7 +29,7 @@ export default async function ProductPage({
   const { data: product } = await getProduct(slug);
   if (!product) redirect("/not-found");
 
-  const products = await getProducts(`?limit=4&refIds=${product.id}`);
+  const relatedProducts = await getRelatedProducts([product.id]);
 
   return (
     <>
@@ -56,13 +56,13 @@ export default async function ProductPage({
           </div>
         </section>
 
-        {products.length > 0 && (
+        {relatedProducts.length > 0 && (
           <section aria-labelledby="related-heading" className="lg:mt-24 mt-16">
             <h2 className="tracking-tight font-medium text-gray-900">
               Customers also purchased
             </h2>
             <ProductList
-              products={products}
+              products={relatedProducts}
               className="mt-6 sm:grid-cols-2 lg:grid-cols-4"
             />
           </section>

@@ -93,18 +93,37 @@ export class ProductsService {
     });
   }
 
+  async recommend(refIds: number[]) {
+    const [{ categories }] = await this.prisma.product.findMany({
+      where: { id: { in: refIds } },
+      select: { categories: { select: { id: true } } },
+    });
+    const recommendedProducts = await this.prisma.product.findMany({
+      take: 8,
+      orderBy: { orders: { _count: 'desc' } },
+      where: {
+        inStock: { gt: 0 },
+        id: { notIn: refIds },
+        categories: {
+          every: { id: { in: categories.map((c) => c.id) } },
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        images: {
+          select: { file: { select: { url: true } } },
+          take: 1,
+        },
+        price: true,
+      },
+    });
+    return recommendedProducts;
+  }
+
   private formQueries(
-    {
-      q,
-      status,
-      price,
-      inStock,
-      refIds,
-      from,
-      to,
-      sortBy,
-      order,
-    }: FindManyProductsDto,
+    { q, status, price, inStock, from, to, sortBy, order }: FindManyProductsDto,
     slug?: string,
   ) {
     const where: Prisma.ProductWhereInput = {};
@@ -121,7 +140,6 @@ export class ProductsService {
     }
     if (inStock !== undefined)
       where.inStock = inStock ? { gt: 0 } : { equals: 0 };
-    if (refIds) where.id = { not: { in: refIds } };
     let start: Date, end: Date;
     if (from) start = startOfDay(new Date(from));
     if (to) end = endOfDay(new Date(to));
@@ -163,7 +181,6 @@ export class ProductsService {
           inStock: true,
           price: true,
           createdAt: true,
-          desc: true,
           status: true,
           images: {
             select: { file: { select: { url: true } } },

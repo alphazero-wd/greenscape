@@ -78,7 +78,7 @@ export const ProductsClient = ({
         <h1 className="font-bold mt-6 text-4xl tracking-tight text-gray-900">
           Products
         </h1>
-        <p className="text-gray-500">
+        <p className="text-muted-foreground">
           Unleash the Jungle in Your Home with Monstera Deliciosa!
         </p>
       </div>
@@ -95,7 +95,7 @@ export const ProductsClient = ({
               <h2 className="text-2xl font-bold tracking-tight mt-4 text-gray-900 sm:text-3xl">
                 No products found
               </h2>
-              <p className="text-base leading-7 text-gray-600 mt-2">
+              <p className="text-base leading-7 text-secondary-foreground mt-2">
                 We couldn&apos;t find any products matching your selection.
               </p>
             </div>

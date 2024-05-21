@@ -51,7 +51,7 @@ export const SalesByCountries = ({ data }: { data: SaleByCountry[] }) => {
             <svg
               viewBox="0 0 100 100"
               xmlns="http://www.w3.org/2000/svg"
-              className="h-full w-full rounded-full"
+              className="mx-auto h-full w-full max-w-[200px] rounded-full"
             >
               <clipPath id="hole">
                 <path d="M 50 0 a 50 50 0 0 1 0 100 50 50 0 0 1 0 -100 v 18 a 2 2 0 0 0 0 64 2 2 0 0 0 0 -64" />

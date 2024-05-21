@@ -1,9 +1,9 @@
 export const getShippingOption = (shippingCost: number) => {
   switch (shippingCost) {
     case 0:
-      return "Free shipping (5-7 business days)";
+      return "Free shipping";
     case 15:
-      return "Next day air (1-2 business days)";
+      return "Next day air";
     default:
       return "Shipping option not found";
   }

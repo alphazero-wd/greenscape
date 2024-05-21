@@ -9,6 +9,7 @@ import { Breadcrumb } from "@/features/ui/breadcrumb";
 import { Separator } from "@/features/ui/separator";
 import { getCurrentUser } from "@/features/user/utils";
 import { redirect } from "next/navigation";
+import { CopyButton } from "../../../features/common/components";
 
 interface OrderPageProps {
   params: {
@@ -30,8 +31,8 @@ export default async function OrderPage({ params: { id } }: OrderPageProps) {
   if (!order) redirect("/not-found");
 
   return (
-    <div className="container max-w-7xl">
-      <div className="mb-4">
+    <div className="container max-w-3xl">
+      <div className="mb-4 max-w-full">
         <Breadcrumb
           links={[
             { name: "Orders", href: "/orders" },
@@ -45,9 +46,16 @@ export default async function OrderPage({ params: { id } }: OrderPageProps) {
             <h2 className="text-2xl font-bold leading-none tracking-tight">
               {formatPrice(order.total)}
             </h2>
-            <p className="text-sm text-gray-500">
-              Payment ID: <span className="font-mono">{order.id}</span>
-            </p>
+            <div className="group flex gap-x-3">
+              <p className="text-sm text-muted-foreground">
+                Order ID: <span className="font-mono">{order.id}</span>
+              </p>
+              <CopyButton
+                className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
+                text={"Copy order ID"}
+                content={order.id}
+              />
+            </div>
           </div>
           <Separator className="my-4" />
           <OrderOverview order={order} />

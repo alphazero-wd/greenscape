@@ -12,9 +12,14 @@ import React, { useEffect, useState } from "react";
 interface CopyButtonProps {
   text: string;
   content: string;
+  className?: string;
 }
 
-export const CopyButton: React.FC<CopyButtonProps> = ({ text, content }) => {
+export const CopyButton: React.FC<CopyButtonProps> = ({
+  text,
+  content,
+  className,
+}) => {
   const [isCopied, setIsCopied] = useState(false);
 
   useEffect(() => {
@@ -32,15 +37,16 @@ export const CopyButton: React.FC<CopyButtonProps> = ({ text, content }) => {
           <Button
             size="icon"
             variant="ghost"
+            className={className}
             onClick={() => {
               navigator.clipboard.writeText(content);
               setIsCopied(true);
             }}
           >
             {isCopied ? (
-              <CheckIcon className="h-5 w-5" />
+              <CheckIcon className="h-4 w-4" />
             ) : (
-              <ClipboardIcon className="h-5 w-5" />
+              <ClipboardIcon className="h-4 w-4" />
             )}
           </Button>
         </TooltipTrigger>

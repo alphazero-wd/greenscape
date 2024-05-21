@@ -25,7 +25,7 @@ export const MobileFilter: React.FC<FilterProps> = ({ categories, slug }) => {
     <Sheet>
       <SheetTrigger asChild>
         <Button variant="ghost" className="lg:hidden">
-          <FunnelIcon className="mr-2 w-5 h-5 text-gray-500" />
+          <FunnelIcon className="mr-2 w-5 h-5 text-muted-foreground" />
           Filter
         </Button>
       </SheetTrigger>

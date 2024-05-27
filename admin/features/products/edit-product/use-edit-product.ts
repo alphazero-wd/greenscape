@@ -1,69 +1,44 @@
-import { FilePreview } from "@/features/types";
+import { formSchema, useImagesUpload } from "@/features/products/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useDropzone } from "react-dropzone";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import * as z from "zod";
-import { Product } from "../types";
-
-const formSchema = z.object({
-  name: z
-    .string()
-    .min(1, { message: "Product name must be between 1 and 120 characters" })
-    .max(120, { message: "Product name must be between 1 and 120 characters" }),
-
-  desc: z.string().nonempty({ message: "Please provide a description" }),
-  price: z.coerce
-    .number()
-    .gte(0.01, { message: "Price cannot be less than 0.01" })
-    .multipleOf(0.01, { message: "Price needs to have 2 decimal digits" }),
-  inStock: z.coerce
-    .number()
-    .nonnegative({
-      message: "The number of products in stock must be non-negative",
-    })
-    .int(),
-  categoryId: z.number().int().gte(1),
-  status: z.enum(["Active", "Draft"]),
-});
+import { Product, Status } from "../types";
 
 export const useEditProduct = (product: Product) => {
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-  });
-  const [files, setFiles] = useState<FilePreview[]>([]);
-  const dropzoneState = useDropzone({
-    multiple: true,
-    maxFiles: 4,
-    maxSize: Math.pow(1024, 2) * 5, // 5MB
-    accept: {
-      "image/png": [".png"],
-      "image/jpeg": [".jpg", ".jpeg"],
-    },
-    onDrop: (acceptedFiles) => {
-      setFiles(
-        acceptedFiles.map((file) =>
-          Object.assign(file, {
-            preview: URL.createObjectURL(file),
-          }),
-        ),
-      );
+    defaultValues: {
+      name: "",
+      desc: "",
+      categoryIds: [],
+      slug: "",
+      status: Status.Draft,
     },
   });
-  const [tempImages, setTempImages] = useState<Product["images"]>([]);
   const [loading, setLoading] = useState(false);
+  const {
+    prevImages,
+    files,
+    dropzoneState,
+    createFilesFormData,
+    deleteFile,
+    populateImages,
+    clearFiles,
+  } = useImagesUpload();
 
   useEffect(() => {
-    setTempImages(product.images);
-  }, [product.images]);
+    populateImages(product.images);
+  }, [populateImages]);
 
   useEffect(() => {
     form.reset({
-      categoryId: product.category.id,
+      categoryIds: product.categories.map((c) => c.id),
+      slug: product.slug,
       desc: product.desc,
       name: product.name,
       inStock: product.inStock,
@@ -73,18 +48,16 @@ export const useEditProduct = (product: Product) => {
   }, [product]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    if (tempImages.length + files.length === 0) {
-      toast.error("Please upload at least 1 image");
+    if (prevImages.length + files.length === 0) {
+      toast.error("Please upload at least an image");
       return;
     }
 
     try {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
-      const formData = new FormData();
-      files.forEach((file) => {
-        formData.append("images", file);
-      });
+      const formData = createFilesFormData();
       setLoading(true);
+
       await axios.patch(API_URL + "/products/" + product.id, values, {
         withCredentials: true,
       });
@@ -94,11 +67,11 @@ export const useEditProduct = (product: Product) => {
           formData,
           { withCredentials: true },
         );
+
+      const existingImageIds = new Set(prevImages.map((img) => img.file.id));
       const deletedImages = product.images
-        .map((image) => image.id)
-        .filter(
-          (imageId) => !tempImages.map((img) => img.id).includes(imageId),
-        );
+        .map((image) => image.file.id)
+        .filter((imageId) => !existingImageIds.has(imageId));
       if (deletedImages.length > 0)
         await axios.delete(
           `${API_URL}/products/${
@@ -107,6 +80,14 @@ export const useEditProduct = (product: Product) => {
           { withCredentials: true },
         );
       toast.success("Product updated");
+      form.reset({
+        name: "",
+        desc: "",
+        categoryIds: [],
+        slug: "",
+        status: Status.Draft,
+      });
+      clearFiles();
       router.refresh();
       router.push("/products");
     } catch (error: any) {
@@ -122,7 +103,7 @@ export const useEditProduct = (product: Product) => {
     handleSubmit: form.handleSubmit(onSubmit),
     dropzoneState,
     files,
-    tempImages,
-    setTempImages,
+    deleteFile,
+    prevImages,
   };
 };

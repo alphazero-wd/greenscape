@@ -1,7 +1,7 @@
 "use client";
+import { Badge } from "@/features/ui/badge";
+import { Button } from "@/features/ui/button";
 import {
-  Badge,
-  Button,
   Command,
   CommandEmpty,
   CommandGroup,
@@ -9,11 +9,9 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-  Separator,
-} from "@/features/ui";
+} from "@/features/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/features/ui/popover";
+import { Separator } from "@/features/ui/separator";
 import { cn } from "@/lib/utils";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { Table } from "@tanstack/react-table";
@@ -123,7 +121,7 @@ export const CountriesFilter: React.FC<CountriesFilterProps> = ({
                   >
                     <div
                       className={cn(
-                        "border-primary mr-2 flex h-4 w-4 items-center justify-center rounded-sm border",
+                        "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
                         isSelected
                           ? "bg-primary text-primary-foreground"
                           : "opacity-50 [&_svg]:invisible",

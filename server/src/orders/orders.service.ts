@@ -2,41 +2,37 @@ import { Injectable } from '@nestjs/common';
 import { CreateOrderDto, FindManyOrdersDto, UpdateOrderDto } from './dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma } from '@prisma/client';
-import { removeWhiteSpaces } from '../common/utils';
+import { endOfDay, startOfDay } from 'date-fns';
 
 @Injectable()
 export class OrdersService {
   constructor(private prisma: PrismaService) {}
 
-  create({ cart, ...createOrderDto }: CreateOrderDto) {
+  create({ bag, ...createOrderDto }: CreateOrderDto) {
     return this.prisma.order.create({
       data: {
         ...createOrderDto,
         products: {
-          create: cart,
+          create: bag,
         },
       },
     });
   }
 
-  async findAll({
-    limit = 10,
-    offset = 0,
-    status,
-    totalRange,
-    startDate,
-    endDate,
-    q = '',
-    shippingCost,
+  private formQueries({
+    q,
     countries,
+    from,
+    to,
+    status,
+    shippingCost,
+    totalRange,
   }: FindManyOrdersDto) {
     const where: Prisma.OrderWhereInput = {};
-    const search: Prisma.StringFilter<'Order'> = q
-      ? {
-          search: removeWhiteSpaces(q).split(' ').join(' & '),
-          mode: 'insensitive',
-        }
-      : undefined;
+    const search: Prisma.StringFilter<'Order'> = {
+      contains: q,
+      mode: 'insensitive',
+    };
     if (q) {
       where.OR = [
         { customer: search },
@@ -50,15 +46,27 @@ export class OrdersService {
       ];
     }
     if (countries) where.country = { in: countries };
-    where.createdAt = { gte: startDate, lt: endDate };
-    where.shippingCost = { equals: shippingCost };
+    where.shippingCost = shippingCost;
     if (totalRange) {
       where.total = {};
       if (totalRange[0]) where.total.gte = totalRange[0];
       if (totalRange[1]) where.total.lte = totalRange[1];
     }
+    let start: Date, end: Date;
+    if (from) start = startOfDay(new Date(from));
+    if (to) end = endOfDay(new Date(to));
+    where.createdAt = { gte: start, lte: end };
     if (status === 'delivered') where.deliveredAt = { not: null };
     if (status === 'pending') where.deliveredAt = null;
+    return where;
+  }
+
+  async findAll({
+    limit = 10,
+    offset = 0,
+    ...findManyOrdersDto
+  }: FindManyOrdersDto) {
+    const where = this.formQueries(findManyOrdersDto);
 
     const orders = await this.prisma.order.findMany({
       take: limit,
@@ -68,34 +76,18 @@ export class OrdersService {
     });
     const count = await this.prisma.order.count({ where });
 
-    const whereWithoutStatus = { ...where };
-    delete whereWithoutStatus.deliveredAt;
-    const statusGroups = await this.groupBy('deliveredAt', whereWithoutStatus);
-
-    const whereWithoutCountries = { ...where };
-    delete whereWithoutCountries.country;
-    const countryGroups = await this.groupBy('country', whereWithoutCountries);
-
-    const whereWithoutShippingOptions = { ...where };
-    delete whereWithoutShippingOptions.shippingCost;
-    const shippingOptionGroups = await this.groupBy(
-      'shippingCost',
-      whereWithoutShippingOptions,
-    );
-
     return {
       data: orders,
       count,
-      statusGroups,
-      countryGroups,
-      shippingOptionGroups,
     };
   }
 
-  private async groupBy(
+  async aggregate(
     field: 'deliveredAt' | 'country' | 'shippingCost',
-    where: Prisma.OrderWhereInput,
+    findManyOrdersDto: FindManyOrdersDto,
   ) {
+    const where = this.formQueries(findManyOrdersDto);
+    delete where[field];
     return this.prisma.order.groupBy({
       by: field,
       _count: { id: true },
@@ -113,12 +105,6 @@ export class OrdersService {
               select: {
                 name: true,
                 price: true,
-                category: { select: { name: true } },
-                images: {
-                  select: { url: true },
-                  take: 1,
-                  orderBy: { id: 'asc' },
-                },
               },
             },
           },

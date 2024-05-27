@@ -1,50 +1,25 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import qs from "query-string";
-import { Button, Label, PriceInput } from "@/features/ui";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useDebouncedCallback } from "use-debounce";
+import { PriceInput } from "@/features/common/components";
+import { Button } from "@/features/ui/button";
+import { Label } from "@/features/ui/label";
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { useQueryStore } from "../hooks/use-query-store";
 
 export const PriceFilter = () => {
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
-  const router = useRouter();
   const searchParams = useSearchParams();
+  const minPrice = useQueryStore((state) => state.minPrice);
+  const maxPrice = useQueryStore((state) => state.maxPrice);
+  const update = useQueryStore((state) => state.update);
 
   useEffect(() => {
     const price = searchParams.get("price");
     if (price) {
       const [min, max] = price.split(",");
-      setMinPrice(!isNaN(+min) ? min : "");
-      setMaxPrice(!isNaN(+max) ? max : "");
-    } else {
-      setMinPrice("");
-      setMaxPrice("");
+      if (!isNaN(+min)) update({ minPrice: +min });
+      if (!isNaN(+max)) update({ maxPrice: +max });
     }
   }, [searchParams.get("price")]);
-
-  const filterProductsByPriceRange = useDebouncedCallback(() => {
-    const currentQuery = qs.parse(searchParams.toString());
-    if (
-      currentQuery.maxPrice !== maxPrice ||
-      currentQuery.minPrice !== minPrice
-    ) {
-      if (minPrice || maxPrice) {
-        currentQuery.price = `${minPrice},${maxPrice}`;
-      } else delete currentQuery.price;
-      currentQuery.offset = "0";
-
-      const urlWithPriceRange = qs.stringifyUrl({
-        url: "/products",
-        query: currentQuery,
-      });
-      router.push(urlWithPriceRange, { scroll: false });
-    }
-  }, 1000);
-
-  useEffect(() => {
-    filterProductsByPriceRange();
-  }, [searchParams.toString(), minPrice, maxPrice]);
 
   return (
     <div className="pt-4 space-y-4">
@@ -53,29 +28,29 @@ export const PriceFilter = () => {
         <div className="space-y-2">
           <Label>Min</Label>
           <PriceInput
-            value={minPrice}
-            onChange={(e) => setMinPrice(e.target.value)}
+            value={minPrice ? minPrice.toString() : ""}
+            onChange={(e) => update({ minPrice: +e.target.value || null })}
           />
         </div>
         <div className="space-y-2">
           <Label>Max</Label>
           <PriceInput
-            value={maxPrice}
-            onChange={(e) => setMaxPrice(e.target.value)}
+            value={maxPrice ? maxPrice.toString() : ""}
+            onChange={(e) => update({ maxPrice: +e.target.value || null })}
           />
         </div>
       </div>
-      {(minPrice || maxPrice) && (
+      {minPrice || maxPrice ? (
         <Button
           variant="secondary"
+          size="sm"
           onClick={() => {
-            setMinPrice("");
-            setMaxPrice("");
+            update({ minPrice: null, maxPrice: null });
           }}
         >
           Reset
         </Button>
-      )}
+      ) : null}
     </div>
   );
 };

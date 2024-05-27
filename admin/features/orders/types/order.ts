@@ -16,6 +16,7 @@ export interface Order {
   total: number;
   createdAt: Date;
   deliveredAt?: Date;
+  tax: number;
 }
 
 interface OrdersOnProducts {

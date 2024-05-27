@@ -2,13 +2,6 @@ import Link from "next/link";
 import { Product } from "../types";
 import Image from "next/image";
 import { formatPrice } from "../utils";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/features/ui";
 
 interface ProductItemProps {
   product: Product;
@@ -17,35 +10,26 @@ interface ProductItemProps {
 export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
   return (
     <Link
-      href={`/products/${product.id}`}
+      href={`/products/details/${product.slug}`}
       key={product.id}
-      className="relative group h-full"
+      className="relative max-w-[300px] mx-auto sm:mx-0 w-fit group h-full"
     >
-      <Card className="p-0 h-full group-hover:opacity-75">
-        <Image
-          alt={product.name}
-          width={1024}
-          height={1024}
-          className="object-cover rounded-tl-lg rounded-tr-lg aspect-square"
-          src={product.images[0].url}
-        />
-        <CardContent className="pt-4 space-y-2 border-t border-gray-200">
-          <CardTitle className="font-semibold text-base line-clamp-1">
-            {product.name}
-          </CardTitle>
-          <CardDescription className="text-sm whitespace-pre-wrap text-gray-500 line-clamp-3">
-            {product.desc}
-          </CardDescription>
-          <div className="flex justify-end flex-col flex-1">
-            <CardDescription className="text-gray-500 italic text-sm">
-              {product.category.name}
-            </CardDescription>
-            <CardDescription className="font-medium text-base text-gray-900">
-              {formatPrice(product.price)}
-            </CardDescription>
-          </div>
-        </CardContent>
-      </Card>
+      <Image
+        alt={product.name}
+        width={600}
+        height={600}
+        className="rounded-md object-cover transition-opacity group-hover:opacity-75 aspect-square"
+        src={product.images[0].file.url}
+      />
+
+      <div className="pt-4 space-y-2 border-t border-gray-200">
+        <div className="font-medium text-base text-foreground line-clamp-1">
+          {product.name}
+        </div>
+        <div className="text-base text-muted-foreground">
+          {formatPrice(product.price)}
+        </div>
+      </div>
     </Link>
   );
 };

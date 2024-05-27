@@ -1,8 +1,10 @@
 "use client";
-import { Label, Switch } from "@/features/ui";
+import { Label } from "@/features/ui/label";
+import { Switch } from "@/features/ui/switch";
 import React, { useEffect } from "react";
+import { Badge } from "../../ui/badge";
 import { Order } from "../types";
-import { getPostalAddress } from "../utils";
+import { getPostalAddress, getShippingOption } from "../utils";
 import { useSetDelivered } from "./use-set-delivered";
 
 interface OrderSummaryProps {
@@ -22,6 +24,7 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({
     email,
     phone,
     deliveredAt,
+    shippingCost,
   },
 }) => {
   const { delivered, setDelivered, updateDeliveryStatus } = useSetDelivered(
@@ -37,7 +40,7 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({
     <div className="space-y-6">
       <div className="grid w-full grid-cols-3 gap-x-8">
         <Label>Customer details</Label>
-        <ul className="col-span-2 space-y-1 text-sm text-gray-600">
+        <ul className="col-span-2 space-y-1 text-sm text-secondary-foreground">
           <li>{customer}</li>
           <li>{phone}</li>
           <li>{email}</li>
@@ -46,7 +49,7 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({
 
       <div className="grid w-full grid-cols-3 gap-x-8">
         <Label>Shipping details</Label>
-        <p className="col-span-2 whitespace-pre-wrap text-sm text-gray-600">
+        <p className="col-span-2 whitespace-pre-wrap text-sm text-secondary-foreground">
           {getPostalAddress({
             line1,
             line2,
@@ -58,7 +61,21 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({
           })}
         </p>
       </div>
-
+      <div className="grid w-full grid-cols-3 gap-x-8">
+        <Label>Delivery status</Label>
+        <Badge
+          className="w-fit"
+          variant={deliveredAt ? "default" : "secondary"}
+        >
+          {deliveredAt ? "Delivered" : "Pending"}
+        </Badge>
+      </div>
+      <div className="grid w-full grid-cols-3 gap-x-8">
+        <Label>Shipping option</Label>
+        <p className="col-span-2 whitespace-pre-wrap text-sm text-secondary-foreground">
+          {getShippingOption(+shippingCost)}
+        </p>
+      </div>
       {!deliveredAt && (
         <div className="flex items-center space-x-2">
           <Switch

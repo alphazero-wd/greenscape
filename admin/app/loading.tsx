@@ -1,11 +1,11 @@
-import { MobileLogo } from "@/features/ui";
+import { MobileLogo } from "@/features/common/components";
 
 export default function Loading() {
   return (
     <div className="flex h-1/2 w-full flex-col items-center justify-center gap-y-8">
       <MobileLogo />
       <svg
-        className="h-8 w-8 animate-spin text-green-500"
+        className="h-8 w-8 animate-spin text-primary"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 32 32"

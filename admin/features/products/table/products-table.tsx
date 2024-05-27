@@ -1,18 +1,24 @@
 "use client";
 import { Category } from "@/features/categories/types";
 import {
-  Button,
   DataTable,
   DataTablePagination,
   DataTableViewOptions,
-  Input,
+  DateRangeFilter,
   useTable,
-} from "@/features/ui";
+} from "@/features/common/data-table";
+import { Button } from "@/features/ui/button";
+import { Input } from "@/features/ui/input";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { useRouter, useSearchParams } from "next/navigation";
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import qs from "query-string";
 import React from "react";
-import { CategoryGroup, InStockGroup, Product, StatusGroup } from "../types";
+import { InStockGroup, Product, StatusGroup } from "../types";
 import { CategoriesFilter } from "./categories-filter";
 import { columns } from "./columns";
 import { InStockFilter } from "./in-stock-filter";
@@ -24,7 +30,6 @@ interface ProductsTableProps {
   count: number;
   categories: Category[];
   statusGroups: StatusGroup[];
-  categoryGroups: CategoryGroup[];
   inStockGroups: InStockGroup[];
 }
 
@@ -33,22 +38,24 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({
   products,
   categories,
   statusGroups,
-  categoryGroups,
   inStockGroups,
 }) => {
   const { q, setQ, table } = useTable(columns, products, count);
   const searchParams = useSearchParams();
+  const { slug } = useParams();
+  const pathname = usePathname();
   const router = useRouter();
   const reset = () => {
     const currentQuery = qs.parse(searchParams.toString());
     delete currentQuery.price;
     delete currentQuery.inStock;
-    delete currentQuery.categoryIds;
+    delete currentQuery.from;
+    delete currentQuery.to;
     delete currentQuery.status;
     delete currentQuery.q;
     table.resetPageIndex();
     const resetQuery = qs.stringifyUrl({
-      url: "/products",
+      url: pathname,
       query: currentQuery,
     });
     router.push(resetQuery, { scroll: false });
@@ -66,16 +73,18 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({
           />
           <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
             <CategoriesFilter
-              categoryGroups={categoryGroups}
+              slug={slug?.at(-1)}
               categories={categories}
               table={table}
             />
+            <DateRangeFilter table={table} />
             <StatusFilter table={table} statusGroups={statusGroups} />
             <PriceFilter table={table} />
             <InStockFilter table={table} inStockGroups={inStockGroups} />
             {(searchParams.get("price") ||
               searchParams.get("inStock") ||
-              searchParams.get("categoryIds") ||
+              searchParams.get("from") ||
+              searchParams.get("to") ||
               searchParams.get("q") ||
               searchParams.get("status")) && (
               <Button

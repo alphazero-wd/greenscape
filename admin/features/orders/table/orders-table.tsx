@@ -1,12 +1,13 @@
 "use client";
 import {
-  Button,
   DataTable,
   DataTablePagination,
   DataTableViewOptions,
-  Input,
+  DateRangeFilter,
   useTable,
-} from "@/features/ui";
+} from "@/features/common/data-table";
+import { Button } from "@/features/ui/button";
+import { Input } from "@/features/ui/input";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "query-string";
@@ -18,7 +19,6 @@ import {
 } from "../types";
 import { columns } from "./columns";
 import { CountriesFilter } from "./countries-filter";
-import { DateRangeFilter } from "./date-range-filter";
 import { ShippingOptionFilter } from "./shipping-options-filter";
 import { StatusFilter } from "./status-filter";
 import { TotalFilter } from "./total-filter";
@@ -78,8 +78,8 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({
               table={table}
             />
             {(searchParams.get("countries") ||
-              searchParams.get("startDate") ||
-              searchParams.get("endDate") ||
+              searchParams.get("from") ||
+              searchParams.get("to") ||
               searchParams.get("totalRange") ||
               searchParams.get("status") ||
               searchParams.get("q") ||

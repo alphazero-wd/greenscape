@@ -1,10 +1,16 @@
-import { FavoritesSection, HeroSection, Testimonials } from "@/features/ui";
+import {
+  Categories,
+  HeroSection,
+  Testimonials,
+  TrendingProducts,
+} from "@/features/home";
 
 export default function Home() {
   return (
     <>
       <HeroSection />
-      <FavoritesSection />
+      <TrendingProducts />
+      <Categories />
       <Testimonials />
     </>
   );

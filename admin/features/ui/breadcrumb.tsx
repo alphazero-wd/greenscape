@@ -13,11 +13,14 @@ interface BreadcrumbProps {
 export const Breadcrumb: React.FC<BreadcrumbProps> = ({ links }) => {
   return (
     <nav className="flex" aria-label="Breadcrumb">
-      <ol role="list" className="flex items-center space-x-4">
+      <ol
+        role="list"
+        className="flex items-center space-x-4 overflow-x-auto pb-2"
+      >
         <li>
           <Link
             href="/"
-            className="flex-shrink-0 text-gray-400 hover:text-gray-500"
+            className="flex-shrink-0 text-muted-foreground hover:text-secondary-foreground"
           >
             <HomeIcon className="h-5 w-5" />
             <span className="sr-only">Home</span>
@@ -27,14 +30,14 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({ links }) => {
         {links.map((link, index) => (
           <li key={link.name}>
             <div className="flex items-center">
-              <ChevronRightIcon className="h-4 w-4 flex-shrink-0 text-gray-400" />
+              <ChevronRightIcon className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
               <Link
                 href={link.href}
                 className={cn(
-                  "ml-4 line-clamp-1 text-sm font-medium text-gray-400",
+                  "ml-4 truncate text-sm font-medium text-muted-foreground",
                   index === links.length - 1
-                    ? "text-gray-900"
-                    : "hover:text-gray-500",
+                    ? "text-foreground"
+                    : "hover:text-primary",
                 )}
               >
                 {link.name}

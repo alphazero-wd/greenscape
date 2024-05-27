@@ -26,7 +26,7 @@ export class CheckoutService implements OnModuleInit {
 
   onModuleInit() {
     this.stripe = new Stripe(this.configService.get('STRIPE_SECRET_KEY'), {
-      apiVersion: '2023-08-16',
+      apiVersion: '2024-04-10',
     });
   }
 
@@ -38,18 +38,19 @@ export class CheckoutService implements OnModuleInit {
       webhookSecret,
     );
     const session = event.data.object as Stripe.Checkout.Session;
-
     if (event.type === 'checkout.session.completed') {
-      const productIds = session.metadata.cartItemIds
+      const productIds = session.metadata.bagItemIds
         .split(',')
         .map((id) => +id);
       const quantities = session.metadata.quantities
         .split(',')
         .map((id) => +id);
+
       const { city, country, postal_code, state, line1, line2 } =
         session.customer_details.address;
       await this.ordersService.create({
         id: session.payment_intent.toString().split('_')[1],
+        tax: session.total_details.amount_tax,
         line1,
         line2,
         state,
@@ -59,7 +60,7 @@ export class CheckoutService implements OnModuleInit {
         total: +(session.amount_total / 100).toFixed(2),
         phone: session.customer_details.phone,
         email: session.customer_details.email,
-        cart: productIds.map((id, index) => ({
+        bag: productIds.map((id, index) => ({
           productId: id,
           qty: quantities[index],
         })),
@@ -75,25 +76,25 @@ export class CheckoutService implements OnModuleInit {
     }
   }
 
-  async checkout({ cart }: CheckoutDto) {
-    const cartItemIds = cart.map((item) => item.productId);
-    const cartItemQuantities = cart.map((item) => item.qty);
+  async checkout({ bag }: CheckoutDto) {
+    const bagItemIds = bag.map((item) => item.productId);
+    const bagItemQuantities = bag.map((item) => item.qty);
     const products = await this.prisma.product.findMany({
-      where: { id: { in: cartItemIds } },
+      where: { id: { in: bagItemIds } },
       include: {
-        images: { take: 1, orderBy: { id: 'asc' }, select: { url: true } },
+        images: { take: 1, select: { file: { select: { url: true } } } },
       },
     });
-    if (products.length !== cartItemIds.length)
+    if (products.length !== bagItemIds.length)
       throw new NotFoundException({
         success: false,
-        message: 'Cannot find some products in cart',
+        message: 'Cannot find some products in bag',
       });
     if (
-      cart.some(
+      bag.some(
         (item, i) =>
           item.qty <= 0 ||
-          item.qty > products.find((p) => p.id === cartItemIds[i]).inStock,
+          item.qty > products.find((p) => p.id === bagItemIds[i]).inStock,
       )
     )
       throw new BadRequestException({
@@ -102,19 +103,19 @@ export class CheckoutService implements OnModuleInit {
           "Quantity must be positive and less than or equal to what's in stock",
       });
 
-    const cartItemsWithProducts = cartItemQuantities.map((qty, i) => ({
+    const bagItemsWithProducts = bagItemQuantities.map((qty, i) => ({
       qty,
-      ...products.find((p) => p.id === cartItemIds[i]),
+      ...products.find((p) => p.id === bagItemIds[i]),
     }));
     const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
-    cartItemsWithProducts.forEach((item) => {
+    bagItemsWithProducts.forEach((item) => {
       lineItems.push({
         quantity: item.qty,
         price_data: {
           currency: 'USD',
           product_data: {
             name: item.name,
-            images: item.images.map((image) => image.url),
+            images: item.images.map((image) => image.file.url),
           },
           unit_amount: +(+item.price.toFixed(2) * 100).toFixed(2),
         },
@@ -129,16 +130,17 @@ export class CheckoutService implements OnModuleInit {
       line_items: lineItems,
       mode: 'payment',
       billing_address_collection: 'required',
+      automatic_tax: { enabled: true },
       phone_number_collection: { enabled: true },
       success_url: `${this.configService.get(
         'CORS_ORIGIN_STORE',
-      )}/cart?success=1`,
+      )}/bag?success=1`,
       cancel_url: `${this.configService.get(
         'CORS_ORIGIN_STORE',
-      )}/cart?cancelled=1`,
+      )}/bag?cancelled=1`,
       metadata: {
-        cartItemIds: cartItemIds.join(','),
-        quantities: cartItemQuantities.join(','),
+        bagItemIds: bagItemIds.join(','),
+        quantities: bagItemQuantities.join(','),
       },
     });
 

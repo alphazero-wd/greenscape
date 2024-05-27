@@ -1,16 +1,15 @@
 import { OmitType } from '@nestjs/mapped-types';
+import { Transform, Type } from 'class-transformer';
 import {
   ArrayMaxSize,
   ArrayMinSize,
-  IsDateString,
   IsIn,
-  IsInt,
   IsNumber,
   IsOptional,
-  Min,
+  Matches,
 } from 'class-validator';
+import { VALID_DATE_REGEX } from '../../common/constants';
 import { FindManyDto } from '../../common/dto';
-import { Transform, Type } from 'class-transformer';
 import { allowedCountries } from '../../common/utils';
 
 export class FindManyOrdersDto extends OmitType(FindManyDto, [
@@ -21,13 +20,17 @@ export class FindManyOrdersDto extends OmitType(FindManyDto, [
   @IsIn(['delivered', 'pending'])
   status?: 'delivered' | 'pending';
 
-  @IsDateString()
+  @Matches(VALID_DATE_REGEX, {
+    message: 'Please provide a valid date in the format of yyyy-mm-dd',
+  })
   @IsOptional()
-  startDate?: string;
+  from?: string;
 
-  @IsDateString()
+  @Matches(VALID_DATE_REGEX, {
+    message: 'Please provide a valid date in the format of yyyy-mm-dd',
+  })
   @IsOptional()
-  endDate?: string;
+  to?: string;
 
   @IsOptional()
   @Transform(({ value }: { value: string }) =>

@@ -1,6 +1,6 @@
-import { getOrders } from "@/features/orders/actions";
+import { aggregateOrders, getOrders } from "@/features/orders/actions";
 import { OrdersTable } from "@/features/orders/table";
-import { Breadcrumb } from "@/features/ui";
+import { Breadcrumb } from "@/features/ui/breadcrumb";
 import { getCurrentUser } from "@/features/user/utils";
 import { redirect } from "next/navigation";
 import qs from "query-string";
@@ -15,8 +15,8 @@ interface OrdersPageProps {
     offset?: string;
     q?: string;
     totalRange?: string;
-    startDate?: string;
-    endDate?: string;
+    from?: string;
+    to?: string;
     countries?: string;
     shippingCost?: string;
     status?: "pending" | "delivered";
@@ -29,8 +29,8 @@ export default async function OrdersPage({
     offset = "0",
     q,
     totalRange,
-    startDate,
-    endDate,
+    from,
+    to,
     countries,
     shippingCost,
     status,
@@ -46,16 +46,17 @@ export default async function OrdersPage({
       offset,
       q,
       totalRange,
-      startDate,
-      endDate,
+      from,
+      to,
       countries,
       shippingCost,
       status,
     },
   });
 
-  const { data, count, countryGroups, statusGroups, shippingOptionGroups } =
-    await getOrders(query);
+  const { data, count } = await getOrders(query);
+  const { countryGroups, statusGroups, shippingOptionGroups } =
+    await aggregateOrders(query);
   return (
     <>
       <div className="container max-w-7xl">

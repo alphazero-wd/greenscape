@@ -1,19 +1,19 @@
+import { CopyButton } from "@/features/common/components";
+import { formatPrice } from "@/features/common/utils";
+import { Badge } from "@/features/ui/badge";
+import { Button } from "@/features/ui/button";
 import {
-  Badge,
-  Button,
-  CopyButton,
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/features/ui";
-import { formatPrice } from "@/features/utils";
+} from "@/features/ui/tooltip";
 import { ViewfinderCircleIcon } from "@heroicons/react/24/outline";
 import { ColumnDef } from "@tanstack/react-table";
-import { format } from "date-fns";
+import format from "date-fns/format";
 import { useRouter } from "next/navigation";
 import { Order } from "../types/order";
-import { getCountryName, getPostalAddress, getShippingOption } from "../utils";
+import { getCountryName, getShippingOption } from "../utils";
 
 export const columns: ColumnDef<Order>[] = [
   {
@@ -43,26 +43,10 @@ export const columns: ColumnDef<Order>[] = [
     cell: ({ row }) => <div>{row.original.phone}</div>,
   },
   {
-    id: "address",
-    accessorKey: "address",
-    header: "Address",
-    cell: ({
-      row: {
-        original: { line1, line2, city, postalCode, country, state, customer },
-      },
-    }) => (
-      <div className="whitespace-pre-wrap">
-        {getPostalAddress({
-          line1,
-          line2,
-          city,
-          postalCode,
-          country,
-          state,
-          customer,
-        })}
-      </div>
-    ),
+    id: "email",
+    accessorKey: "email",
+    header: "Email",
+    cell: ({ row }) => <div>{row.original.email}</div>,
   },
   {
     id: "country",
@@ -75,35 +59,30 @@ export const columns: ColumnDef<Order>[] = [
     accessorKey: "shippingCost",
     header: "Shipping option",
     cell: ({ row }) => (
-      <div className="text-sm text-gray-500">
+      <div className="text-sm text-muted-foreground">
         {getShippingOption(+row.original.shippingCost)}
       </div>
     ),
   },
   {
-    id: "status",
+    id: "createdAt",
     accessorKey: "createdAt",
     header: "Paid at",
     cell: ({ row }) => (
-      <div>{format(new Date(row.original.createdAt), "MMM d y, h:mm a")}</div>
+      <div>{format(new Date(row.original.createdAt), "Pp")}</div>
     ),
   },
   {
     id: "status",
     accessorKey: "deliveredAt",
-    header: "Delivery status",
+    header: "Status",
     cell: ({ row }) => (
       <Badge variant={row.original.deliveredAt ? "default" : "secondary"}>
         {row.original.deliveredAt ? "Delivered" : "Pending"}
       </Badge>
     ),
   },
-  {
-    id: "email",
-    accessorKey: "email",
-    header: "Email",
-    cell: ({ row }) => <div>{row.original.email}</div>,
-  },
+
   {
     id: "actions",
     header: () => <div className="text-right">Actions</div>,
@@ -123,7 +102,7 @@ export const columns: ColumnDef<Order>[] = [
                   <ViewfinderCircleIcon className="h-5 w-5" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>See order</TooltipContent>
+              <TooltipContent>View order details</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </div>

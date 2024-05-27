@@ -1,12 +1,23 @@
-import { getCategories } from "@/features/categories/actions";
-import { getProducts } from "@/features/products/actions";
+import { getCategoriesTree } from "@/features/categories/actions";
+import {
+  aggregateProducts,
+  getProducts,
+  paginateProducts,
+} from "@/features/products/actions";
 import { ProductsTable } from "@/features/products/table";
-import { Breadcrumb, Button, DeleteRecordsModal } from "@/features/ui";
+import { Status } from "@/features/products/types";
+import { Breadcrumb } from "@/features/ui/breadcrumb";
+import { Button } from "@/features/ui/button";
 import { getCurrentUser } from "@/features/user/utils";
 import { PlusIcon } from "lucide-react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import qs from "query-string";
+
+const DeleteRecordsModal = dynamic(
+  () => import("@/features/common/delete-records/modal"),
+);
 
 export const metadata = {
   title: "Products",
@@ -19,10 +30,11 @@ interface ProductsPageProps {
     sortBy?: string;
     order?: "asc" | "desc";
     q?: string;
-    status?: "Active" | "Draft";
-    categoryIds?: string;
+    status?: Status;
     price?: number;
     inStock?: string;
+    from?: string;
+    to?: string;
   };
 }
 
@@ -34,9 +46,10 @@ export default async function ProductsPage({
     q,
     sortBy,
     status,
-    categoryIds,
     price,
     inStock,
+    from,
+    to,
   },
 }: ProductsPageProps) {
   const user = await getCurrentUser();
@@ -50,14 +63,17 @@ export default async function ProductsPage({
       q,
       sortBy,
       status,
-      categoryIds,
       price,
       inStock,
+      from,
+      to,
     },
   });
-  const { count, data, statusGroups, categoryGroups, inStockGroups } =
-    await getProducts(query);
-  const { data: categories } = await getCategories();
+  const data = await getProducts(query);
+  const count = await paginateProducts(query);
+  const { inStockGroups, statusGroups } = await aggregateProducts(query);
+
+  const categories = await getCategoriesTree();
 
   return (
     <>
@@ -79,7 +95,6 @@ export default async function ProductsPage({
         </div>
         <div className="mt-6 space-y-3">
           <ProductsTable
-            categoryGroups={categoryGroups}
             categories={categories}
             statusGroups={statusGroups}
             count={count}

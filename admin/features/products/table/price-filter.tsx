@@ -1,13 +1,9 @@
 "use client";
-import {
-  Button,
-  Label,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-  PriceInput,
-} from "@/features/ui";
-import { formatPrice } from "@/features/utils";
+import { PriceInput } from "@/features/common/components";
+import { formatPrice } from "@/features/common/utils";
+import { Button } from "@/features/ui/button";
+import { Label } from "@/features/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@/features/ui/popover";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { Table } from "@tanstack/react-table";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";

@@ -1,4 +1,4 @@
-# Greenify - an e-commerce website that sells plants
+# Greenscape - an e-commerce website that sells plants
 
 ## Table of Content 📑
 
@@ -22,7 +22,7 @@
 
 ### About the project
 
-Greenify is an e-commerce application that is built to sell plants, but it can also be converted to selling other things.
+Greenscape is an e-commerce application that is built to sell plants, but it can also be converted to selling other things.
 
 ### Project Structure
 

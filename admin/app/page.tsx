@@ -1,14 +1,16 @@
 import {
   getKeyStats,
-  getMonthlyRevenues,
+  getMonthlyRevenuesInYear,
   getSalesByCountries,
 } from "@/features/dashboard/actions";
-import { KeyStats } from "@/features/dashboard/key-stats";
-import { RevenuesChart } from "@/features/dashboard/revenues-chart";
+import {
+  KeyStats,
+  RevenuesChart,
+  SalesByCountries,
+} from "@/features/dashboard/components";
 import { getCurrentUser } from "@/features/user/utils";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { SalesByCountries } from "../features/dashboard/sales-by-countries";
 
 export const metadata: Metadata = {
   title: "Admin | Dashboard",
@@ -27,9 +29,9 @@ export default async function DashboardPage({
   const user = await getCurrentUser();
   if (!user) redirect("/auth/login");
   const keyStats = await getKeyStats();
-  const { startYear, endYear, monthlyRevenues } = await getMonthlyRevenues(
-    year || new Date().getFullYear().toString(),
-  );
+  const { startYear, endYear, monthlyRevenues } =
+    await getMonthlyRevenuesInYear(year || new Date().getFullYear().toString());
+
   const salesByCountries = await getSalesByCountries();
 
   return (

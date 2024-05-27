@@ -1,4 +1,5 @@
 "use client";
+import { formatPrice } from "@/features/common/utils";
 import {
   Table,
   TableBody,
@@ -6,9 +7,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/features/ui";
-import { formatPrice } from "@/features/utils";
-import Image from "next/image";
+} from "@/features/ui/table";
 import { useRouter } from "next/navigation";
 import { Order } from "../types";
 import { getShippingOption } from "../utils";
@@ -20,7 +19,6 @@ export const OrderItems = ({ order }: { order: Order }) => {
       <TableHeader>
         <TableRow>
           <TableHead>Product</TableHead>
-          <TableHead>Category</TableHead>
           <TableHead className="text-right">Quantity</TableHead>
           <TableHead className="text-right">Unit price</TableHead>
           <TableHead className="text-right">Price</TableHead>
@@ -33,19 +31,7 @@ export const OrderItems = ({ order }: { order: Order }) => {
             onClick={() => router.push(`/products/${productId}/preview`)}
             key={productId}
           >
-            <TableCell className="flex items-center gap-x-3">
-              <Image
-                src={product.images[0].url}
-                alt={product.name}
-                width={128}
-                height={128}
-                className="aspect-square h-16 w-16 rounded-md object-cover"
-              />
-              <span className="line-clamp-2 text-sm font-medium">
-                {product.name}
-              </span>
-            </TableCell>
-            <TableCell>{product.category.name}</TableCell>
+            <TableCell className="font-medium">{product.name}</TableCell>
             <TableCell className="text-right">{qty}</TableCell>
             <TableCell className="text-right">
               {formatPrice(product.price)}
@@ -56,20 +42,24 @@ export const OrderItems = ({ order }: { order: Order }) => {
           </TableRow>
         ))}
         <TableRow>
-          <TableCell className="text-right" colSpan={4}>
+          <TableCell className="text-right" colSpan={3}>
             <ul>
-              <li className="text-sm text-gray-500">
+              <li className="text-sm text-muted-foreground">
                 Shipping ({getShippingOption(+order.shippingCost)})
               </li>
+              <li className="text-sm text-muted-foreground">Tax</li>
               <li className="font-medium text-gray-900">Total</li>
             </ul>
           </TableCell>
           <TableCell>
             <ul className="text-right">
-              <li className="text-sm text-gray-500">
+              <li className="text-sm text-muted-foreground">
                 {formatPrice(order.shippingCost)}
               </li>
-              <li className="font-medium text-gray-900">
+              <li className="text-sm text-muted-foreground">
+                {formatPrice(order.tax)}
+              </li>
+              <li className="font-medium text-foreground">
                 {formatPrice(order.total)}
               </li>
             </ul>

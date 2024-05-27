@@ -1,67 +1,31 @@
-import { FilePreview } from "@/features/types";
+import { formSchema, useImagesUpload } from "@/features/products/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useDropzone } from "react-dropzone";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import * as z from "zod";
-
-const formSchema = z.object({
-  name: z
-    .string()
-    .min(1, { message: "Product name must be between 1 and 120 characters" })
-    .max(120, { message: "Product name must be between 1 and 120 characters" }),
-
-  desc: z.string().nonempty({ message: "Please provide a description" }),
-  price: z.coerce
-    .number({ invalid_type_error: "Price must be a number" })
-    .gte(0.01, { message: "Price cannot be less than 0.01" })
-    .multipleOf(0.01, { message: "Price needs to have 2 decimal digits" }),
-  inStock: z.coerce
-    .number()
-    .nonnegative({
-      message: "The number of products in stock must be non-negative",
-    })
-    .int(),
-  categoryId: z.number().int().gte(1),
-  status: z.enum(["Active", "Draft"]),
-});
 
 export const useCreateProduct = () => {
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { name: "", desc: "", status: "Draft" },
+    defaultValues: { name: "", desc: "", status: "Draft", categoryIds: [] },
   });
-  const [files, setFiles] = useState<FilePreview[]>([]);
-  const dropzoneState = useDropzone({
-    multiple: true,
-    maxSize: Math.pow(1024, 2) * 5, // 5MB
-    accept: {
-      "image/png": [".png"],
-      "image/jpeg": [".jpg", ".jpeg"],
-    },
-    onDrop: (acceptedFiles) => {
-      setFiles(
-        acceptedFiles.map((file) =>
-          Object.assign(file, {
-            preview: URL.createObjectURL(file),
-          }),
-        ),
-      );
-    },
-  });
+  const { clearFiles, deleteFile, createFilesFormData, dropzoneState, files } =
+    useImagesUpload();
+
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      if (files.length === 0) {
+        toast.error("Please upload at least an image");
+        return;
+      }
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
-      const formData = new FormData();
-      files.forEach((file) => {
-        formData.append("images", file);
-      });
+      const formData = createFilesFormData();
       setLoading(true);
       const {
         data: { data },
@@ -74,7 +38,7 @@ export const useCreateProduct = () => {
         { withCredentials: true },
       );
       form.reset();
-      setFiles([]);
+      clearFiles();
       toast.success("Product created");
       router.refresh();
       router.replace("/products");
@@ -91,5 +55,6 @@ export const useCreateProduct = () => {
     handleSubmit: form.handleSubmit(onSubmit),
     dropzoneState,
     files,
+    deleteFile,
   };
 };

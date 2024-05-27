@@ -5,21 +5,20 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateCategoryDto, UpdateCategoryDto } from './dto';
-import { PrismaService } from '../prisma/prisma.service';
-import { removeWhiteSpaces } from '../common/utils';
 import { Prisma } from '@prisma/client';
 import { PrismaError } from '../prisma/prisma-error';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateCategoryDto, UpdateCategoryDto } from './dto';
 import { FindManyDto } from '../common/dto';
 
 @Injectable()
 export class CategoriesService {
   constructor(private prisma: PrismaService) {}
 
-  async create({ name }: CreateCategoryDto) {
+  async create(dto: CreateCategoryDto) {
     try {
       const newCategory = await this.prisma.category.create({
-        data: { name: removeWhiteSpaces(name) },
+        data: dto,
       });
       return newCategory;
     } catch (error) {
@@ -27,8 +26,7 @@ export class CategoriesService {
         if (error.code === PrismaError.UniqueViolation)
           throw new BadRequestException({
             success: false,
-            message:
-              'Category with the given `name` already exists in the store',
+            message: 'Duplicate slug',
           });
       }
       throw new InternalServerErrorException({
@@ -38,38 +36,70 @@ export class CategoriesService {
     }
   }
 
-  async findAll({
-    limit,
-    order = 'asc',
-    sortBy = 'id',
-    offset = 0,
-    q = '',
-  }: FindManyDto) {
+  private formQueries(
+    { q, sortBy = 'id', order = 'asc' }: FindManyDto,
+    slug: string = null,
+  ) {
     const where: Prisma.CategoryWhereInput = {
+      parentCategory: slug ? { slug } : null,
       name: {
-        search: q ? removeWhiteSpaces(q).split(' ').join(' & ') : undefined,
+        contains: q,
         mode: 'insensitive',
       },
     };
     let orderBy = {};
-    if (sortBy === 'products') orderBy = { products: { _count: order } };
+    if (sortBy === 'products' || sortBy === 'subCategories')
+      orderBy = { [sortBy]: { _count: order } };
     else orderBy = { [sortBy]: order };
+    return { where, orderBy };
+  }
+
+  async findParentsBySlug(slug: string) {
+    return this.prisma.category.findUnique({
+      where: { slug: slug },
+      include: {
+        parentCategory: {
+          select: {
+            slug: true,
+            name: true,
+            parentCategory: { select: { slug: true, name: true } },
+          },
+        },
+      },
+    });
+  }
+
+  async paginate(dto: Omit<FindManyDto, 'limit' | 'offset'>, slug?: string) {
+    const { where } = this.formQueries(dto, slug);
+    const count = await this.prisma.category.count({
+      where,
+    });
+    return count;
+  }
+
+  async findAll(
+    { limit, offset = 0, ...findManyCategoriesDto }: FindManyDto,
+    slug: string = null,
+  ) {
+    const { where, orderBy } = this.formQueries(findManyCategoriesDto, slug);
+
     try {
       const categories = await this.prisma.category.findMany({
         take: limit,
         orderBy,
         skip: offset,
         where,
-        include: { _count: { select: { products: true } } },
+        include: {
+          products: {
+            include: {
+              images: { take: 1, select: { file: { select: { url: true } } } },
+            },
+          },
+          _count: { select: { subCategories: true, products: true } },
+        },
       });
 
-      const count = await this.prisma.category.count({
-        where,
-      });
-      return {
-        count,
-        categories,
-      };
+      return categories;
     } catch (error) {
       throw new InternalServerErrorException({
         success: false,
@@ -78,11 +108,30 @@ export class CategoriesService {
     }
   }
 
-  async update(id: number, { name }: UpdateCategoryDto) {
+  async findCategoriesTree() {
+    const categories = await this.prisma.category.findMany({
+      where: { parentCategory: null },
+      include: {
+        subCategories: {
+          include: {
+            _count: { select: { products: true } },
+            subCategories: {
+              include: {
+                _count: { select: { products: true } },
+              },
+            },
+          },
+        },
+      },
+    });
+    return categories;
+  }
+
+  async update(id: number, dto: UpdateCategoryDto) {
     try {
       const updatedCategory = await this.prisma.category.update({
         where: { id },
-        data: { name: removeWhiteSpaces(name) },
+        data: dto,
       });
       return updatedCategory;
     } catch (error) {
@@ -90,8 +139,7 @@ export class CategoriesService {
         if (error.code === PrismaError.UniqueViolation)
           throw new BadRequestException({
             success: false,
-            message:
-              'Category with the given `name` already exists in the store',
+            message: 'Duplicate slug',
           });
         if (error.code === PrismaError.RecordNotFound)
           throw new NotFoundException({
@@ -108,32 +156,30 @@ export class CategoriesService {
   }
 
   async remove(ids: number[]) {
-    return this.prisma.$transaction(async (transactionClient) => {
-      try {
-        const { count } = await transactionClient.category.deleteMany({
-          where: { id: { in: ids } },
-        });
-        if (count !== ids.length)
-          throw new NotFoundException({
-            success: false,
-            message: `${
-              ids.length - count
-            } categories were not deleted because they were not found`,
-          });
-      } catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError)
-          if (error.code === PrismaError.ForeignViolation)
-            throw new ForbiddenException({
-              success: false,
-              message:
-                'Cannot delete categories because they are linked to existing products',
-            });
-        if (error instanceof NotFoundException) throw error;
-        throw new InternalServerErrorException({
+    try {
+      const { count } = await this.prisma.category.deleteMany({
+        where: { id: { in: ids } },
+      });
+      if (count !== ids.length)
+        throw new NotFoundException({
           success: false,
-          message: 'Something went wrong',
+          message: `${
+            ids.length - count
+          } categories were not deleted because they were not found`,
         });
-      }
-    });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError)
+        if (error.code === PrismaError.ForeignViolation)
+          throw new ForbiddenException({
+            success: false,
+            message:
+              'Cannot delete categories because they are linked to existing products',
+          });
+      if (error instanceof NotFoundException) throw error;
+      throw new InternalServerErrorException({
+        success: false,
+        message: 'Something went wrong',
+      });
+    }
   }
 }

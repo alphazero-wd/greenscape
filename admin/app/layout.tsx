@@ -1,5 +1,6 @@
-import { Toaster } from "@/features/ui";
-import Navbar from "@/features/ui/navbar/navbar";
+import { iconMetadata } from "@/features/config";
+import { Navbar } from "@/features/layout/navbar";
+import { Toaster } from "@/features/layout/toaster";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
     default: "Admin",
   },
   description: "Welcome to the admin page",
+  icons: iconMetadata,
 };
 
 export default async function RootLayout({

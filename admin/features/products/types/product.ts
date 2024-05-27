@@ -1,41 +1,47 @@
 import { Category } from "@/features/categories/types";
 
+export enum Status {
+  Active = "Active",
+  Draft = "Draft",
+  Archived = "Archived",
+}
+
 export interface Product {
   id: number;
   name: string;
+  slug: string;
   desc: string;
   price: number;
-  status: "Active" | "Draft";
+  status: Status;
   inStock: number;
-  category: Category;
+  categories: Category[];
   createdAt: Date;
   updatedAt: Date;
   images: ProductImage[];
   _count: { orders: number };
 }
 export interface ProductImage {
-  id: string;
-  url: string;
+  file: {
+    id: string;
+    url: string;
+  };
 }
 export interface ProductFormDto {
   name: string;
+  slug: string;
   desc: string;
   price: number;
   inStock: number;
-  status: "Active" | "Draft";
-  categoryId: number;
+  status: "Active" | "Draft" | "Archived";
+  categoryIds: number[];
 }
 
 export interface StatusGroup {
   _count: { id: number };
-  status: "Active" | "Draft";
+  status: Status;
 }
 
 export interface InStockGroup {
   _count: { id: number };
   inStock: number;
-}
-export interface CategoryGroup {
-  _count: { id: number };
-  categoryId: number;
 }

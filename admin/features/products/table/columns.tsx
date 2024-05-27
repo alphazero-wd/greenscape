@@ -1,18 +1,18 @@
 "use client";
+import { CopyButton } from "@/features/common/components";
 import {
-  Badge,
-  Checkbox,
-  CopyButton,
   DataTableColumnHeader,
   DataTableRowActions,
-  useDeleteRecordsModal,
-} from "@/features/ui";
-import { formatPrice } from "@/features/utils";
+} from "@/features/common/data-table";
+import { useDeleteRecordsModal } from "@/features/common/delete-records";
+import { formatPrice } from "@/features/common/utils";
+import { Badge } from "@/features/ui/badge";
+import { Checkbox } from "@/features/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Product } from "../types";
-import { PreviewButton } from "./preview-button";
 
 export const columns: ColumnDef<Product>[] = [
   {
@@ -37,11 +37,27 @@ export const columns: ColumnDef<Product>[] = [
     enableHiding: false,
   },
   {
+    id: "images",
+    accessorKey: "images",
+    header: "",
+    cell: ({ row }) => (
+      <div className="h-16 w-16">
+        <Image
+          alt="Product image"
+          className="aspect-square rounded-md object-cover"
+          height="128"
+          src={row.original.images[0]?.file?.url}
+          width="128"
+        />
+      </div>
+    ),
+  },
+  {
     id: "name",
     accessorKey: "name",
     header: "Product",
     cell: ({ row }) => (
-      <div className="line-clamp-2 max-w-xs font-medium">
+      <div className="line-clamp-3 whitespace-pre-wrap font-medium">
         {row.getValue("name")}
       </div>
     ),
@@ -63,12 +79,6 @@ export const columns: ColumnDef<Product>[] = [
     ),
   },
   {
-    id: "category",
-    accessorKey: "category",
-    header: () => <div>Category</div>,
-    cell: ({ row }) => row.original.category.name,
-  },
-  {
     id: "inStock",
     accessorKey: "inStock",
     header: ({ column }) => (
@@ -78,7 +88,9 @@ export const columns: ColumnDef<Product>[] = [
         className="justify-end"
       />
     ),
-    cell: ({ row }) => <div className="text-right">{row.original.inStock}</div>,
+    cell: ({ row }) => (
+      <div className="mr-3 text-right">{row.original.inStock}</div>
+    ),
   },
   {
     id: "orders",
@@ -86,12 +98,12 @@ export const columns: ColumnDef<Product>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader
         column={column}
-        title="Orders"
+        title="Sales"
         className="justify-end"
       />
     ),
     cell: ({ row }) => (
-      <div className="text-right">{row.original._count.orders}</div>
+      <div className="mr-3 text-right">{row.original._count.orders}</div>
     ),
   },
   {
@@ -100,7 +112,13 @@ export const columns: ColumnDef<Product>[] = [
     header: "Status",
     cell: ({ row }) => (
       <Badge
-        variant={row.original.status === "Active" ? "default" : "secondary"}
+        variant={
+          row.original.status === "Active"
+            ? "default"
+            : row.original.status === "Draft"
+            ? "secondary"
+            : "outline"
+        }
       >
         {row.original.status}
       </Badge>
@@ -118,16 +136,6 @@ export const columns: ColumnDef<Product>[] = [
     ),
   },
   {
-    id: "updatedAt",
-    accessorKey: "updatedAt",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Updated at" />
-    ),
-    cell: ({ row }) => (
-      <div>{format(new Date(row.original.updatedAt), "Pp")}</div>
-    ),
-  },
-  {
     id: "actions",
     header: () => <div className="text-right">Actions</div>,
     cell: ({ row }) => {
@@ -136,11 +144,10 @@ export const columns: ColumnDef<Product>[] = [
       return (
         <div className="flex justify-end">
           <CopyButton text="Copy product name" content={row.original.name} />
-          <PreviewButton id={row.original.id} />
           <DataTableRowActions
             row={row}
             onEditAction={() =>
-              router.push(`/products/${row.original.id}/settings`)
+              router.push(`/products/edit/${row.original.slug}`)
             }
             onDeleteAction={onDeleteOpen}
           />

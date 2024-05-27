@@ -4,12 +4,16 @@ import {
   ArrayMaxSize,
   ArrayMinSize,
   IsBoolean,
-  IsIn,
+  IsDateString,
+  IsEnum,
   IsInt,
   IsNumber,
   IsOptional,
+  Matches,
   Min,
 } from 'class-validator';
+import { Status } from '@prisma/client';
+import { VALID_DATE_REGEX } from '../../common/constants';
 
 export class FindManyProductsDto extends FindManyDto {
   @Transform(({ value }: { value: string }) =>
@@ -21,30 +25,24 @@ export class FindManyProductsDto extends FindManyDto {
   @IsOptional({ each: true })
   price?: [number, number];
 
-  @Transform(({ value }: { value: string }) =>
-    value.split(',').map((id) => +id),
-  )
-  @ArrayMinSize(1)
-  @IsInt({ each: true })
-  @Min(1, { each: true })
   @IsOptional()
-  categoryIds?: number[];
-
-  @IsOptional()
-  @Transform(({ value }: { value: string }) =>
-    value.split(',').map((id) => +id),
-  )
-  @ArrayMinSize(1)
-  @IsInt({ each: true })
-  @Min(1, { each: true })
-  refIds?: number[];
-
-  @IsOptional()
-  @IsIn(['Active', 'Draft'])
-  status?: 'Active' | 'Draft';
+  @IsEnum(Status)
+  status?: Status;
 
   @Transform(({ value }) => (value === 'false' ? false : true))
   @IsOptional()
   @IsBoolean()
   inStock?: boolean;
+
+  @Matches(VALID_DATE_REGEX, {
+    message: 'Please provide a valid date in the format of yyyy-mm-dd',
+  })
+  @IsOptional()
+  from?: string;
+
+  @Matches(VALID_DATE_REGEX, {
+    message: 'Please provide a valid date in the format of yyyy-mm-dd',
+  })
+  @IsOptional()
+  to?: string;
 }

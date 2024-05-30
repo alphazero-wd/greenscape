@@ -10,4 +10,4 @@ ENV NODE_ENV=production
 RUN yarn gen
 RUN yarn build
 EXPOSE 5000
-CMD [ "yarn", "prisma", "migrate", "deploy", "&&", "yarn", "start:prod" ]
+CMD [ "yarn", "start:prod" ]

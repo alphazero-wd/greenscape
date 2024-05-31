@@ -1,8 +1,17 @@
 version: '3'
 services:
-  api:
-    image: alphazero/greenscape:latest
+  postgres:
+    image: postgres:alpine
     ports:
-      - '5000:5000'
-    env_file:
-      - .env
+      - '5432:5432'
+    volumes:
+      - /data/postgres:/data/postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=greenscape
+
+  redis:
+    image: redis:alpine
+    ports:
+      - '6379:6379'

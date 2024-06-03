@@ -29,6 +29,7 @@ import { MetricsModule } from './metrics/metrics.module';
         AWS_BUCKET_NAME: Joi.string().required(),
         AWS_OBJECT_DEST: Joi.string().required(),
         AWS_ACCOUNT_ID: Joi.string().required(),
+        COOKIE_DOMAIN: Joi.string().required()
       }),
     }),
     CategoriesModule,

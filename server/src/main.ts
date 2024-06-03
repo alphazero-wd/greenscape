@@ -7,9 +7,10 @@ import { createClient } from 'redis';
 import RedisStore from 'connect-redis';
 import { ConfigService } from '@nestjs/config';
 import { rawBodyMiddleware } from './common/middlewares';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get(ConfigService);
   app.use(rawBodyMiddleware());
   app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
@@ -37,9 +38,12 @@ async function bootstrap() {
         sameSite: 'lax',
         secure: configService.get('NODE_ENV') === 'production',
         maxAge: 1000 * 60 * 60 * 24 * 7,
+        domain: configService.get('COOKIE_DOMAIN')
       },
     }),
   );
+
+  app.set('trust proxy', 1)
 
   app.use(passport.initialize());
   app.use(passport.session());

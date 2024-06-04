@@ -17,7 +17,9 @@ export class FilesService {
     private prisma: PrismaService,
     private configService: ConfigService,
   ) {
-    this.s3Client = new S3Client({});
+    this.s3Client = new S3Client({
+      region: this.configService.get('AWS_REGION')
+    });
   }
 
   async createMany(uploadFilesDto: UploadFileDto[]) {
@@ -69,7 +71,6 @@ export class FilesService {
           Key: key,
         })),
       },
-      ExpectedBucketOwner: this.configService.get('AWS_ACCOUNT_ID'),
     });
     await this.s3Client.send(command);
     await this.prisma.file.deleteMany({ where: { id: { in: keys } } });

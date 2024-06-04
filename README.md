@@ -1,4 +1,4 @@
-# Greenscape - an e-commerce website that sells plants
+# Greenscape
 
 ## Table of Content 📑
 
@@ -6,6 +6,7 @@
   - [About the project](#about-the-project)
   - [Project Structure](#project-structure)
   - [Tech stack](#tech-stack)
+  - [Deployment](#deployment)
   - [Challenges](#challenges)
   - [Features to be added](#features-to-be-added)
 - [Getting started](#getting-started)
@@ -20,9 +21,15 @@
 
 ## Overview
 
-### About the project
+### About
+![Greenscape Logo](./assets/mobile-logo.svg)
 
-Greenscape is an e-commerce application that is built to sell plants, but it can also be converted to selling other things.
+Greenscape is an e-commerce application that is built to sell plants.
+
+#### Demo Links
+- [Store](https://www.greeenscape.store)
+- [Admin](https://admin.greeenscape.store)
+- [API](https://api.greeenscape.store)
 
 ### Project Structure
 
@@ -48,13 +55,25 @@ The application consists of three main components:
 
 - PostgreSQL: there are plenty of relationships between entities, so a relational database fits the project well
 - Redis: storing users' session data
+- Elasticsearch (in the future): handling products' search
+
+### Deployment
+The project was deployed on AWS. AWS Amplify was used to quickly launch the frontend to production environment, the backend was containerized and runs in an ECS cluster, and has a load balancer in front to distribute traffic across the EC2 instances.
+
+Here are two versions of the architecture (with the first one being a cheaper solution, while the second one is more secure):
+
+#### Version 1
+![Version 1](./assets/design-1.jpg)
+
+#### Version 2
+![Version 2](./assets/design-2.jpg)
 
 ### Challenges
 
-- Managing uploaded files is difficult **without** any cloud storage like Amazon S3, Cloudinary.
 - First time handling Stripe payments is rather tough because the documentation does not specify exactly how to integrate Stripe with Next.js and NestJS.
 - Having to resolve conflicts between pagination, filtering and sorting when working with URL query manipulation.
 - Forgetting to add role-based guards to some restricted endpoints resulting in security leaks.
+- Inconsistencies between development and production environment when deploying to AWS.
 
 ### Features to be added
 
@@ -73,7 +92,7 @@ You need to have these tools installed on your machine:
 To get started, clone the project from GitHub
 
 ```
-git clone https://github.com/alphazero-wd/greenify.git
+git clone https://github.com/alphazero-wd/greenscape.git
 ```
 
 ### Setup the server
@@ -177,11 +196,11 @@ yarn dev
 
 ### Store
 
-![Store](https://github.com/alphazero-wd/greenify/assets/83436069/055d0188-cceb-438a-bca9-f64756f7cdf7)
+![Store](./assets/store-demo.jpg)
 
 ### Admin
 
-![Admin](https://github.com/alphazero-wd/greenify/assets/83436069/1bcf393f-9393-4eed-bcbb-8f0df774c3b9)
+![Admin](./assets/admin-demo.jpg)
 
 ## Approaches
 

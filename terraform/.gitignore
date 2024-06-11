@@ -1,4 +1,0 @@
-windows_amd64
-.terraform*
-.tfvars
-terraform.tfstate*

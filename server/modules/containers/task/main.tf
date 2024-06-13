@@ -3,7 +3,6 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
   network_mode       = "bridge"
   execution_role_arn = var.execution_role_arn
   cpu                = 256
-  memory             = 512
   runtime_platform {
     operating_system_family = "LINUX"
     cpu_architecture        = "X86_64"
@@ -23,6 +22,15 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
         }
       ]
       environment = var.env
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          "awslogs-group"         = "greenscape-log-group",
+          "awslogs-create-group"  = "true"
+          "awslogs-region"        = "us-east-1",
+          "awslogs-stream-prefix" = "ecs"
+        }
+      }
     }
   ])
 }

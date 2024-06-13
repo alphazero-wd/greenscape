@@ -5,6 +5,12 @@ terraform {
       version = "~> 4.16"
     }
   }
+  backend "s3" {
+    bucket              = "greenscape-tfstate"
+    key                 = "terraform.tfstate"
+    region              = "us-east-1"
+    allowed_account_ids = ["985071300720"]
+  }
   required_version = ">= 1.2.0"
 }
 
@@ -56,8 +62,50 @@ module "ecs_task_definition" {
   }]
 }
 
+module "alb" {
+  source                = "./containers/alb"
+  alb_security_group_id = module.security_groups.alb_security_group_id
+  alb_subnet_ids        = [module.subnets.public_1a_id, module.subnets.public_1b_id]
+  tg_vpc_id             = module.vpc.vpc_id
+}
+
 module "ecs_cluster" {
   source       = "./containers/ecs"
   asg_arn      = module.ec2.ecs_asg_arn
   cluster_name = local.cluster_name
+}
+
+module "database" {
+  source               = "./database"
+  db_name              = var.db_name
+  db_password          = var.db_password
+  db_username          = var.db_username
+  db_security_group_id = module.security_groups.db_security_group_id
+  db_subnet_ids        = [module.subnets.private_1a_id, module.subnets.private_1b_id]
+}
+
+module "redis_cache" {
+  source                  = "./cache"
+  redis_security_group_id = module.security_groups.redis_security_group_id
+  redis_subnet_ids        = [module.subnets.private_1a_id, module.subnets.private_1b_id]
+}
+
+module "log" {
+  source = "./log"
+  log_group_name = local.log_group_name
+}
+
+module "s3" {
+  source = "./s3"
+}
+
+module "ecs_service" {
+  source                    = "./containers/service"
+  alb_tg_arn                = module.alb.alb_tg_arn
+  capacity_provider_name    = module.ecs_cluster.capacity_provider_name
+  ecs_cluster_id            = module.ecs_cluster.cluster_id
+  service_security_group_id = module.security_groups.ec2_security_group_id
+  service_subnet_ids        = [module.subnets.public_1a_id, module.subnets.public_1b_id]
+  task_definition_arn       = module.ecs_task_definition.task_definition_arn
+  depends_on                = [module.log, module.ec2, module.database, module.redis_cache]
 }

@@ -193,7 +193,7 @@ export class ProductsService {
     } catch (error) {
       throw new InternalServerErrorException({
         success: false,
-        message: 'Something went wrong',
+        message: error.message,
       });
     }
   }

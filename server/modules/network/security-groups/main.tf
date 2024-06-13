@@ -22,7 +22,7 @@ resource "aws_security_group" "redis_sgr" {
   description = "Security group for Redis"
 }
 
-resource "aws_security_group_rule" "elb_sgr_http_rule" {
+resource "aws_security_group_rule" "alb_sgr_http_rule" {
   security_group_id = aws_security_group.alb_sgr.id
   type              = "ingress"
   from_port         = 80
@@ -31,7 +31,7 @@ resource "aws_security_group_rule" "elb_sgr_http_rule" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
-resource "aws_security_group_rule" "elb_sgr_https_rule" {
+resource "aws_security_group_rule" "alb_sgr_https_rule" {
   security_group_id = aws_security_group.alb_sgr.id
   type              = "ingress"
   from_port         = 443
@@ -40,7 +40,7 @@ resource "aws_security_group_rule" "elb_sgr_https_rule" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
-resource "aws_security_group_rule" "elb_sgr_ec2_rule" {
+resource "aws_security_group_rule" "alb_sgr_ec2_rule" {
   security_group_id        = aws_security_group.alb_sgr.id
   type                     = "egress"
   from_port                = 32768
@@ -52,8 +52,8 @@ resource "aws_security_group_rule" "elb_sgr_ec2_rule" {
 resource "aws_security_group_rule" "ec2_sgr_inbound_rule" {
   security_group_id        = aws_security_group.ec2_sgr.id
   type                     = "ingress"
-  from_port                = 5000
-  to_port                  = 5000
+  from_port                = 32768
+  to_port                  = 65535
   protocol                 = "tcp"
   source_security_group_id = aws_security_group.alb_sgr.id
 }

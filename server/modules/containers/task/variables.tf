@@ -5,9 +5,8 @@ variable "execution_role_arn" {
 
 variable "env" {
   type = set(object({
-    name = string
+    name  = string
     value = string
   }))
   description = "Container environment variables"
-  sensitive = true
 }

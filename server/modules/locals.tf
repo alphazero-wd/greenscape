@@ -6,4 +6,6 @@ locals {
   iam_instance_profile_arn = "arn:aws:iam::${var.aws_account_id}:instance-profile/ecsInstanceRole"
   task_execution_role_arn  = "arn:aws:iam::${var.aws_account_id}:role/ecsTaskExecutionRole"
   key_name                 = "cloud-labs-nv"
+  log_group_name = "greenscape-log-group"
+  domain_name = "greeenscape.store"
 }

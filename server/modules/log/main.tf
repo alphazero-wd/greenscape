@@ -1,3 +1,0 @@
-resource "aws_cloudwatch_log_group" "task_log_group" {
-  name = var.log_group_name
-}

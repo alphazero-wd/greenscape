@@ -1,7 +1,7 @@
 FROM node:18-alpine
 WORKDIR /user/src/app
 RUN chown -R node:node /user/src/app
-COPY package.json yarn.lock .
+COPY package.json yarn.lock ./
 USER node
 RUN yarn
 COPY --chown=node:node . .
